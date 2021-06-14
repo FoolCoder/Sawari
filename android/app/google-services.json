@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1018845079644",
+    "project_id": "sawario",
+    "storage_bucket": "sawario.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018845079644:android:eee03746158da0bccd9e99",
+        "android_client_info": {
+          "package_name": "com.sawario"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018845079644-j7bqnp09fi3kbhpbnnrtic6pm7id61q9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIIAIRMP2HaMrMWIkVdSRLys5W9gb3APw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018845079644-j7bqnp09fi3kbhpbnnrtic6pm7id61q9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

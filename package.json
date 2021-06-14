@@ -1,0 +1,61 @@
+{
+  "name": "Sawari",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-community/slider": "^3.0.3",
+    "@react-native-firebase/app": "^10.4.0",
+    "@react-native-firebase/dynamic-links": "^10.4.0",
+    "@react-native-firebase/messaging": "^10.4.1",
+    "@react-navigation/material-top-tabs": "^5.2.19",
+    "@react-navigation/native": "^5.7.6",
+    "@react-navigation/stack": "^5.9.3",
+    "@reduxjs/toolkit": "^1.5.1",
+    "deprecated-react-native-listview": "0.0.6",
+    "millify": "^3.5.0",
+    "moment-timezone": "^0.5.32",
+    "react": "16.13.1",
+    "react-native": "^0.64.1",
+    "react-native-dimension": "^1.0.6",
+    "react-native-document-picker": "^4.0.0",
+    "react-native-dropdown-picker": "^4.0.9",
+    "react-native-geocoding": "^0.4.0",
+    "react-native-geolocation-service": "^5.0.0",
+    "react-native-gesture-handler": "^1.8.0",
+    "react-native-google-places-autocomplete": "^2.0.3",
+    "react-native-image-picker": "^2.3.3",
+    "react-native-maps": "0.27.1",
+    "react-native-modal-dropdown": "git+https://github.com/siemiatj/react-native-modal-dropdown.git",
+    "react-native-pages": "^0.9.0",
+    "react-native-reanimated": "^2.1.0",
+    "react-native-safe-area-context": "^3.1.8",
+    "react-native-screens": "^2.11.0",
+    "react-native-tab-view": "^2.15.2",
+    "react-native-vector-icons": "^7.1.0",
+    "react-redux": "^7.2.4",
+    "redux": "^4.0.5",
+    "socket.io-client": "^2.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/runtime": "^7.12.1",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "babel-jest": "^26.6.0",
+    "eslint": "^7.11.0",
+    "jest": "^26.6.0",
+    "metro-react-native-babel-preset": "^0.63.0",
+    "react-test-renderer": "16.13.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
