@@ -40,7 +40,10 @@ export default function Editadd({ navigation, route }) {
   const [email, setemail] = useState()
   const [age, setage] = useState()
   const [address, setaddress] = useState()
-  const [addressLatlon, setaddressLatlon] = useState({})
+  const [addressLatlon, setaddressLatlon] = useState({
+    lat: 0,
+    lon: 0
+  })
   const [discription, setdiscription] = useState()
   const [cord, setcord] = useState(null)
   const [sellertype, setsellertype] = useState()
@@ -63,7 +66,7 @@ export default function Editadd({ navigation, route }) {
   const [engine, setengine] = useState()
 
   const [user, setuser] = useState()
-
+  const [city, setcity] = useState()
   const [visible, setvisible] = useState(false)
   //dwedhjwd
   const [mapsearch, setmapsearch] = useState('')
@@ -140,7 +143,9 @@ export default function Editadd({ navigation, route }) {
       setphone(data.phone)
       setemail(data.email)
       setaddress(data.address)
-      setaddressLatlon({ lat: data.latitude, lon: data.longitude, city: data.city })
+      setaddressLatlon({ lat: data.latitude, lon: data.longitude })
+      setcity(data.city)
+      console.log('data.ctiy', data.city)
       setdiscription(data.description)
       setsellertype(data.sellerType)
       setmake(data.make)
@@ -365,7 +370,7 @@ export default function Editadd({ navigation, route }) {
       data.append("bodyType", bodytype)
       data.append("fuel", fuel)
       data.append("gear", gear)
-      data.append("city", addressLatlon.city)
+      data.append("city", city)
       data.append("latitude", addressLatlon.lat)
       data.append("longitude", addressLatlon.lon)
       data.append("make", make)
@@ -385,7 +390,7 @@ export default function Editadd({ navigation, route }) {
       })
       data.append("oldImages", JSON.stringify(oldpics))
       data.append("sold", route.params.data.sold)
-      console.log(data)
+      console.log('place ad', data)
 
       try {
         fetch(link + '/ad/updateAd', {
@@ -477,7 +482,21 @@ export default function Editadd({ navigation, route }) {
       </View>
     )
   }
+  const _Geocoding = (lat, lon) => {
+    console.log(lat, lon)
+    Geocoder.from(lat, lon)
+      .then(json => {
+        console.log(json)
+        var addressComponent = json.results[0].address_components[0];
+        console.log(addressComponent.short_name);
+        setmapsearch(addressComponent.long_name)
+        setcity(addressComponent.long_name)
 
+
+      })
+      .catch(error => console.warn(error));
+
+  }
   const location = async () => {
 
     const granted = await PermissionsAndroid.request(
@@ -498,7 +517,8 @@ export default function Editadd({ navigation, route }) {
         }, 1500)
         setcord({ lat: pos.coords.latitude, lng: pos.coords.longitude })
 
-
+        setaddressLatlon({ lat: pos.coords.latitude, lon: pos.coords.longitude })
+        _Geocoding(pos.coords.latitude, pos.coords.longitude)
       }, (err) => {
         console.log(err);
         alert("turn on current location")
@@ -538,7 +558,8 @@ export default function Editadd({ navigation, route }) {
         .then(json => {
           var location = json.results[0].geometry.location;
           setloc({ lat: location.lat, lon: location.lng })
-
+          setaddressLatlon({ lat: location.lat, lon: location.lng })
+          setcity(item)
           map.current.animateToRegion({
             latitude: location.lat,
             longitude: location.lng,
@@ -567,6 +588,8 @@ export default function Editadd({ navigation, route }) {
     if (mapsearch != '') {
       setapplylocationS(true)
       setslocation(false)
+      console.log(city)
+
     }
     else {
       alert('Choose location')

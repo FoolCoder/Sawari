@@ -572,6 +572,7 @@ export default function Sellmenu({ navigation, route }) {
                       >
 
                         <Circle
+
                           center={{
                             latitude: parseFloat(item.latitude),
                             longitude: parseFloat(item.longitude)

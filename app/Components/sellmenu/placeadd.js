@@ -385,7 +385,19 @@ export default function Placeadd({ navigation }) {
       </View>
     )
   }
+  const _Geocoding = (lat, lon) => {
+    console.log(lat, lon)
+    Geocoder.from(lat, lon)
+      .then(json => {
+        var addressComponent = json.results[0].address_components[0];
+        console.log(addressComponent.short_name);
+        setmapsearch(addressComponent.long_name)
 
+
+      })
+      .catch(error => console.warn(error));
+
+  }
   const location = async () => {
 
     const granted = await PermissionsAndroid.request(
@@ -405,7 +417,8 @@ export default function Placeadd({ navigation }) {
 
         }, 1500)
         setcord({ lat: pos.coords.latitude, lng: pos.coords.longitude })
-        setcity(pos.coords.heading)
+        setaddressLatlon({ lat: pos.coords.latitude, lon: pos.coords.longitude })
+        _Geocoding(pos.coords.latitude, pos.coords.longitude)
         // setaddressLatlon({ lat: pos.coords.latitude, lon: pos.coords.longitude })
         // setaddressLatlon({ city: pos.coords.heading })
         console.log(addressLatlon);
@@ -460,7 +473,7 @@ export default function Placeadd({ navigation }) {
 
           }, 1500)
 
-          console.log('setloc', addressLatlon.city);
+          // console.log('setloc', addressLatlon.city);
         })
         .catch(error => console.warn(error));
     }
@@ -482,7 +495,8 @@ export default function Placeadd({ navigation }) {
       setapplylocationS(true)
       setslocation(false)
       setaddress(mapsearch)
-      console.log('apply', addressLatlon.city);
+      setcity(mapsearch)
+
 
       console.log('city', city);
     }

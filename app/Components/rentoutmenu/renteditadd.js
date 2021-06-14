@@ -42,7 +42,10 @@ export default function Reditadd({ navigation, route }) {
   const [email, setemail] = useState()
   const [age, setage] = useState()
   const [address, setaddress] = useState()
-  const [addressLatlon, setaddressLatlon] = useState({})
+  const [addressLatlon, setaddressLatlon] = useState({
+    lat: 0,
+    lon: 0
+  })
   const [discription, setdiscription] = useState()
   const [cord, setcord] = useState(null)
   const [sellertype, setsellertype] = useState()
@@ -75,7 +78,7 @@ export default function Reditadd({ navigation, route }) {
   const [hiringType, sethiringType] = useState(null)
   const [hiringValue, sethiringValue] = useState(0)
   const [user, setuser] = useState({ userDetails: { phone: '' } })
-
+  const [city, setcity] = useState()
   // const [visible, setvisible] = useState(false)
 
   // const [user, setuser] = useState()
@@ -363,7 +366,7 @@ export default function Reditadd({ navigation, route }) {
       data.append("bodyType", bodytype)
       data.append("fuel", fuel)
       data.append("gear", gear)
-      data.append("city", addressLatlon.city)
+      data.append("city", city)
       data.append("latitude", addressLatlon.lat)
       data.append("longitude", addressLatlon.lon)
       data.append("make", make)
@@ -537,7 +540,8 @@ export default function Reditadd({ navigation, route }) {
         .then(json => {
           var location = json.results[0].geometry.location;
           setloc({ lat: location.lat, lon: location.lng })
-
+          setaddressLatlon({ lat: location.lat, lon: location.lng })
+          setcity(item)
           map.current.animateToRegion({
             latitude: location.lat,
             longitude: location.lng,
