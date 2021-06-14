@@ -7,7 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import AsyncStorage from '@react-native-community/async-storage'
 import dynamicLinks from '@react-native-firebase/dynamic-links'
-
+import MapView, { PROVIDER_GOOGLE, Marker, Circle } from 'react-native-maps'
 import { Pages } from 'react-native-pages'
 
 import Header from '../header/header'
@@ -509,19 +509,47 @@ export default function Rsellmenu({ navigation, route }) {
             }
             } />
             <TouchableOpacity
-              onPress={() => setownerD(true)}
+              onPress={() => setownerD(!ownerD)}
               style={ownerD == false ?
-                { height: height(7), width: width(75), marginTop: height(4), alignSelf: 'center', borderRadius: 5, borderWidth: 1, justifyContent: 'center', alignItems: 'center' }
-                : { height: height(7), width: width(75), marginTop: height(4), alignSelf: 'center', backgroundColor: '#232526', borderRadius: 5, borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}
+
+                {
+                  height: height(7), width: width(75), marginTop: height(4),
+                  alignSelf: 'center', borderRadius: 5,
+                  borderWidth: 1, justifyContent: 'center',
+                  alignItems: 'center',
+
+                }
+
+                :
+                {
+                  height: height(7), width: width(75),
+                  marginTop: height(4), alignSelf: 'center',
+                  borderRadius: 5, backgroundColor: '#000',
+                  borderWidth: 1, justifyContent: 'center',
+                  alignItems: 'center'
+                }}
             >
 
-              <Text style={ownerD == false ?
-                { fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }
-                : { fontSize: totalSize(4), color: '#FFBB41', fontFamily: 'BebasNeue-Regular' }}
-              >
+              {
+                ownerD == false ?
+                  < Text style={{
+                    fontSize: totalSize(4),
+                    fontFamily: 'BebasNeue-Regular',
+                    color: '#000'
+                  }}
+                  >
 
-                show owner details
-            </Text>
+                    show owner details
+                  </Text>
+                  :
+                  <Text style={{
+                    fontSize: totalSize(4),
+                    color: '#FFBB41',
+                    fontFamily: 'BebasNeue-Regular'
+                  }}
+                  >
+                    Hide owner details
+                  </Text>}
 
             </TouchableOpacity>
 
@@ -531,48 +559,46 @@ export default function Rsellmenu({ navigation, route }) {
 
                 <Text style={{ fontSize: totalSize(4), marginTop: height(3), alignSelf: 'center', fontFamily: 'BebasNeue-Regular' }}>
                   owner details
-            </Text>
+                </Text>
 
                 <Text style={{ fontSize: totalSize(4), marginTop: height(3), fontFamily: 'BebasNeue-Regular' }}>
                   name
-              </Text>
+                </Text>
 
                 <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                   {item.name}
                 </Text>
 
-                <Text style={{ fontSize: totalSize(4), marginTop: height(3), fontFamily: 'BebasNeue-Regular' }}>
-                  email
-              </Text>
+                <View style={[styles.map, { overflow: 'hidden' }]}>
 
-                <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
-                  {item.email}
-                </Text>
+                  <MapView
 
+                    provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                    style={{ height: '100%' }}
+                    initialRegion={{
+                      latitude: parseFloat(item.latitude),
+                      longitude: parseFloat(item.longitude),
+                      latitudeDelta: 0.1,
+                      longitudeDelta: 0.1,
+                    }}
+                    scrollEnabled={false}
+                    zoomEnabled={false}
+                  >
 
-                <Text style={{ fontSize: totalSize(4), marginTop: height(3), fontFamily: 'BebasNeue-Regular' }}>
-                  phone
-              </Text>
+                    <Circle
+                      center={{
+                        latitude: parseFloat(item.latitude),
+                        longitude: parseFloat(item.longitude)
+                      }}
+                      radius={2000}
+                      fillColor='#0fa4ec60'
+                      strokeWidth={1}
+                      strokeColor='#0fa4ec'
+                    />
 
-                <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
-                  {item.phone}
-                </Text>
+                  </MapView>
 
-                <Text style={{ fontSize: totalSize(4), marginTop: height(3), fontFamily: 'BebasNeue-Regular' }}>
-                  city
-              </Text>
-
-                <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
-                  {item.city}
-                </Text>
-
-                <Text style={{ fontSize: totalSize(4), marginTop: height(3), fontFamily: 'BebasNeue-Regular' }}>
-                  address
-              </Text>
-
-                <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
-                  {item.address}
-                </Text>
+                </View>
 
                 <View style={{ height: height(3) }} />
 
@@ -637,5 +663,11 @@ const styles = StyleSheet.create({
   detailsTextView: {
     fontSize: totalSize(3),
     fontFamily: 'BebasNeue-Regular'
+  },
+  map: {
+    height: height(35),
+    marginTop: height(3),
+    borderRadius: 10,
+    borderWidth: 1
   }
 })

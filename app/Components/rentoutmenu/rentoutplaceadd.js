@@ -39,9 +39,12 @@ export default function Rplaceadd({ navigation }) {
   const [email, setemail] = useState()
   const [age, setage] = useState()
   const [address, setaddress] = useState()
-  const [addressLatlon, setaddressLatlon] = useState({})
+  const [addressLatlon, setaddressLatlon] = useState({
+    lat: 0,
+    lon: 0
+  })
   const [discription, setdiscription] = useState()
-
+  const [city, setcity] = useState()
   const [sellertype, setsellertype] = useState()
   const [make, setmake] = useState()
   const [makearray, setmakearray] = useState([])
@@ -294,7 +297,7 @@ export default function Rplaceadd({ navigation }) {
       data.append("fuel", fuel)
       data.append("gear", gear)
       console.log(('city', addressLatlon));
-      data.append("city", addressLatlon.city)
+      data.append("city", city)
       data.append("latitude", addressLatlon.lat)
       data.append("longitude", addressLatlon.lon)
       data.append("make", make)
@@ -456,8 +459,8 @@ export default function Rplaceadd({ navigation }) {
           var location = json.results[0].geometry.location;
           setloc({ lat: location.lat, lon: location.lng })
           setaddressLatlon({ lat: location.lat, lon: location.lng })
-          setaddressLatlon({ city: item })
-
+          // setaddressLatlon({ city: item })
+          setcity(item)
           map.current.animateToRegion({
             latitude: location.lat,
             longitude: location.lng,
@@ -487,6 +490,7 @@ export default function Rplaceadd({ navigation }) {
       setslocation(false)
       setaddress(mapsearch)
       console.log(addressLatlon);
+      console.log(city);
 
     }
     else {
