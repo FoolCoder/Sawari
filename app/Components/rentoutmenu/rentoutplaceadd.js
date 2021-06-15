@@ -387,6 +387,21 @@ export default function Rplaceadd({ navigation }) {
     )
   }
 
+  const _Geocoding = (lat, lon) => {
+    console.log(lat, lon)
+    Geocoder.from(lat, lon)
+      .then(json => {
+        console.log('kkkk', json.results[3].formatted_address);
+        var addressComponent = json.results[0].address_components[0];
+        console.log(addressComponent);
+        setmapsearch(json.results[0].formatted_address)
+
+        setcity(json.results[3].formatted_address)
+      })
+      .catch(error => console.warn(error));
+
+  }
+
   const location = async () => {
     console.log(title)
     const granted = await PermissionsAndroid.request(
@@ -408,6 +423,8 @@ export default function Rplaceadd({ navigation }) {
         setaddressLatlon({ lat: pos.coords.latitude, lon: pos.coords.longitude })
         setcord({ lat: pos.coords.latitude, lng: pos.coords.longitude })
         console.log(cord.lat, cord.lng);
+        setaddressLatlon({ lat: pos.coords.latitude, lon: pos.coords.longitude })
+        _Geocoding(pos.coords.latitude, pos.coords.longitude)
         // setTimeout(() => {
         //   calspeed()
         // }, 2000);
@@ -490,7 +507,7 @@ export default function Rplaceadd({ navigation }) {
       setslocation(false)
       setaddress(mapsearch)
       console.log(addressLatlon);
-      console.log(city);
+
 
     }
     else {

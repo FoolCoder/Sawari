@@ -72,7 +72,7 @@ export default function Placeadd({ navigation }) {
     lat: 0,
     lng: 0
   })
-  const [city, setcity] = useState(null)
+  const [city, setcity] = useState('')
   const [slider, setslider] = useState(5)
   // const [visible, setvisible] = useState(false)
   const [slocation, setslocation] = useState(false)
@@ -297,6 +297,7 @@ export default function Placeadd({ navigation }) {
       data.append("fuel", fuel)
       data.append("gear", gear)
       data.append("city", city)
+      console.log('append cuty', city);
       console.log('append', addressLatlon);
       data.append("latitude", addressLatlon.lat)
       data.append("longitude", addressLatlon.lon)
@@ -385,19 +386,24 @@ export default function Placeadd({ navigation }) {
       </View>
     )
   }
+
+
   const _Geocoding = (lat, lon) => {
     console.log(lat, lon)
     Geocoder.from(lat, lon)
       .then(json => {
+        console.log('kkkk', json.results[3].formatted_address);
         var addressComponent = json.results[0].address_components[0];
-        console.log(addressComponent.short_name);
-        setmapsearch(addressComponent.long_name)
-
-
+        console.log(addressComponent);
+        setmapsearch(json.results[0].formatted_address)
+        console.log(mapsearch);
+        // setcity(json.results[3].formatted_address)
       })
       .catch(error => console.warn(error));
 
   }
+
+
   const location = async () => {
 
     const granted = await PermissionsAndroid.request(
@@ -495,7 +501,8 @@ export default function Placeadd({ navigation }) {
       setapplylocationS(true)
       setslocation(false)
       setaddress(mapsearch)
-      setcity(mapsearch)
+
+      console.log('cityyyy', city);
 
 
       console.log('city', city);

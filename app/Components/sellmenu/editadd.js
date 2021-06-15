@@ -66,7 +66,7 @@ export default function Editadd({ navigation, route }) {
   const [engine, setengine] = useState()
 
   const [user, setuser] = useState()
-  const [city, setcity] = useState()
+  const [city, setcity] = useState('')
   const [visible, setvisible] = useState(false)
   //dwedhjwd
   const [mapsearch, setmapsearch] = useState('')
@@ -371,6 +371,7 @@ export default function Editadd({ navigation, route }) {
       data.append("fuel", fuel)
       data.append("gear", gear)
       data.append("city", city)
+      console.log('append city', city);
       data.append("latitude", addressLatlon.lat)
       data.append("longitude", addressLatlon.lon)
       data.append("make", make)
@@ -486,11 +487,11 @@ export default function Editadd({ navigation, route }) {
     console.log(lat, lon)
     Geocoder.from(lat, lon)
       .then(json => {
-        console.log(json)
+        console.log('eeeeeeeeeeee', json.results[3].formatted_address)
         var addressComponent = json.results[0].address_components[0];
-        console.log(addressComponent.short_name);
-        setmapsearch(addressComponent.long_name)
-        setcity(addressComponent.long_name)
+
+        // setmapsearch(json.results[0].formatted_address)
+        setlocmap(json.results[3].formatted_address)
 
 
       })
@@ -588,7 +589,7 @@ export default function Editadd({ navigation, route }) {
     if (mapsearch != '') {
       setapplylocationS(true)
       setslocation(false)
-      console.log(city)
+      console.log('applycity', city)
 
     }
     else {
