@@ -564,6 +564,15 @@ export default function Placeadd({ navigation }) {
 
             </TouchableHighlight>
 
+
+            <FlatList
+              style={{ marginTop: height(2) }}
+              data={pics}
+              horizontal={true}
+              renderItem={_Flatlist}
+              showsHorizontalScrollIndicator={false}
+            />
+
             <TouchableHighlight
               underlayColor='#242527'
               onPress={() => setslocation(true)}
@@ -618,14 +627,6 @@ export default function Placeadd({ navigation }) {
               Address
             </Text>
 
-
-            <FlatList
-              style={{ marginTop: height(2) }}
-              data={pics}
-              horizontal={true}
-              renderItem={_Flatlist}
-              showsHorizontalScrollIndicator={false}
-            />
 
             <View style={{ width: width(95), alignSelf: 'center' }}>
 
