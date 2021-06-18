@@ -72,6 +72,10 @@ export default function Buymenu({ navigation }) {
   const [cars, setcars] = useState([])
   const [flagState, setFlagState] = useState(false)
   const [load, setload] = useState(true)
+  const [addressLatlon, setaddressLatlon] = useState({
+    lat: 0,
+    lon: 0
+  })
 
   // const reload = useSelector((state) => state.reload)
 
@@ -569,6 +573,23 @@ export default function Buymenu({ navigation }) {
       </TouchableOpacity>
     )
   }
+
+
+  const _Geocoding = (lat, lon) => {
+    console.log(lat, lon)
+    Geocoder.from(lat, lon)
+      .then(json => {
+        console.log('kkkk', json.results[3].formatted_address);
+        var addressComponent = json.results[0].address_components[0];
+        console.log(addressComponent);
+        setmapsearch(json.results[0].formatted_address)
+        console.log(mapsearch);
+        setcity(json.results[3].formatted_address)
+      })
+      .catch(error => console.warn(error));
+
+  }
+
   const location = async () => {
 
     const granted = await PermissionsAndroid.request(
@@ -590,6 +611,8 @@ export default function Buymenu({ navigation }) {
 
         setcord({ lat: pos.coords.latitude, lng: pos.coords.longitude })
 
+        setaddressLatlon({ lat: pos.coords.latitude, lon: pos.coords.longitude })
+        _Geocoding(pos.coords.latitude, pos.coords.longitude)
       }, (err) => {
         console.log(err);
         alert("turn on current location")

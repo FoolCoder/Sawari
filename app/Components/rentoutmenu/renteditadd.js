@@ -47,7 +47,6 @@ export default function Reditadd({ navigation, route }) {
     lon: 0
   })
   const [discription, setdiscription] = useState()
-  const [cord, setcord] = useState(null)
   const [sellertype, setsellertype] = useState()
   const [make, setmake] = useState()
   const [makearray, setmakearray] = useState([])
@@ -71,6 +70,10 @@ export default function Reditadd({ navigation, route }) {
   const [mapsearch, setmapsearch] = useState('')
   const [mapsearcharray, setmapsearcharray] = useState([])
   const [loc, setloc] = useState(null)
+  const [cord, setcord] = useState({
+    lat: 0,
+    lng: 0
+  })
   const [slider, setslider] = useState(5)
   // const [visible, setvisible] = useState(false)
   const [slocation, setslocation] = useState(false)
@@ -1420,6 +1423,19 @@ export default function Reditadd({ navigation, route }) {
                     />
 
                   </View>
+                }
+                {
+                  cord == null ? null :
+
+                    <Circle
+                      center={{
+                        latitude: cord.lat,
+                        longitude: cord.lng
+                      }}
+                      radius={slider * 200}
+                      fillColor='#00000060'
+                      strokeWidth={0}
+                    />
                 }
               </MapView>
 

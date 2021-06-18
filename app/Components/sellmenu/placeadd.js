@@ -72,7 +72,7 @@ export default function Placeadd({ navigation }) {
     lat: 0,
     lng: 0
   })
-  const [city, setcity] = useState('')
+  const [city, setcity] = useState('yyyyyyy')
   const [slider, setslider] = useState(5)
   // const [visible, setvisible] = useState(false)
   const [slocation, setslocation] = useState(false)
@@ -397,7 +397,7 @@ export default function Placeadd({ navigation }) {
         console.log(addressComponent);
         setmapsearch(json.results[0].formatted_address)
         console.log(mapsearch);
-        // setcity(json.results[3].formatted_address)
+        setcity(json.results[3].formatted_address)
       })
       .catch(error => console.warn(error));
 

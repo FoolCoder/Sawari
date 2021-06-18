@@ -81,13 +81,13 @@ export default function Rplaceadd({ navigation }) {
   // const [visible, setvisible] = useState(false)
 
   // const [user, setuser] = useState()
-  const s = ['select make type']
+
   const [visible, setvisible] = useState(false)
 
   const dispatch = useDispatch();
   const map = useRef()
 
-  const [scale, setscale] = useState(width(30))
+  const [scale, setscale] = useState(width(38))
 
   useEffect(() => {
     Geocoder.init(apikey);
@@ -115,6 +115,14 @@ export default function Rplaceadd({ navigation }) {
     const val = JSON.parse(await AsyncStorage.getItem('token'))
     setuser(val)
     // console.log(val);
+    setname(val.userDetails.name)
+    setemail(val.userDetails.email)
+    if (val.userDetails.phone) {
+      setphone(val.userDetails.phone)
+    }
+    // console.log(val);
+
+
   }
 
   const makearrayF = async () => {
@@ -532,15 +540,15 @@ export default function Rplaceadd({ navigation }) {
               let high = e.nativeEvent.contentSize.height - e.nativeEvent.layoutMeasurement.height
 
               if (e.nativeEvent.contentOffset.y > high * 0.96) {
-                if (scale != width(40)) {
+                if (scale != width(44)) {
                   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-                  setscale(width(40))
+                  setscale(width(44))
                 }
               }
               else {
-                if (scale != width(30)) {
+                if (scale != width(38)) {
                   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-                  setscale(width(30))
+                  setscale(width(38))
                 }
               }
             }}
@@ -720,12 +728,14 @@ export default function Rplaceadd({ navigation }) {
 
               <TextInput
                 onChangeText={(text) => setname(text)}
+                value={name}
                 placeholder='Name'
                 style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
               />
 
               <TextInput
                 onChangeText={(text) => setphone(text)}
+                value={phone}
                 keyboardType='phone-pad'
                 placeholder='phone'
                 style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
@@ -733,6 +743,7 @@ export default function Rplaceadd({ navigation }) {
 
               <TextInput
                 onChangeText={(text) => setemail(text)}
+                value={email}
                 placeholder='email'
                 style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
               />
@@ -1345,12 +1356,19 @@ export default function Rplaceadd({ navigation }) {
               shadowOpacity: 0.20,
               shadowRadius: 1.41,
 
-              elevation: 2, width: scale, marginTop: height(85), position: 'absolute', zIndex: 1, alignSelf: 'center', backgroundColor: '#fff', borderWidth: 1.5, borderColor: '#fabb47', borderRadius: 10, justifyContent: 'center'
+              elevation: 2, width: scale, marginTop: height(85),
+              position: 'absolute', zIndex: 1, alignSelf: 'center',
+              backgroundColor: '#fff', borderWidth: 1.5,
+              borderColor: '#fabb47', borderRadius: 10,
+              justifyContent: 'center'
             }}
             onPress={() => Placead()}
           >
 
-            <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#fabb47', alignSelf: 'center' }}>
+            <Text style={{
+              fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular',
+              color: '#fabb47', alignSelf: 'center'
+            }}>
               place rent ad
             </Text>
 

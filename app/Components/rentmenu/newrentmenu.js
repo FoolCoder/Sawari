@@ -639,7 +639,7 @@ export default function Buymenu({ navigation }) {
 
                 <Text style={{ fontSize: totalSize(0.85), marginTop: height(1), alignSelf: 'center', color: '#FF0000' }}>
                   Select City and distance
-              </Text>
+                </Text>
                 :
 
                 <View style={{ marginTop: height(0.7), width: width(39), alignSelf: 'flex-end', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
@@ -671,7 +671,7 @@ export default function Buymenu({ navigation }) {
 
                 <Text style={{ fontSize: totalSize(1.7), fontFamily: 'BebasNeue-Regular' }}>
                   More Filter
-              </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -687,7 +687,7 @@ export default function Buymenu({ navigation }) {
 
                 {' '}Button to apply filters
 
-            </Text>
+              </Text>
 
             </View>
 
@@ -765,13 +765,13 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(2), fontFamily: 'BebasNeue-Regular', color: '#fff', alignSelf: 'center' }}>
                       Clear
-                </Text>
+                    </Text>
 
                   </TouchableHighlight>
 
                   <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2' }}>
                     filter options
-               </Text>
+                  </Text>
 
                   <TouchableHighlight
                     onPress={() => setvisible(false)}
@@ -781,7 +781,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(2), fontFamily: 'BebasNeue-Regular', alignSelf: 'center' }}>
                       apply
-                </Text>
+                    </Text>
 
                   </TouchableHighlight>
 
@@ -796,7 +796,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       Sortby
-                     </Text>
+                    </Text>
 
                     <ModalDropdown
                       defaultValue={sortByText}
@@ -830,7 +830,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       Car type
-                  </Text>
+                    </Text>
 
                     <ModalDropdown
                       defaultValue={sellertype}
@@ -864,7 +864,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       seller type
-                  </Text>
+                    </Text>
 
                     <ModalDropdown
                       defaultValue={sellertype}
@@ -895,7 +895,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       make
-                  </Text>
+                    </Text>
 
                     <ModalDropdown
                       onSelect={(index, value) => {
@@ -930,7 +930,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       model
-                  </Text>
+                    </Text>
 
                     <ModalDropdown
                       onSelect={(index, value) => {
@@ -963,7 +963,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       color
-                  </Text>
+                    </Text>
 
                     <ModalDropdown
                       onSelect={(index, value) => setcolor(value)}
@@ -996,7 +996,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       door
-              </Text>
+                    </Text>
 
                     <ModalDropdown
                       onSelect={(index, value) => setdoor(value)}
@@ -1028,7 +1028,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       minseats
-                </Text>
+                    </Text>
 
                     <ModalDropdown
                       onSelect={(index, value) => setminseats(value)}
@@ -1058,7 +1058,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       maxseats
-                </Text>
+                    </Text>
 
                     <ModalDropdown
                       onSelect={(index, value) => setmaxseats(value)}
@@ -1088,7 +1088,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       body type
-                 </Text>
+                    </Text>
 
                     <ModalDropdown
                       onSelect={(index, value) => setbodytype(value)}
@@ -1118,7 +1118,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       fuel
-                  </Text>
+                    </Text>
 
                     <ModalDropdown
                       onSelect={(index, value) => setfuel(value)}
@@ -1148,7 +1148,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       gear
-                 </Text>
+                    </Text>
 
                     <ModalDropdown
                       onSelect={(index, value) => setgear(value)}
@@ -1178,7 +1178,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       millage's
-                      </Text>
+                    </Text>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
@@ -1210,7 +1210,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       year
-                   </Text>
+                    </Text>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
@@ -1269,7 +1269,7 @@ export default function Buymenu({ navigation }) {
 
                     <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                       engine
-                  </Text>
+                    </Text>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
@@ -1439,7 +1439,7 @@ export default function Buymenu({ navigation }) {
 
                   <Text style={{ fontSize: totalSize(2.7), fontWeight: 'bold', color: '#fabb47' }}>
                     X
-            </Text>
+                  </Text>
 
                 </TouchableOpacity>
 
@@ -1540,7 +1540,7 @@ export default function Buymenu({ navigation }) {
                     fontFamily: 'BebasNeue-Regular',
                   }}>
                     custom radius
-          </Text>
+                  </Text>
                   <TouchableOpacity
                     onPress={() => location()}
                   >
@@ -1557,7 +1557,7 @@ export default function Buymenu({ navigation }) {
 
                 <Text style={{ fontSize: totalSize(2.2), width: width(90), alignSelf: 'center', color: '#b8b8b8', fontFamily: 'BebasNeue-Regular' }}>
                   show listing at specfied distance
-          </Text>
+                </Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
@@ -1574,7 +1574,7 @@ export default function Buymenu({ navigation }) {
 
                   <Text style={{ fontSize: totalSize(3), width: width(90), color: '#b8b8b8', fontFamily: 'BebasNeue-Regular' }}>
                     {slider} mi
-          </Text>
+                  </Text>
 
                 </View>
 
@@ -1587,7 +1587,7 @@ export default function Buymenu({ navigation }) {
 
                 <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#fabb47', alignSelf: 'center' }}>
                   apply
-             </Text>
+                </Text>
 
               </TouchableHighlight>
 

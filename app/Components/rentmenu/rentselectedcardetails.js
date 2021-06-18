@@ -1,14 +1,17 @@
 import React, { Component, Fragment, useEffect, useState } from 'react'
 import { View, ImageBackground, Image, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView, FlatList, StyleSheet, Modal, Platform, Linking, Alert, Share } from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
+import { useDispatch, useSelector } from 'react-redux'
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import AsyncStorage from '@react-native-community/async-storage'
 import dynamicLinks from '@react-native-firebase/dynamic-links'
 import MapView, { PROVIDER_GOOGLE, Marker, Circle } from 'react-native-maps'
 import { Pages } from 'react-native-pages'
+import { newsFeedR } from '../Store/action'
 
 import Header from '../header/header'
 
@@ -28,11 +31,16 @@ export default function Rsellmenu({ navigation, route }) {
   const [room, setroom] = useState('')
   const [chatDisable, setchatDisable] = useState(false)
   const [chatBColor, setchatBColor] = useState('#000')
+  const [favour, setfavour] = useState()
+  const reload = useSelector((state) => state.reload)
+  const [flagState, setFlagState] = useState(false)
+  const [user, setuser] = useState('')
 
   useEffect(() => {
     try {
-      setitem(route.params.data)
 
+      setitem(route.params.data)
+      setfavour(route.params.data.isfavourite)
       console.log(route.params.data)
 
       open()
@@ -44,8 +52,10 @@ export default function Rsellmenu({ navigation, route }) {
 
   const open = async () => {
     try {
-
       const val = JSON.parse(await AsyncStorage.getItem('token'))
+
+      setuser(val)
+      // const val = JSON.parse(await AsyncStorage.getItem('token'))
 
       if (val.id == route.params.data.user._id) {
         setchatDisable(true)
@@ -91,12 +101,62 @@ export default function Rsellmenu({ navigation, route }) {
       setchatBColor('#ccc')
     }
   }
+  const Favourite = (item) => {
+    try {
 
+      let api = ''
+
+      // console.log('dddddddd', item)
+
+      if (item.isfavourite == false) {
+        api = '/rent/makeFavourite?userId=' + user.id + '&rentId=' + item._id
+      } else if (item.isfavourite == true) {
+        api = '/rent/removeFavourite?userId=' + user.id + '&rentId=' + item._id
+      }
+      console.log(api)
+      setFlagState(!flagState)
+
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", "Bearer " + user.token);
+
+      var requestOptions = {
+        method: 'PUT',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+
+      fetch(link + api, requestOptions)
+        .then((response) => response.json())
+        .then(async (responseJson) => {
+          console.log('respooooone', responseJson)
+          if (responseJson.type == 'success') {
+
+            setfavour(!favour)
+
+            dispatch(newsFeedR(!reload))
+
+            if (route.params.reloadF) {
+              route.params.reloadF()
+            }
+          }
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
   const roomFunc = (val) => {
     let data = [{ _id: val }]
     setroom(data)
   }
-
+  const email = () => {
+    let email = item.email
+    Linking.openURL(`mailto:${email}`)
+  }
   const showpic = (item) => {
     setpic(item)
     setvisible(true)
@@ -242,80 +302,53 @@ export default function Rsellmenu({ navigation, route }) {
             </View>
 
           }
-          <View style={{ flex: 1, width: width(90), marginTop: height(2), alignSelf: 'center' }}>
+          <View style={{ flex: 1 }}>
 
-            {loader == true ?
+            <View style={{ width: width(90), alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
-              <View style={{ flex: 1, justifyContent: 'center', backgroundColor: '#fff' }}>
+              <Text style={{ fontSize: totalSize(4), marginTop: height(2), fontFamily: 'BebasNeue-Regular' }}>
+                {item.title}
+              </Text>
+              <View style={{ width: width(22), flexDirection: 'row', justifyContent: 'space-between' }}>
 
+                {favour == true ?
+                  <TouchableOpacity
+                    onPress={() => Favourite(item)}
+                    style={{ borderWidth: 1, borderRadius: 3, borderColor: '#555' }}
+                  >
 
-                <Loader
-                  color='#000'
-                />
+                    <MaterialCommunityIcons name='heart' size={20} color='#FFBB41' style={{ paddingVertical: 5, paddingHorizontal: 7 }} />
 
-              </View>
+                  </TouchableOpacity>
+                  :
+                  <TouchableOpacity
+                    onPress={() => Favourite(item)}
+                    style={{ borderWidth: 1, borderRadius: 3, borderColor: '#555' }}
+                  >
 
-              :
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <MaterialCommunityIcons name='heart' size={20} color='#777' style={{ paddingVertical: 5, paddingHorizontal: 7 }} />
 
-                <TouchableOpacity
-                  disabled={chatDisable}
-                  onPress={() => navigation.navigate('chatStack', {
-                    screen: 'chat',
-                    params: {
-                      data: route.params.data,
-                      name: route.params.data.user.name,
-                      room: room,
-                      user: true,
-                      roomF: roomFunc
-                    }
-                  })}
-                  style={{ borderWidth: 1, borderRadius: 3, borderColor: chatBColor }}>
-
-                  <Image source={chat}
-                    style={{
-                      paddingVertical: 5, paddingHorizontal: 10,
-                      height: 40, width: 50
-                    }}
-                  />
-                  {/* <MaterialCommunityIcons name='message-text-outline' size={40} color={chatBColor}
-                    style={{ paddingVertical: 5, paddingHorizontal: 10 }} /> */}
-
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={() => dialCall()}
-                  style={{ borderWidth: 1, borderRadius: 3 }}>
-
-                  <MaterialIcons name='call' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
-
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={() => sms()}
-                  style={{ borderWidth: 1, borderRadius: 3 }}>
-
-                  <MaterialIcons name='email' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
-
-                </TouchableOpacity>
+                  </TouchableOpacity>
+                }
 
                 <TouchableOpacity
                   onPress={() => onShare()}
-                  style={{ borderWidth: 1, borderRadius: 3 }}>
+                  style={{ borderWidth: 1, borderRadius: 3, borderColor: '#555' }}
+                >
 
-                  <MaterialCommunityIcons name='share' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
+                  <MaterialCommunityIcons name='share' size={30} color='#777' style={{ paddingHorizontal: 3 }} />
 
                 </TouchableOpacity>
 
               </View>
-            }
-
-            <Text style={{ fontSize: totalSize(4), marginTop: height(2), fontFamily: 'BebasNeue-Regular' }}>
-              {item.title}
-            </Text>
-
-
-
+            </View>
+            <View
+              style={{
+                width: width(100),
+                height: 1,
+                backgroundColor: '#000'
+              }}
+            />
             <Text style={{ fontSize: totalSize(4), marginTop: height(3), alignSelf: 'center', fontFamily: 'BebasNeue-Regular' }}>
               car details
             </Text>
@@ -488,26 +521,36 @@ export default function Rsellmenu({ navigation, route }) {
 
             </View>
             <View style={{
-              width: width(90),
+              width: width(95),
               height: height(0.2),
               backgroundColor: '#000',
-              marginTop: 8
+              marginTop: 8,
+              alignSelf: 'center'
             }
             } />
-            <Text style={{ fontSize: totalSize(3), marginTop: height(1), fontFamily: 'BebasNeue-Regular' }}>
+            <Text style={{
+              fontSize: totalSize(3),
+              marginTop: height(1), fontFamily: 'BebasNeue-Regular',
+              marginLeft: width(2.5)
+            }}>
               description
             </Text>
 
-            <Text style={{ fontSize: totalSize(1.7) }}>
+            <Text style={{
+              fontSize: totalSize(1.7),
+              marginLeft: width(2.5)
+            }}>
               {item.description}
             </Text>
             <View style={{
-              width: width(90),
+              width: width(95),
               height: height(0.2),
               backgroundColor: '#000',
-              marginTop: 8
+              marginTop: 8,
+              alignSelf: 'center'
             }
             } />
+
             <TouchableOpacity
               onPress={() => setownerD(!ownerD)}
               style={ownerD == false ?
@@ -516,7 +559,7 @@ export default function Rsellmenu({ navigation, route }) {
                   height: height(7), width: width(75), marginTop: height(4),
                   alignSelf: 'center', borderRadius: 5,
                   borderWidth: 1, justifyContent: 'center',
-                  alignItems: 'center',
+                  alignItems: 'center', marginBottom: height(1.5)
 
                 }
 
@@ -526,7 +569,7 @@ export default function Rsellmenu({ navigation, route }) {
                   marginTop: height(4), alignSelf: 'center',
                   borderRadius: 5, backgroundColor: '#000',
                   borderWidth: 1, justifyContent: 'center',
-                  alignItems: 'center'
+                  alignItems: 'center', marginBottom: height(1.5)
                 }}
             >
 
@@ -561,11 +604,14 @@ export default function Rsellmenu({ navigation, route }) {
                   owner details
                 </Text>
 
-                <Text style={{ fontSize: totalSize(4), marginTop: height(3), fontFamily: 'BebasNeue-Regular' }}>
+                <Text style={{
+                  fontSize: totalSize(4), marginTop: height(3), fontFamily: 'BebasNeue-Regular',
+                  marginLeft: width(3.5)
+                }}>
                   name
                 </Text>
 
-                <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
+                <Text style={{ fontSize: totalSize(3), marginLeft: width(3.5), fontFamily: 'BebasNeue-Regular' }}>
                   {item.name}
                 </Text>
 
@@ -574,7 +620,7 @@ export default function Rsellmenu({ navigation, route }) {
                   <MapView
 
                     provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                    style={{ height: '100%' }}
+                    style={{ height: '100%', }}
                     showsUserLocation={true}
                     initialRegion={{
                       latitude: parseFloat(item.latitude),
@@ -644,9 +690,101 @@ export default function Rsellmenu({ navigation, route }) {
           </Modal>
 
         </ScrollView>
+        <View style={{ height: height(0.2), marginTop: height(1), backgroundColor: '#000' }} />
 
+        <View style={{
+          height: height(7),
+          width: width(94),
+          alignSelf: 'center'
+        }}>
+          {loader == true ?
+
+            <View style={{ flex: 1, justifyContent: 'center', backgroundColor: '#fff' }}>
+
+
+              <Loader
+                color='#000'
+              />
+
+            </View>
+
+            :
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+
+              <TouchableOpacity
+                disabled={chatDisable}
+                onPress={() => navigation.navigate('chatStack', {
+                  screen: 'chat',
+                  params: {
+                    data: route.params.data,
+                    name: route.params.data.user.name,
+                    room: room,
+                    user: true,
+                    roomF: roomFunc
+                  }
+                })}
+                style={{ borderRadius: 3, borderColor: chatBColor }}>
+
+                <Image source={chat}
+                  style={{
+                    paddingVertical: 5, paddingHorizontal: 10,
+                    height: 40, width: 50
+                  }}
+                />
+                {/* <MaterialCommunityIcons name='message-text-outline' size={40} color={chatBColor}
+      style={{ paddingVertical: 5, paddingHorizontal: 10 }} /> */}
+
+              </TouchableOpacity>
+              <View
+                style={{
+                  width: 0.5,
+                  height: height(7),
+                  backgroundColor: '#000'
+                }}
+              />
+
+              <TouchableOpacity
+                onPress={() => dialCall()}
+                style={{}}>
+
+                <MaterialIcons name='call' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
+
+              </TouchableOpacity>
+              <View
+                style={{
+                  width: 0.5,
+                  height: height(7),
+                  backgroundColor: '#000'
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => sms()}
+                style={{}}>
+
+                <FontAwesome5 name='sms' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
+
+              </TouchableOpacity>
+              <View
+                style={{
+                  width: 0.5,
+                  height: height(7),
+                  backgroundColor: '#000'
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => email()}
+                style={{}}>
+
+                <MaterialCommunityIcons name='email' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
+
+              </TouchableOpacity>
+
+            </View>
+          }
+
+        </View>
       </SafeAreaView>
-    </Fragment>
+    </Fragment >
   )
 }
 
@@ -659,7 +797,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: height(3),
-    alignItems: 'center'
+    alignItems: 'center',
+
+    width: width(95),
+    alignSelf: 'center'
   },
   detailsTextView: {
     fontSize: totalSize(3),
@@ -669,6 +810,8 @@ const styles = StyleSheet.create({
     height: height(35),
     marginTop: height(3),
     borderRadius: 10,
-    borderWidth: 1
+    borderWidth: 1,
+    width: width(90),
+    alignSelf: 'center'
   }
 })

@@ -37,6 +37,7 @@ export default function Sellmenu({ navigation, route }) {
   const [chatBColor, setchatBColor] = useState('#000')
 
   const [favour, setfavour] = useState()
+  const [flagState, setFlagState] = useState(false)
 
   const reload = useSelector((state) => state.reload)
   const dispatch = useDispatch()
@@ -143,19 +144,24 @@ export default function Sellmenu({ navigation, route }) {
     Linking.openURL(`mailto:${email}`)
   }
 
-  const Favourite = () => {
+  const Favourite = (item) => {
     try {
 
       let api = ''
 
-      console.log(item.isfavourite)
+      console.log('nnnnnnn', item)
 
       if (item.isfavourite == false) {
         api = '/ad/makeFavourite?userId=' + user.id + '&adId=' + item._id
+        // data[index].isfavourite = !data[index].isfavourite
+
       }
       else if (item.isfavourite == true) {
         api = '/ad/removeFavourite?userId=' + user.id + '&adId=' + item._id
+        // data[index].isfavourite = !data[index].isfavourite
+
       }
+      setFlagState(!flagState)
 
       var myHeaders = new Headers();
       myHeaders.append("Authorization", "Bearer " + user.token);
@@ -283,7 +289,7 @@ export default function Sellmenu({ navigation, route }) {
 
                   {favour == true ?
                     <TouchableOpacity
-                      onPress={() => Favourite()}
+                      onPress={() => Favourite(item)}
                       style={{ borderWidth: 1, borderRadius: 3, borderColor: '#555' }}
                     >
 
@@ -292,7 +298,7 @@ export default function Sellmenu({ navigation, route }) {
                     </TouchableOpacity>
                     :
                     <TouchableOpacity
-                      onPress={() => Favourite()}
+                      onPress={() => Favourite(item)}
                       style={{ borderWidth: 1, borderRadius: 3, borderColor: '#555' }}
                     >
 

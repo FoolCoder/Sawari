@@ -69,10 +69,12 @@ export default function Buymenu({ navigation, route }) {
   const [loc, setloc] = useState(null)
   const [slider, setslider] = useState(5)
   const [cord, setcord] = useState({ lat: 0, lng: 0 })
+  const [flagState, setFlagState] = useState(false)
 
   const [visible, setvisible] = useState(false)
   const [slocation, setslocation] = useState(false)
   const [applylocationS, setapplylocationS] = useState(false)
+  const [favour, setfavour] = useState()
 
   const map = useRef(null);
 
@@ -483,7 +485,7 @@ export default function Buymenu({ navigation, route }) {
 
             <View style={{ width: width(19), flexDirection: 'row', justifyContent: 'space-between' }}>
 
-              {/* {item.isfavourite == true ?
+              {item.isfavourite == true ?
                 <TouchableOpacity
                   onPress={() => Favourite(item, index)}
                   style={{ borderWidth: 1, borderRadius: 3, borderColor: '#555' }}
@@ -504,7 +506,7 @@ export default function Buymenu({ navigation, route }) {
 
                 </TouchableOpacity>
 
-              } */}
+              }
 
               <TouchableOpacity
                 onPress={() => onShare(item)}
@@ -547,6 +549,53 @@ export default function Buymenu({ navigation, route }) {
       </TouchableOpacity>
     )
   }
+
+  const Favourite = (item, index) => {
+    try {
+
+      let api = ''
+      let data = cars
+      console.log('uuuuuuuuu', item.isfavourite);
+      if (item.isfavourite == false) {
+        api = '/rent/makeFavourite?userId=' + user.id + '&rentId=' + item._id
+        data[index].isfavourite = !data[index].isfavourite
+      }
+      else {
+        api = '/rent/removeFavourite?userId=' + user.id + '&rentId=' + item._id
+        data[index].isfavourite = !data[index].isfavourite
+      }
+
+      setFlagState(!flagState)
+
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", "Bearer " + user.token);
+
+      var requestOptions = {
+        method: 'PUT',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+
+      fetch(link + api, requestOptions)
+        .then((response) => response.json())
+        .then(async (responseJson) => {
+          console.log(responseJson)
+          if (responseJson.type == 'success') {
+            console.log('kkkkkkkkkkkk');
+            setcars(data)
+            // dispatch(newsFeedR(!reload))
+          }
+        })
+        .catch((e) => {
+
+        })
+
+    }
+    catch (e) {
+
+    }
+  }
+
   return (
     <Fragment>
       <SafeAreaView

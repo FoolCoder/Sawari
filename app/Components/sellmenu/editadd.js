@@ -45,7 +45,10 @@ export default function Editadd({ navigation, route }) {
     lon: 0
   })
   const [discription, setdiscription] = useState()
-  const [cord, setcord] = useState(null)
+  const [cord, setcord] = useState({
+    lat: 0,
+    lng: 0
+  })
   const [sellertype, setsellertype] = useState()
   const [make, setmake] = useState()
   const [makearray, setmakearray] = useState([])
@@ -71,7 +74,10 @@ export default function Editadd({ navigation, route }) {
   //dwedhjwd
   const [mapsearch, setmapsearch] = useState('')
   const [mapsearcharray, setmapsearcharray] = useState([])
-  const [loc, setloc] = useState(null)
+  const [loc, setloc] = useState({
+    lat: 0,
+    lon: 0
+  })
   const [slider, setslider] = useState(5)
   // const [visible, setvisible] = useState(false)
   const [slocation, setslocation] = useState(false)
@@ -113,7 +119,6 @@ export default function Editadd({ navigation, route }) {
       }
 
     }
-
   }, [])
 
   const asyncFunction = async () => {
@@ -371,7 +376,7 @@ export default function Editadd({ navigation, route }) {
       data.append("fuel", fuel)
       data.append("gear", gear)
       data.append("city", city)
-      console.log('append city', city);
+      // console.log('append city', city);
       data.append("latitude", addressLatlon.lat)
       data.append("longitude", addressLatlon.lon)
       data.append("make", make)
@@ -517,8 +522,9 @@ export default function Editadd({ navigation, route }) {
 
         }, 1500)
         setcord({ lat: pos.coords.latitude, lng: pos.coords.longitude })
-
         setaddressLatlon({ lat: pos.coords.latitude, lon: pos.coords.longitude })
+
+        setloc({ lat: 0, lon: 0 })
         _Geocoding(pos.coords.latitude, pos.coords.longitude)
       }, (err) => {
         console.log(err);
@@ -1357,11 +1363,11 @@ export default function Editadd({ navigation, route }) {
 
               }
 
-
+              {console.log('kkk', loc)}
               <MapView
                 provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 ref={map}
-                showsUserLocation
+                showsUserLocation={true}
                 style={{ height: height(40), marginTop: 2 }}
                 initialRegion={{
                   latitude: 37.78825,
@@ -1370,10 +1376,9 @@ export default function Editadd({ navigation, route }) {
                   longitudeDelta: 100,
                 }}
               >
-                {loc == null ? null
+                {loc !== null ? null
                   :
                   <View>
-
                     <Marker
                       coordinate={{
                         latitude: loc.lat,
@@ -1393,6 +1398,20 @@ export default function Editadd({ navigation, route }) {
                     />
 
                   </View>
+                }
+
+                {
+                  cord == null ? null :
+
+                    <Circle
+                      center={{
+                        latitude: cord.lat,
+                        longitude: cord.lng
+                      }}
+                      radius={slider * 200}
+                      fillColor='#00000060'
+                      strokeWidth={0}
+                    />
                 }
               </MapView>
 

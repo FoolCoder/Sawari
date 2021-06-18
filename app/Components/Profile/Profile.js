@@ -29,6 +29,7 @@ export default function MyProfile({ navigation, route }) {
   const [selladdFlat, setselladdFlat] = useState(false)
   const [rentaddFlat, setrentaddFlat] = useState(false)
   const [FSaddFlat, setFSaddFlat] = useState(false)
+  const [favouriteRent, setfavouriteRent] = useState([])
 
   const userdetail = useSelector((state) => state.user)
   const reload = useSelector((state) => state.reload)
@@ -38,6 +39,7 @@ export default function MyProfile({ navigation, route }) {
     openSell()
     openRent()
     openFavouriteSell()
+    openFavouriteRent()
     openNotification()
   }, [reload])
 
@@ -170,8 +172,51 @@ export default function MyProfile({ navigation, route }) {
       alert('Check your Internet Connection')
     }
 
-  }
 
+  }
+  const openFavouriteRent = async () => {
+    const val = JSON.parse(await AsyncStorage.getItem('token'))
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + val.token);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+
+    try {
+      fetch(link + '/rent/getFavouritedRents?userId=' + val.id, requestOptions)
+        .then((response) => response.json())
+        .then(async (responseJson) => {
+          // console.log(responseJson);
+          if (responseJson.type === 'success') {
+            var val = responseJson.result
+            val.reverse()
+            setfavouriteRent(val)
+            // setrentLoader(false)
+            // setload(false)
+            // setmodalloader(false)
+          }
+          else {
+            alert('Check your Internet Connection')
+            setrentLoader(false)
+            // setload(false)
+            // setmodalloader(false)
+          }
+        }).catch(e => {
+          alert('Check your Internet Connection')
+          setrentLoader(false)
+          // setmodalloader(false)
+        })
+    } catch (e) {
+      alert('Check your Internet Connection')
+    }
+
+
+  }
   const openNotification = async () => {
 
     const val = JSON.parse(await AsyncStorage.getItem('token'))
@@ -274,6 +319,7 @@ export default function MyProfile({ navigation, route }) {
             }
           })
           setrentadds(rentadds)
+          console.log(rentadds);
           setrentaddFlat(!rentaddFlat)
         }
         )
@@ -326,7 +372,53 @@ export default function MyProfile({ navigation, route }) {
 
     }
     catch (e) {
+      console.log(e);
+    }
 
+    try {
+
+      let api = ''
+      // let data = favouriteSell
+
+      // if (item.isfavourite == false) {
+      //   api = '/ad/makeFavourite?userId=' + user.id + '&adId=' + item._id
+      //   data[index].isfavourite = !data[index].isfavourite
+      // }
+      // else if (item.isfavourite == true) {
+      api = '/rent/removeFavourite?userId=' + user.id + '&adId=' + item._id
+      // data[index].isfavourite = !data[index].isfavourite
+      // }
+
+      favouriteSell.splice(index, 1)
+
+      setFSaddFlat(!FSaddFlat)
+
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", "Bearer " + user.token);
+
+      var requestOptions = {
+        method: 'PUT',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+
+      fetch(link + api, requestOptions)
+        .then((response) => response.json())
+        .then(async (responseJson) => {
+          if (responseJson.type == 'success') {
+
+            setfavouriteSell(favouriteSell)
+
+            // dispatch(newsFeedR(!reload))
+          }
+        })
+        .catch((e) => {
+
+        })
+
+    }
+    catch (e) {
+      console.log(e);
     }
   }
 
@@ -391,7 +483,7 @@ export default function MyProfile({ navigation, route }) {
     <View style={{ alignSelf: 'center', marginTop: height(2) }}>
 
       <View style={{ borderWidth: 2, borderRadius: 7, marginHorizontal: width(1.5), height: height(18), width: width(45) }}>
-
+        <Text>ttttttttttt</Text>
         <Image
           style={{ height: height(11), borderRadius: 5.7 }}
           source={{ uri: link + '/' + item.images[0] }} />
@@ -508,6 +600,70 @@ export default function MyProfile({ navigation, route }) {
     </TouchableOpacity>
   );
 
+  const FlatListFSR = ({ item, index }) => (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('RSCD', { data: item })}
+      style={{ alignSelf: 'center', marginTop: height(2) }}>
+
+      <View style={{ borderWidth: 2, borderRadius: 7, marginHorizontal: width(1.5), height: height(18), width: width(45) }}>
+
+        <Image
+          style={{ height: height(11), borderRadius: 5.7 }}
+          source={{ uri: link + '/' + item.images[0] }} />
+
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width(40), alignItems: 'center', alignSelf: 'center' }}>
+
+          <Text
+            numberOfLines={1}
+            style={{ fontFamily: "BebasNeue-Regular", fontSize: totalSize(2.5), width: width(20) }}>{item.title}</Text>
+
+          {item.sold == true ?
+
+            <Text style={{ fontFamily: "BebasNeue-Regular", fontSize: totalSize(1.7), color: '#219653' }}>Sold</Text>
+
+            :
+            <Text style={{ fontFamily: "BebasNeue-Regular", fontSize: totalSize(1.4), color: '#B83C3C' }}>Available</Text>
+
+          }
+
+        </View>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width(40), alignItems: 'center', alignSelf: 'center' }}>
+
+          <View style={{ flexDirection: 'row', width: width(20) }}>
+
+            <Text style={{ color: '#B83C3C', fontFamily: "BebasNeue-Regular" }}>{item.priceCurrency}</Text>
+
+            <Text style={{ color: '#B83C3C', marginLeft: width(1), fontFamily: "BebasNeue-Regular" }}>{item.priceValue}</Text>
+
+          </View>
+
+          {/* {item.isfavourite == true ? */}
+          <TouchableOpacity
+            onPress={() => statusFS(item, index)}
+            style={{ borderWidth: 1, borderRadius: 3, borderColor: '#555' }}
+          >
+
+            <MaterialCommunityIcons name='heart' size={10} color='#FFBB41' style={{ paddingVertical: 2, paddingHorizontal: 4 }} />
+
+          </TouchableOpacity>
+          {/* :
+            <TouchableOpacity
+              onPress={() => Favourite(item, index)}
+              style={{ borderWidth: 1, borderRadius: 3, borderColor: '#555' }}
+            >
+
+              <MaterialCommunityIcons name='heart' size={10} color='#777' style={{ paddingVertical: 2, paddingHorizontal: 4 }} />
+
+            </TouchableOpacity>
+
+          } */}
+
+        </View>
+      </View>
+
+    </TouchableOpacity>
+  );
   const FlatListNotification = ({ item, index }) => (
 
     <TouchableOpacity
@@ -688,8 +844,18 @@ export default function MyProfile({ navigation, route }) {
                   showsHorizontalScrollIndicator={false}
                 />
 
-                <Text style={{ fontFamily: "BebasNeue-Regular", fontSize: totalSize(2.5), marginTop: height(4), alignSelf: 'center', width: width(93) }}>Rent Out</Text>
+                <Text style={{ fontFamily: "BebasNeue-Regular", fontSize: totalSize(2.5), marginTop: height(4), alignSelf: 'center', width: width(93) }}>Rent Outhhh</Text>
                 {/* <RentoutHorizontal /> */}
+                <FlatList
+                  data={favouriteRent}
+                  renderItem={FlatListFSR}
+                  extraData={FSaddFlat}
+                  keyExtractor={(item, index) => { return index.toString() }}
+                  ListHeaderComponent={<View style={{ width: width(2) }} />}
+                  ListFooterComponent={<View style={{ width: width(2) }} />}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                />
               </View>
             )
           }
