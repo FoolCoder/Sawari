@@ -361,6 +361,22 @@ export default function Buymenu({ navigation, route }) {
       console.log(data);
     }
   }
+
+  const _Geocoding = (lat, lon) => {
+    console.log(lat, lon)
+    Geocoder.from(lat, lon)
+      .then(json => {
+        console.log('kkkk', json.results[3].formatted_address);
+        var addressComponent = json.results[0].address_components[0];
+        console.log(addressComponent);
+        setmapsearch(json.results[0].formatted_address)
+
+        setcity(json.results[3].formatted_address)
+      })
+      .catch(error => console.warn(error));
+
+  }
+
   const location = async () => {
 
     const granted = await PermissionsAndroid.request(
@@ -380,6 +396,8 @@ export default function Buymenu({ navigation, route }) {
 
         }, 1500)
         setcord({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+        // setaddressLatlon({ lat: pos.coords.latitude, lon: pos.coords.longitude })
+        _Geocoding(pos.coords.latitude, pos.coords.longitude)
 
 
       }, (err) => {
@@ -1580,7 +1598,7 @@ export default function Buymenu({ navigation, route }) {
                         latitude: cord.lat,
                         longitude: cord.lng
                       }}
-                      radius={slider * 200}
+                      radius={slider * 1000}
                       fillColor='#00000060'
                       strokeWidth={0}
                     />

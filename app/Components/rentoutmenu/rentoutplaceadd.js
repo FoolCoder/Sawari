@@ -280,7 +280,7 @@ export default function Rplaceadd({ navigation }) {
         return alert('Maximum 8 Images')
       }
       console.log('fghjkdsdfg');
-      // setvisible(true)
+      setvisible(true)
 
       var data = new FormData()
       data.append('user', user.id)

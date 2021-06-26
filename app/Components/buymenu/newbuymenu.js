@@ -1523,7 +1523,7 @@ export default function Buymenu({ navigation }) {
                         latitude: loc.lat,
                         longitude: loc.lon
                       }}
-                      radius={slider * 500}
+                      radius={slider * 1000}
                       fillColor='#00000060'
                       strokeWidth={0}
                     />

@@ -568,7 +568,6 @@ export default function Sellmenu({ navigation, route }) {
                         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                         style={{ height: '100%' }}
                         showsUserLocation={true}
-                        showsMyLocationButton={true}
                         initialRegion={{
                           latitude: parseFloat(item.latitude),
                           longitude: parseFloat(item.longitude),

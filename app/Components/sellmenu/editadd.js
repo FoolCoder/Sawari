@@ -496,7 +496,7 @@ export default function Editadd({ navigation, route }) {
         var addressComponent = json.results[0].address_components[0];
 
         // setmapsearch(json.results[0].formatted_address)
-        setlocmap(json.results[3].formatted_address)
+        setmapsearch(json.results[3].formatted_address)
 
 
       })
@@ -1376,7 +1376,7 @@ export default function Editadd({ navigation, route }) {
                   longitudeDelta: 100,
                 }}
               >
-                {loc !== null ? null
+                {loc == null ? null
                   :
                   <View>
                     <Marker
