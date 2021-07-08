@@ -71,7 +71,7 @@ export default function Chat({ navigation, route }) {
         console.log(e)
       }
 
-      console.log(r, c)
+      console.log('rrrrr', r, 'cccccccccc', c)
 
       apiCall(val)
 
@@ -331,6 +331,7 @@ export default function Chat({ navigation, route }) {
           <View style={{ width: width(95), marginVertical: height(1), borderRadius: 5, alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
             <TouchableOpacity
+              onPress={() => alert('this is imag picker')}
             >
 
               <Image
@@ -343,7 +344,7 @@ export default function Chat({ navigation, route }) {
             <View style={{ backgroundColor: '#d9d9d9', borderRadius: 5 }}>
 
               <TextInput
-                placeholder='Type a message'
+                placeholder='Send The message'
                 multiline
                 value={message}
                 onChangeText={(text) => setmessage(text)}

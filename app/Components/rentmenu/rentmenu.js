@@ -48,6 +48,8 @@ export default function Buymenu({ navigation, route }) {
   const [maxyear, setmaxyear] = useState('max')
   const [color, setcolor] = useState(null)
   const [rentType, setrentType] = useState(null)
+  const [insurenceType, setinsurenceType] = useState(null)
+
   const [pricetype, setpricetype] = useState('$')
   const [minprice, setminprice] = useState(null)
   const [maxprice, setmaxprice] = useState(null)
@@ -250,6 +252,10 @@ export default function Buymenu({ navigation, route }) {
     if (rentType !== null) {
       data.rentType = rentType
     }
+    if (insurenceType !== null) {
+      data.insurenceType = insurenceType
+    }
+
     if (minprice !== null) {
       data.minprice = minprice
     }
@@ -1066,7 +1072,7 @@ export default function Buymenu({ navigation, route }) {
                       onSelect={(index, value) => setrentType(value)}
                       dropdownTextStyle={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}
                       dropdownStyle={{ flex: 1, width: width(25), borderWidth: 2 }}
-                      options={['P/D', 'P/W', 'P/M', 'P/Q', 'P/Y']}>
+                      options={['Daily', 'Weekly', 'Quatarly', 'Monthly', 'Yearly']}>
 
                       <View
                         style={{ width: 90, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
@@ -1098,7 +1104,7 @@ export default function Buymenu({ navigation, route }) {
                       onSelect={(index, value) => setdoor(value)}
                       dropdownTextStyle={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}
                       dropdownStyle={{ flex: 1, width: width(25), borderWidth: 2 }}
-                      options={[2, 4, 5, 6, 'Unlisted']}>
+                      options={[2, 3, 4, 5, 6, 'Unlisted']}>
 
                       <View
                         style={door == 'Unlisted' ?

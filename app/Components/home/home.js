@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { Authcontext } from '../context/context'
 
 import { socket } from '../socket/socket'
+import { socketF, userP } from '../Store/action'
 
 import { link } from '../links/links'
 import Loader from '../loader/loader'
@@ -18,7 +19,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import splas from '../../assets/splash.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { socketConnection } from '../Store/actiontype'
-import { socketF, userP } from '../Store/action'
 
 import { dylinkF } from '../Store/action'
 
@@ -257,7 +257,7 @@ export default function Home({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }}>
                 BUY
-            </Text>
+              </Text>
 
             </TouchableHighlight>
 
@@ -269,7 +269,7 @@ export default function Home({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }}>
                 SELL
-            </Text>
+              </Text>
 
             </TouchableHighlight>
 
@@ -281,7 +281,7 @@ export default function Home({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }}>
                 RENT
-            </Text>
+              </Text>
 
             </TouchableHighlight>
 
@@ -293,7 +293,7 @@ export default function Home({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }}>
                 RENT OUT
-            </Text>
+              </Text>
 
             </TouchableHighlight>
 
@@ -305,7 +305,7 @@ export default function Home({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }}>
                 social media
-            </Text>
+              </Text>
 
             </TouchableHighlight>
 
@@ -317,7 +317,7 @@ export default function Home({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), color: '#FFBB41', fontFamily: 'BebasNeue-Regular' }}>
                 logout
-            </Text>
+              </Text>
 
             </TouchableOpacity>
 

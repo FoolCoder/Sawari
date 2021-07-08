@@ -58,6 +58,7 @@ export default function Reditadd({ navigation, route }) {
   const [pricetype, setpricetype] = useState('$')
   const [priceValue, setpriceValue] = useState()
   const [rentType, setrentType] = useState()
+  const [insurenceType, setinsurenceType] = useState()
   const [door, setdoor] = useState()
   const [millage, setmillage] = useState()
   const [minseats, setminseats] = useState()
@@ -153,6 +154,7 @@ export default function Reditadd({ navigation, route }) {
       setpriceValue(data.priceValue)
       setpricetype(data.priceCurrency)
       setrentType(data.rentType)
+      setinsurenceType(data.insurenceType)
       setdoor(data.doors)
       setmillage(data.millage)
       setminseats(data.seats)
@@ -363,6 +365,7 @@ export default function Reditadd({ navigation, route }) {
       data.append("priceCurrency", pricetype)
       data.append("priceValue", priceValue)
       data.append("rentType", rentType)
+      data.append("insurrencetype", insurenceType)
       data.append("doors", door)
       data.append("millage", millage)
       data.append("seats", minseats)
@@ -986,7 +989,7 @@ export default function Reditadd({ navigation, route }) {
                 onSelect={(index, value) => setrentType(value)}
                 dropdownTextStyle={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}
                 dropdownStyle={{ flex: 1, width: width(25), borderWidth: 2 }}
-                options={['P/D', 'P/W', 'P/M', 'P/Q', 'P/Y']}>
+                options={['Daily', 'Weekly', 'quaterly', 'mmonthly', 'yearly']}>
 
                 <View
                   style={{ width: 90, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
@@ -1006,7 +1009,35 @@ export default function Reditadd({ navigation, route }) {
 
             </View>
 
+            <View style={styles.Boldtextview}>
 
+              <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
+                insurence type
+              </Text>
+
+              <ModalDropdown
+                onSelect={(index, value) => setinsurenceType(value)}
+                dropdownTextStyle={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}
+                dropdownStyle={{ flex: 1, width: width(25), borderWidth: 2, height: height(13) }}
+                options={['with', 'without']}>
+
+                <View
+                  style={{ width: 90, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+
+                  <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#000' }}>
+
+                    {insurenceType}
+
+                  </Text>
+
+                  <MaterialIcons name='arrow-drop-down' size={25} color='#868887' />
+
+                </View>
+
+
+              </ModalDropdown>
+
+            </View>
 
             <View style={styles.Boldtextview}>
 
@@ -1019,7 +1050,7 @@ export default function Reditadd({ navigation, route }) {
                 onSelect={(index, value) => setdoor(value)}
                 dropdownTextStyle={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}
                 dropdownStyle={{ flex: 1, width: width(25), borderWidth: 2 }}
-                options={[2, 4, 5, 6, 'Unlisted']}>
+                options={[2, 3, 4, 5, 6, 'Unlisted']}>
 
                 <View
                   style={door == 'Unlisted' ?

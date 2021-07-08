@@ -656,7 +656,7 @@ export default function Newsfeed({ navigation }) {
 
                   Reply
 
-               </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -809,7 +809,7 @@ export default function Newsfeed({ navigation }) {
 
                   Reply
 
-               </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -869,7 +869,7 @@ export default function Newsfeed({ navigation }) {
 
                     Reply
 
-               </Text>
+                  </Text>
 
                 </TouchableOpacity>
 
@@ -922,7 +922,7 @@ export default function Newsfeed({ navigation }) {
 
                   <TextInput
                     numberOfLines={1}
-                    placeholder='WHATS HAPPENING'
+                    placeholder='WHATSPPENING'
                     value={msg}
                     onChangeText={(text) => setmsg(text)}
                     style={{ fontSize: totalSize(2.5), width: width(68), paddingVertical: 0 }}
@@ -962,7 +962,7 @@ export default function Newsfeed({ navigation }) {
 
                   <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#fabb47', alignSelf: 'center' }}>
                     Post
-             </Text>
+                  </Text>
 
                 </TouchableHighlight>
 
@@ -996,7 +996,7 @@ export default function Newsfeed({ navigation }) {
 
                   <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                     Nothing to show
-                 </Text>
+                  </Text>
 
                 </View>
             }
@@ -1006,7 +1006,11 @@ export default function Newsfeed({ navigation }) {
           <View style={{ bottom: height(10), right: width(1), position: 'absolute', zIndex: 1 }}>
 
             <TouchableOpacity
-              onPress={() => navigation.navigate('chatStack')}
+              onPress={() => {
+                // alert('ddddddd')
+                navigation.navigate('groupstack')
+              }
+              }
               style={{ height: 70, width: 70, borderRadius: 50, marginTop: height(0.5), borderWidth: 1, borderColor: '#ffc55d', backgroundColor: '#00000090' }}
             >
 
@@ -1033,7 +1037,7 @@ export default function Newsfeed({ navigation }) {
                 <Loader color="#000" />
                 <Text style={{ marginTop: height(3), fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#000' }}>
                   Posting post
-              </Text>
+                </Text>
               </View>
 
             </View>

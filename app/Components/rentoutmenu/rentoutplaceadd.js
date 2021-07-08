@@ -56,6 +56,7 @@ export default function Rplaceadd({ navigation }) {
   const [pricetype, setpricetype] = useState('$')
   const [priceValue, setpriceValue] = useState()
   const [rentType, setrentType] = useState()
+  const [insurenceType, setinsurenceType] = useState()
   const [door, setdoor] = useState()
   const [millage, setmillage] = useState()
   const [minseats, setminseats] = useState()
@@ -263,6 +264,9 @@ export default function Rplaceadd({ navigation }) {
     else if (!gear) {
       return 'Gear type missing'
     }
+    else if (!insurenceType) {
+      return 'Insurence type missing'
+    }
     // else if (!engine) {
     //   return 'Engine type missing'
     // }
@@ -292,6 +296,7 @@ export default function Rplaceadd({ navigation }) {
       data.append("email", email)
       console.log(('address', address));
       data.append("address", address)
+      data.append('insurence', insurenceType === 'with' ? true : false)
       data.append("description", discription)
       data.append("sellerType", sellertype)
       data.append("color", color)
@@ -985,7 +990,7 @@ export default function Rplaceadd({ navigation }) {
                 onSelect={(index, value) => setrentType(value)}
                 dropdownTextStyle={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}
                 dropdownStyle={{ flex: 1, width: width(25), borderWidth: 2 }}
-                options={['P/D', 'P/W', 'P/M', 'P/Q', 'P/Y']}>
+                options={['Daily', 'Weekly', 'Quaterly', 'Monthly', 'Yearly']}>
 
                 <View
                   style={{ width: 90, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
@@ -993,6 +998,35 @@ export default function Rplaceadd({ navigation }) {
                   <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#000' }}>
 
                     {rentType}
+
+                  </Text>
+
+                  <MaterialIcons name='arrow-drop-down' size={25} color='#868887' />
+
+                </View>
+
+
+              </ModalDropdown>
+
+            </View>
+            <View style={styles.Boldtextview}>
+
+              <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
+                insurance
+              </Text>
+
+              <ModalDropdown
+                onSelect={(index, value) => setinsurenceType(value)}
+                dropdownTextStyle={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}
+                dropdownStyle={{ flex: 1, width: width(25), borderWidth: 2, height: height(13) }}
+                options={['with', 'without']}>
+
+                <View
+                  style={{ width: 90, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+
+                  <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#000' }}>
+
+                    {insurenceType}
 
                   </Text>
 
@@ -1018,7 +1052,7 @@ export default function Rplaceadd({ navigation }) {
                 onSelect={(index, value) => setdoor(value)}
                 dropdownTextStyle={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}
                 dropdownStyle={{ flex: 1, width: width(25), borderWidth: 2 }}
-                options={[2, 4, 5, 6, 'Unlisted']}>
+                options={[2, 3, 4, 5, 6, 'Unlisted']}>
 
                 <View
                   style={door == 'Unlisted' ?
@@ -1562,7 +1596,7 @@ export default function Rplaceadd({ navigation }) {
         </View>
 
       </SafeAreaView>
-    </Fragment>
+    </Fragment >
   )
 }
 

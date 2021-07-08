@@ -40,6 +40,7 @@ export default function Rsellmenu({ navigation, route }) {
     try {
 
       setitem(route.params.data)
+      console.log('iiiiii', item);
       setfavour(route.params.data.isfavourite)
       console.log(route.params.data)
 
@@ -412,7 +413,17 @@ export default function Rsellmenu({ navigation, route }) {
               </Text>
 
             </View>
+            <View style={styles.detailsView}>
 
+              <Text style={styles.detailsTextView}>
+                insurance
+              </Text>
+
+              <Text style={styles.detailsTextView}>
+                {item.insurence}
+              </Text>
+
+            </View>
             <View style={styles.detailsView}>
 
               <Text style={styles.detailsTextView}>

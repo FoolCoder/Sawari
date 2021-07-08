@@ -999,7 +999,7 @@ export default function Editadd({ navigation, route }) {
                 onSelect={(index, value) => setdoor(value)}
                 dropdownTextStyle={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}
                 dropdownStyle={{ flex: 1, width: width(25), borderWidth: 2 }}
-                options={[2, 4, 5, 6, 'Unlisted']}>
+                options={[2, 3, 4, 5, 6, 'Unlisted']}>
 
                 <View
                   style={door == 'Unlisted' ?

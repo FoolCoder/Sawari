@@ -121,13 +121,13 @@ export default function Signup({ navigation }) {
 
               <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#fabb47', alignSelf: 'center' }}>
                 sign up
-             </Text>
+              </Text>
 
             </TouchableHighlight>
 
             <Text style={{ fontSize: totalSize(2.5), marginTop: height(4), alignSelf: 'center', color: '#898', fontFamily: 'BebasNeue-Regular' }}>
               or login using
-          </Text>
+            </Text>
 
             <View style={{ width: width(50), marginTop: height(2), flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignSelf: 'center' }}>
 

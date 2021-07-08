@@ -15,7 +15,6 @@ import Splash from '../Splash/Splash'
 import Fhome from '../home/Fhome'
 import login from '../loginSignup/login'
 import signup from '../loginSignup/signup'
-
 import homeS from '../home/home'
 import myProfile from '../Profile/Profile'
 import buymenu from '../buymenu/newbuymenu'
@@ -39,6 +38,8 @@ import editprofile from '../media/editprofile'
 import searchchat from '../media/searchchat'
 import listchat from '../media/listchat'
 import chat from '../media/chat'
+import gchat from '../gchat'
+
 
 LogBox.ignoreAllLogs()
 
@@ -52,6 +53,7 @@ if (
 const loginStack = createStackNavigator()
 const home = createStackNavigator()
 const chatStack = createStackNavigator()
+const groupchatstack = createStackNavigator()
 
 const LoginScreen = () => (
   <loginStack.Navigator headerMode='none'>
@@ -109,7 +111,7 @@ const HomeScreen = () => {
       <home.Screen name='editprofile' component={editprofile} />
       <home.Screen name='searchchat' component={searchchat} />
       <home.Screen name='chatStack' component={ChatScreen} />
-
+      <home.Screen name='groupstack' component={gchat} />
     </home.Navigator>
 
   )
@@ -123,7 +125,11 @@ const ChatScreen = () => {
     </chatStack.Navigator>
   )
 }
-
+// const groupchatscreen = () => {
+//   <groupchatscreen.Navigator headerMode='none'>
+//     <groupchatscreen.Screen name='groupchat' component={gchat} />
+//   </groupchatscreen.Navigator>
+// }
 function Navigation() {
   const [IsSignedIn, setIsSignedIn] = useState(false)
   const [IsSplash, setIsSplash] = useState(true)

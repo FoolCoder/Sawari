@@ -831,7 +831,7 @@ export default function MyProfile({ navigation, route }) {
           else if (frameType == 3) {
             return (
               <View style={{ borderTopWidth: 1.4, borderColor: '#C4C4C4', marginTop: height(3.5), width: width(100) }}>
-                <Text style={{ fontFamily: "BebasNeue-Regular", fontSize: totalSize(2.5), marginTop: height(2), alignSelf: 'center', width: width(93) }}>Selling Ads</Text>
+                <Text style={{ fontFamily: "BebasNeue-Regular", fontSize: totalSize(2.5), marginTop: height(2), alignSelf: 'center', width: width(93) }}>buying Ads</Text>
 
                 <FlatList
                   data={favouriteSell}
@@ -844,7 +844,7 @@ export default function MyProfile({ navigation, route }) {
                   showsHorizontalScrollIndicator={false}
                 />
 
-                <Text style={{ fontFamily: "BebasNeue-Regular", fontSize: totalSize(2.5), marginTop: height(4), alignSelf: 'center', width: width(93) }}>Rent Outhhh</Text>
+                <Text style={{ fontFamily: "BebasNeue-Regular", fontSize: totalSize(2.5), marginTop: height(4), alignSelf: 'center', width: width(93) }}>Rent Ads</Text>
                 {/* <RentoutHorizontal /> */}
                 <FlatList
                   data={favouriteRent}
