@@ -47,7 +47,7 @@ export default function Sellmenu({ navigation, route }) {
       setitem(route.params.data)
       setfavour(route.params.data.isfavourite)
 
-      console.log(route.params.data)
+      console.log('rrrrrrrrrrrr', route.params.data)
 
       open()
 

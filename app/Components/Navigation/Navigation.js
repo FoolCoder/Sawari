@@ -111,7 +111,6 @@ const HomeScreen = () => {
       <home.Screen name='editprofile' component={editprofile} />
       <home.Screen name='searchchat' component={searchchat} />
       <home.Screen name='chatStack' component={ChatScreen} />
-      <home.Screen name='groupstack' component={gchat} />
     </home.Navigator>
 
   )
@@ -122,6 +121,8 @@ const ChatScreen = () => {
     <chatStack.Navigator headerMode='none' initialRouteName='listchat'>
       <home.Screen name='listchat' component={listchat} />
       <home.Screen name='chat' component={chat} />
+      <home.Screen name='groupstack' component={gchat} />
+
     </chatStack.Navigator>
   )
 }

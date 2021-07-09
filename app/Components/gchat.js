@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     View, Text, Button, TextInput, TouchableOpacity,
     Image, FlatList, SafeAreaView, StyleSheet
@@ -8,32 +8,57 @@ import Header from '../Components/header/header'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { height, width, totalSize } from 'react-native-dimension'
 import pic from '../assets/image-add.png'
+import { link } from './links/links'
+import AsyncStorage from '@react-native-community/async-storage'
 
-const massege = [
-    {
-        _id: 1,
-        text: 'Hello developer',
-
-        user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-        }
-    },
-
-]
 
 export default function Groupchat({ navigation, route }) {
+    const [flag, setflag] = useState(false)
+    const [token, settoken] = useState()
+    const [massege, setmassege] = useState([])
+    var groupchat = []
     useEffect(() => {
 
-        // open()
 
-        // return (() => {
-        //   socket.removeAllListeners()
-        // })
+
+        Groupapicall()
+
 
     }, [])
 
+    const Groupapicall = async () => {
+        let api = ''
+        // var myHeaders = new Headers();
+        settoken(JSON.parse(await AsyncStorage.getItem('token')))
+        console.log('ttttttttt', token.userDetails._id);
+        try {
+            var requestOptions = {
+                method: 'GET',
+                // headers: myHeaders,
+                redirect: 'follow'
+            };
+
+            fetch(link + '/room/getGroupMessages' + api, requestOptions)
+                .then((response) => response.json())
+                .then(async (responseJson) => {
+                    console.log(responseJson.result[0])
+                    // console.log('kkkkkkkkkkkkkk', responseJson.result)
+
+                    if (responseJson.type === 'success') {
+                        groupchat = responseJson.result
+
+                    }
+
+                }).catch((e) => {
+                    console.log(e);
+                })
+
+        }
+        catch (e) {
+            console.log(e)
+        }
+        setmassege(groupchat)
+    }
 
     const open = async () => {
 
@@ -119,22 +144,55 @@ export default function Groupchat({ navigation, route }) {
 
     const renderMassege = ({ item }) => {
         return (
-            <View style={{
+            token.userDetails._id !== item.author._id ?
 
-            }}>
-                <Text style={{
-                    fontSize: totalSize(2)
-                }}>
-                    {item.text}
-                </Text>
-                <Text>
-                    {item.user.name}
-                </Text>
-                <Image
-                    source={item.user.avatar}
-                />
+                <View style={{ width: width(95), alignSelf: 'center', flexDirection: 'row', marginTop: height(4) }}>
 
-            </View>
+                    <Image
+                        source={{ uri: link + '/' + item.author.image }}
+                        style={{ height: 40, width: 40, marginRight: width(2), borderRadius: 20 }}
+                    />
+                    {/* <Image
+                        source={firstarrow}
+                        style={{ height: 30, width: 50, marginRight: -40, zIndex: -1 }}
+                    /> */}
+
+                    <View style={{ maxWidth: width(60), borderRadius: 5, justifyContent: 'center', alignItems: 'center', backgroundColor: '#ffbb41' }}>
+
+                        <Text style={{ fontSize: totalSize(2.3), padding: 10 }}>
+                            {item.text}
+                        </Text>
+
+                    </View>
+
+                </View>
+
+
+                :
+                <View style={{ width: width(95), alignSelf: 'center', marginTop: height(4) }}>
+
+                    <View style={{ alignSelf: 'flex-end', flexDirection: 'row' }}>
+
+                        <View style={{ maxWidth: width(60), borderRadius: 5, justifyContent: 'center', alignItems: 'center', backgroundColor: '#c9cbcc' }}>
+
+                            <Text style={{ fontSize: totalSize(2.3), padding: 10 }}>
+                                {item.text}
+                            </Text>
+
+                        </View>
+
+                        {/* <Image
+                            source={secarrow}
+                            style={{ height: 30, width: 30, marginLeft: -20, zIndex: -1 }}
+                        />   */}
+                        <Image
+                            source={{ uri: link + '/' + item.author.image }}
+                            style={{ height: 40, width: 40, marginLeft: width(2), borderRadius: 20 }}
+                        />
+
+                    </View>
+
+                </View>
         )
     }
     return (
@@ -156,7 +214,7 @@ export default function Groupchat({ navigation, route }) {
                 <FlatList
                     style={{
                         // borderWidth: 1,
-                        // height: height(80)
+                        // height:  height(80)
                     }}
                     data={massege}
 

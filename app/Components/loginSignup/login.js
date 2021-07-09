@@ -103,7 +103,7 @@ export default function Login({ navigation }) {
 
                   forget password
 
-            </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -115,7 +115,7 @@ export default function Login({ navigation }) {
 
                   sign up
 
-            </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -132,13 +132,13 @@ export default function Login({ navigation }) {
 
               <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#fabb47', alignSelf: 'center' }}>
                 login
-             </Text>
+              </Text>
 
             </TouchableHighlight>
 
             <Text style={{ fontSize: totalSize(2.5), marginTop: height(4), alignSelf: 'center', color: '#898', fontFamily: 'BebasNeue-Regular' }}>
               or login using
-          </Text>
+            </Text>
 
             <View style={{ width: width(50), marginTop: height(2), flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignSelf: 'center' }}>
 

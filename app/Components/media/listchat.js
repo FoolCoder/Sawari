@@ -157,12 +157,36 @@ export default function Chat({ navigation }) {
 
                 <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                   let's start new conversation
-            </Text>
+                </Text>
 
               </View>
           }
 
         </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('groupstack')}
+
+          style={{
+            borderWidth: 1, width: 60,
+            height: 60,
+            borderRadius: 40,
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'flex-end',
+            marginRight: 15,
+            bottom: height(8),
+            backgroundColor: '#000',
+            position: 'absolute',
+            zIndex: 1
+
+          }}>
+          <Text style={{
+            color: '#fff',
+            textAlign: 'center'
+          }}>
+            Group chat
+          </Text>
+        </TouchableOpacity>
 
       </SafeAreaView>
     </Fragment>

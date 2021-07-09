@@ -1,5 +1,5 @@
 // export const link = 'http://18.219.46.195:5000'
-export const link = 'https://301d2b4bd24f.ngrok.io/'
+export const link = 'https://60b5830aa5e0.ngrok.io'
 
 export const filterdadds = '/ad/getFilteredAds'
 export const useradds = '/ad/getAdsByUser?userId='

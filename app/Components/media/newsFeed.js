@@ -1008,7 +1008,9 @@ export default function Newsfeed({ navigation }) {
             <TouchableOpacity
               onPress={() => {
                 // alert('ddddddd')
-                navigation.navigate('groupstack')
+                navigation.navigate('chatStack', {
+                  screen: 'listchat'
+                })
               }
               }
               style={{ height: 70, width: 70, borderRadius: 50, marginTop: height(0.5), borderWidth: 1, borderColor: '#ffc55d', backgroundColor: '#00000090' }}
