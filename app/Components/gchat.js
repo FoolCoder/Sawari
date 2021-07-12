@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import {
     View, Text, Button, TextInput, TouchableOpacity,
-    Image, FlatList, SafeAreaView, StyleSheet
+    Image, FlatList, SafeAreaView, StyleSheet, ActivityIndicator,
+    KeyboardAvoidingView, Alert
 } from 'react-native'
 import Header from '../Components/header/header'
 
@@ -11,26 +12,101 @@ import pic from '../assets/image-add.png'
 import { link } from './links/links'
 import AsyncStorage from '@react-native-community/async-storage'
 
+import { useSelector } from 'react-redux'
 
+var chatLocal = []
 export default function Groupchat({ navigation, route }) {
-    const [flag, setflag] = useState(false)
+
     const [token, settoken] = useState()
     const [massege, setmassege] = useState([])
-    var groupchat = []
+    const [message, setMessage] = useState()
+    const [loader, setloader] = useState(true)
+    const [reload, setreload] = useState(false);
+    const socket = useSelector((state) => state.socket)
+
     useEffect(() => {
-
-
-
         Groupapicall()
-
-
+        return (() => {
+            socket.removeAllListeners()
+        })
     }, [])
 
+
+    const sendMessage = () => {
+        if (message) {
+            let data = {
+                room:
+                {
+                    group: true,   // Your ID and Other User ID .......... if Group Only Your ID
+                },
+                message: {
+                    author: token.userDetails._id,
+                    text: message,
+                }
+            }
+            socket.emit('sendMessage', data)
+        } else {
+            console.log("No message to send");
+            //show alert no message
+            Alert.alert(
+                'Message',
+                'Write something'
+            )
+        }
+
+    }
+
     const Groupapicall = async () => {
+
         let api = ''
         // var myHeaders = new Headers();
-        settoken(JSON.parse(await AsyncStorage.getItem('token')))
-        console.log('ttttttttt', token.userDetails._id);
+        const token = JSON.parse(await AsyncStorage.getItem('token'));
+        settoken(token);
+
+        //receiving message
+
+        socket.on("messageRecieved", (data) => {
+            if (data.group) {
+                console.log('message recieved ', data);
+                chatLocal = [data.message, ...chatLocal];
+                setmassege(chatLocal);
+            }
+            // });
+        });
+        socket.on('messageSentAck', (data) => {
+            console.log("Acknowledged Response", data)
+            console.log('sent')
+            if (data.sent && data.group) {
+                chatLocal = [data.message, ...chatLocal]
+                setmassege(chatLocal)
+                setloader(false)
+            }
+            //     if (data.sent == true) {
+            //       try {
+            //         if (route.params.room == null) {
+            //           route.params.roomF(data.message.room)
+            //         }
+            //       }
+            //       catch (e) {
+            //         console.log(e)
+            //       }
+
+            //       setroom(data.message.room)
+
+            //       chatLocal = [data.message, ...chatLocal]
+
+            //       setchat(chatLocal)
+
+            //     }
+            //     else {
+            //       Alert.alert(
+            //         'Message',
+            //         'Failed to send message'
+            //       )
+            //     }
+            //   })
+
+        });
         try {
             var requestOptions = {
                 method: 'GET',
@@ -41,12 +117,11 @@ export default function Groupchat({ navigation, route }) {
             fetch(link + '/room/getGroupMessages' + api, requestOptions)
                 .then((response) => response.json())
                 .then(async (responseJson) => {
-                    console.log(responseJson.result[0])
-                    // console.log('kkkkkkkkkkkkkk', responseJson.result)
-
                     if (responseJson.type === 'success') {
-                        groupchat = responseJson.result
-
+                        setmassege(responseJson.result)
+                        setreload(!reload);
+                        setloader(false)
+                        chatLocal = responseJson.result;
                     }
 
                 }).catch((e) => {
@@ -57,93 +132,15 @@ export default function Groupchat({ navigation, route }) {
         catch (e) {
             console.log(e)
         }
-        setmassege(groupchat)
+
     }
 
-    const open = async () => {
 
-        chatLocal = []
-        r = ''
-        c = ''
 
-        try {
-
-            let val = JSON.parse(await AsyncStorage.getItem('token'))
-
-            setchatUser(route.params.data)
-            c = route.params.data
-
-            setuser(val)
-
-            try {
-                if (route.params.room == null) {
-                    setroom(route.params.room)
-                    r = route.params.room
-                }
-                else {
-                    setroom(route.params.room[0]._id)
-                    r = route.params.room[0]._id
-                }
-            }
-            catch (e) {
-                console.log(e)
-            }
-
-            console.log('rrrrr', r, 'cccccccccc', c)
-
-            apiCall(val)
-
-            socket.on('messageRecieved', (data) => {
-
-                if (r == data.message.room || c._id == data.message.room) {
-
-                    if (data.received == true) {
-
-                        chatLocal = [data.message, ...chatLocal]
-
-                        setchat(chatLocal)
-
-                    }
-                }
-
-            })
-
-            socket.on('messageSentAck', (data) => {
-                console.log(data)
-
-                if (data.sent == true) {
-                    try {
-                        if (route.params.room == null) {
-                            route.params.roomF(data.message.room)
-                        }
-                    }
-                    catch (e) {
-                        console.log(e)
-                    }
-
-                    setroom(data.message.room)
-
-                    chatLocal = [data.message, ...chatLocal]
-
-                    setchat(chatLocal)
-
-                }
-                else {
-                    Alert.alert(
-                        'Message',
-                        'Failed to send message'
-                    )
-                }
-            })
-
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
-
-    const renderMassege = ({ item }) => {
+    const renderMassege = ({ item, index }) => {
         return (
+
+
             token.userDetails._id !== item.author._id ?
 
                 <View style={{ width: width(95), alignSelf: 'center', flexDirection: 'row', marginTop: height(4) }}>
@@ -193,9 +190,12 @@ export default function Groupchat({ navigation, route }) {
                     </View>
 
                 </View>
+
+
         )
     }
     return (
+
         <SafeAreaView
             style={(styles.container)}
         >
@@ -208,27 +208,34 @@ export default function Groupchat({ navigation, route }) {
                 alignSelf: 'center'
             }}>
                 <Header
-                    text='Gorup Chat'
+                    text='Global Chat'
                     back={() => navigation.goBack()}
                 />
-                <FlatList
-                    style={{
-                        // borderWidth: 1,
-                        // height:  height(80)
-                    }}
-                    data={massege}
+                {
+                    loader ?
+                        <View style={{ flex: 1, justifyContent: 'center' }}>
 
-                    renderItem={renderMassege}
-                    keyExtractor={(item, index) => item._id}
-                />
-
+                            <Loader
+                                color='#000'
+                            />
+                        </View>
+                        :
+                        <FlatList
+                            style={{
+                                // borderWidth: 1,
+                                // height:  height(80)
+                            }}
+                            inverted
+                            data={massege}
+                            extraData={massege}
+                            renderItem={renderMassege}
+                            keyExtractor={(item, index) => index.toString()}
+                        />}
 
                 <View style={{
-                    flexDirection: 'row',
-                    width: width(95),
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    alignSelf: 'center'
+                    width: width(95), marginVertical: height(1),
+                    borderRadius: 5, alignSelf: 'center', flexDirection: 'row',
+                    justifyContent: 'space-between', alignItems: 'center'
                 }}>
                     <TouchableOpacity>
                         <Image style={{
@@ -238,13 +245,14 @@ export default function Groupchat({ navigation, route }) {
                             source={pic}
                         />
                     </TouchableOpacity>
+
                     <View style={{ backgroundColor: '#d9d9d9', borderRadius: 5, width: width(65) }}>
 
                         <TextInput
                             placeholder='Send The message'
                             multiline
-                            // value={message}
-                            // onChangeText={(text) => setmessage(text)}
+                            value={message}
+                            onChangeText={(text) => setMessage(text)}
                             style={{
                                 maxHeight: height(20), width: width(68),
                                 fontSize: totalSize(2.2)
@@ -253,7 +261,10 @@ export default function Groupchat({ navigation, route }) {
 
                     </View>
                     <TouchableOpacity
-                        // onPress={() => sendMessage()}
+                        onPress={() => {
+                            sendMessage()
+                            setMessage('')
+                        }}
                         style={{ borderRadius: 40, backgroundColor: '#ffbb41' }}
                     >
 
@@ -261,6 +272,7 @@ export default function Groupchat({ navigation, route }) {
 
                     </TouchableOpacity>
                 </View>
+
             </View>
         </SafeAreaView>
     )

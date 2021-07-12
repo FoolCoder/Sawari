@@ -483,7 +483,7 @@ export default function MyProfile({ navigation, route }) {
     <View style={{ alignSelf: 'center', marginTop: height(2) }}>
 
       <View style={{ borderWidth: 2, borderRadius: 7, marginHorizontal: width(1.5), height: height(18), width: width(45) }}>
-        <Text>ttttttttttt</Text>
+
         <Image
           style={{ height: height(11), borderRadius: 5.7 }}
           source={{ uri: link + '/' + item.images[0] }} />

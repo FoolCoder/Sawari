@@ -420,7 +420,7 @@ export default function Rsellmenu({ navigation, route }) {
               </Text>
 
               <Text style={styles.detailsTextView}>
-                {item.insurence}
+                {item.insurence ? "With" : "With Out"}
               </Text>
 
             </View>

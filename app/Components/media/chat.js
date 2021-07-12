@@ -315,7 +315,6 @@ export default function Chat({ navigation, route }) {
               <Loader
                 color='#000'
               />
-
             </View>
 
             :
@@ -328,7 +327,12 @@ export default function Chat({ navigation, route }) {
 
           }
 
-          <View style={{ width: width(95), marginVertical: height(1), borderRadius: 5, alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View style={{
+            width: width(95), marginVertical: height(1),
+            borderRadius: 5, alignSelf: 'center', flexDirection: 'row',
+            justifyContent: 'space-between', alignItems: 'center'
+
+          }}>
 
             <TouchableOpacity
               onPress={() => alert('this is imag picker')}
