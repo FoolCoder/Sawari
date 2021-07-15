@@ -57,12 +57,11 @@ export default function Groupchat({ navigation, route }) {
     }
 
     const Groupapicall = async () => {
-
         let api = ''
-        // var myHeaders = new Headers();
+        var myHeaders = new Headers();
         const token = JSON.parse(await AsyncStorage.getItem('token'));
         settoken(token);
-
+        console.log('ttttttt', token);
         //receiving message
 
         socket.on("messageRecieved", (data) => {
@@ -81,52 +80,35 @@ export default function Groupchat({ navigation, route }) {
                 setmassege(chatLocal)
                 setloader(false)
             }
-            //     if (data.sent == true) {
-            //       try {
-            //         if (route.params.room == null) {
-            //           route.params.roomF(data.message.room)
-            //         }
-            //       }
-            //       catch (e) {
-            //         console.log(e)
-            //       }
-
-            //       setroom(data.message.room)
-
-            //       chatLocal = [data.message, ...chatLocal]
-
-            //       setchat(chatLocal)
-
-            //     }
-            //     else {
-            //       Alert.alert(
-            //         'Message',
-            //         'Failed to send message'
-            //       )
-            //     }
-            //   })
 
         });
         try {
             var requestOptions = {
                 method: 'GET',
-                // headers: myHeaders,
+                headers: myHeaders,
                 redirect: 'follow'
             };
+            console.log('check1');
 
             fetch(link + '/room/getGroupMessages' + api, requestOptions)
                 .then((response) => response.json())
                 .then(async (responseJson) => {
+                    console.log('check1');
+                    console.log(666, responseJson.result);
                     if (responseJson.type === 'success') {
+                        console.log('check2');
+
                         setmassege(responseJson.result)
                         setreload(!reload);
                         setloader(false)
                         chatLocal = responseJson.result;
                     }
-
+                    console.log('mmmmmmmmm', massege);
+                    console.log('cccccccc', chatLocal);
                 }).catch((e) => {
-                    console.log(e);
+                    console.log(e, 'ffffffff');
                 })
+
 
         }
         catch (e) {

@@ -44,7 +44,7 @@ export default function Chat({ navigation }) {
         .then((response) => response.json())
         .then(async (responseJson) => {
 
-          console.log(responseJson.result)
+          console.log('tttttrrrrr', responseJson.result)
 
           if (responseJson.type === 'success') {
             setlist(responseJson.result)

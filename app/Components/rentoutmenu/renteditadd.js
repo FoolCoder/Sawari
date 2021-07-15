@@ -154,7 +154,7 @@ export default function Reditadd({ navigation, route }) {
       setpriceValue(data.priceValue)
       setpricetype(data.priceCurrency)
       setrentType(data.rentType)
-      setinsurenceType(data.insurenceType)
+      setinsurenceType(data.insurence)
       setdoor(data.doors)
       setmillage(data.millage)
       setminseats(data.seats)
@@ -365,7 +365,8 @@ export default function Reditadd({ navigation, route }) {
       data.append("priceCurrency", pricetype)
       data.append("priceValue", priceValue)
       data.append("rentType", rentType)
-      data.append("insurrencetype", insurenceType)
+      console.log('hhhhh', insurenceType);
+      data.append("insurence", insurenceType === 'with' ? true : false)
       data.append("doors", door)
       data.append("millage", millage)
       data.append("seats", minseats)

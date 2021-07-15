@@ -684,7 +684,7 @@ export default function MyProfile({ navigation, route }) {
           source={{ uri: link + '/' + item.user.image }}
           style={{ height: totalSize(6), width: totalSize(6), borderRadius: totalSize(3), marginTop: height(0.5) }}
         />
-
+        {console.log(item.user.image)}
         <View style={{ width: width(68) }}>
 
           <Text

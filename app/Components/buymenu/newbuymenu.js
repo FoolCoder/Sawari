@@ -67,6 +67,7 @@ export default function Buymenu({ navigation }) {
   const [slocation, setslocation] = useState(false)
   const [applylocationS, setapplylocationS] = useState(false)
 
+
   const map = useRef(null)
 
   const [cars, setcars] = useState([])
@@ -109,6 +110,7 @@ export default function Buymenu({ navigation }) {
   const search = (val) => {
 
     if (val == true) {
+
       setload(true)
     }
 
@@ -120,6 +122,7 @@ export default function Buymenu({ navigation }) {
       data.currentLon = loc.lon
       data.distance = slider
     }
+
     if (city !== 'city') {
       data.city = city
     }
@@ -302,66 +305,15 @@ export default function Buymenu({ navigation }) {
       )
   }
 
-  const mapsearchlocation = async (text) => {
-    setmapsearch(text)
 
-    try {
 
-      const mapurl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=
-    ${apikey}&input=${text}&types=(cities)`
-      const result = await fetch(mapurl)
-      const json = await result.json()
 
-      console.log(json)
-
-      setmapsearcharray(json.predictions)
-    }
-    catch (e) {
-      alert('Network Problem')
-    }
-
-  }
-
-  const setlocmap = (item) => {
-
-    setmapsearch(item)
-    setmapsearcharray([])
-
-    try {
-      Geocoder.from(item)
-        .then(json => {
-          var location = json.results[0].geometry.location;
-          setloc({ lat: location.lat, lon: location.lng })
-
-          map.current.animateToRegion({
-            latitude: location.lat,
-            longitude: location.lng,
-            latitudeDelta: 0.5,
-            longitudeDelta: 0.5,
-
-          }, 1500)
-
-        })
-        .catch(error => console.warn(error));
-    }
-    catch (e) {
-      alert('loc error')
-    }
-
-  }
-
-  const maplocationModal = () => {
-    setslocation(false)
-    setmapsearch('')
-    setmapsearcharray([])
-    setslider(5)
-    setloc(null)
-    setapplylocationS(false)
-  }
 
   const apply = () => {
     if (mapsearch != '') {
+
       setapplylocationS(true)
+      setloc(cord)
       setslocation(false)
     }
     else {
@@ -624,6 +576,61 @@ export default function Buymenu({ navigation }) {
     }
 
 
+  }
+  const mapsearchlocation = async (text) => {
+    setmapsearch(text)
+
+    try {
+
+      const mapurl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=
+    ${apikey}&input=${text}&types=(cities)`
+      const result = await fetch(mapurl)
+      const json = await result.json()
+
+      console.log(json)
+
+      setmapsearcharray(json.predictions)
+    }
+    catch (e) {
+      alert('Network Problem')
+    }
+
+  }
+  const setlocmap = (item) => {
+
+    setmapsearch(item)
+    setmapsearcharray([])
+
+    try {
+      Geocoder.from(item)
+        .then(json => {
+          var location = json.results[0].geometry.location;
+          setloc({ lat: location.lat, lon: location.lng })
+
+          map.current.animateToRegion({
+            latitude: location.lat,
+            longitude: location.lng,
+            latitudeDelta: 0.5,
+            longitudeDelta: 0.5,
+
+          }, 1500)
+
+        })
+        .catch(error => console.warn(error));
+    }
+    catch (e) {
+      alert('loc error')
+    }
+
+  }
+
+  const maplocationModal = () => {
+    setslocation(false)
+    setmapsearch('')
+    setmapsearcharray([])
+    setslider(5)
+    setloc(null)
+    setapplylocationS(false)
   }
 
   return (

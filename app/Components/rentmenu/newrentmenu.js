@@ -58,7 +58,7 @@ export default function Buymenu({ navigation }) {
 
   const [mapsearch, setmapsearch] = useState('')
   const [mapsearcharray, setmapsearcharray] = useState([])
-  const [loc, setloc] = useState(null)
+  const [loc, setloc] = useState({ lat: 0, lon: 0 })
   const [cord, setcord] = useState({ lat: 0, lng: 0 })
 
   const [slider, setslider] = useState(5)
@@ -233,7 +233,7 @@ export default function Buymenu({ navigation }) {
         body: JSON.stringify({ filter: data, sortBy: sort, user: val.id })
       }).then((response) => response.json())
         .then(async (responseJson) => {
-          console.log(responseJson);
+          console.log('tttttttkkk', responseJson[0].result);
           if (responseJson.type === 'success') {
             if (responseJson.result) {
               var val = responseJson.result
@@ -359,6 +359,7 @@ export default function Buymenu({ navigation }) {
 
   const apply = () => {
     if (mapsearch != '') {
+      setloc(cord)
       setapplylocationS(true)
       setslocation(false)
     }
@@ -591,6 +592,8 @@ export default function Buymenu({ navigation }) {
         }, 1500)
 
         setcord({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+        setloc(cord)
+        console.log('lllll', loc);
 
       }, (err) => {
         console.log(err);

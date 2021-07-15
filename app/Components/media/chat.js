@@ -208,7 +208,7 @@ export default function Chat({ navigation, route }) {
             {
               group: false,
               name: null,
-              users: [user.id, route.params.data.user._id]    // Your ID and Other User ID .......... if Group Only Your ID
+              users: [user.id, route.params.data.user[0]._id]    // Your ID and Other User ID .......... if Group Only Your ID
             },
             message: {
               author: user.id,
