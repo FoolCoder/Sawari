@@ -77,7 +77,7 @@ export default function Rsellmenu({ navigation, route }) {
         redirect: 'follow'
       };
 
-      fetch(link + '/room/checkRoom?userId=' + val.id + '&otherUserId=' + route.params.data.user._id, requestOptions)
+      fetch(link + '/room/checkRoom?userId=' + val.id + '&otherUserId=' + route.params.data.user[0]._id, requestOptions)
         .then(response => response.json())
         .then(response => {
 
