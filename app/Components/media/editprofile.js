@@ -166,7 +166,7 @@ export default function Editprofile({ navigation }) {
 
               <Text style={{ fontSize: totalSize(3), color: '#ffc55d', fontFamily: 'BebasNeue-Regular' }}>
                 upload image
-                  </Text>
+              </Text>
 
             </TouchableOpacity>
 
@@ -208,7 +208,7 @@ export default function Editprofile({ navigation }) {
 
               <Text style={{ fontSize: totalSize(3), color: '#ffc55d', fontFamily: 'BebasNeue-Regular' }}>
                 save
-                  </Text>
+              </Text>
 
             </TouchableOpacity>
 
@@ -224,7 +224,7 @@ export default function Editprofile({ navigation }) {
                 <Loader color="#000" />
                 <Text style={{ marginTop: height(3), fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#000' }}>
                   Updating Profile
-              </Text>
+                </Text>
               </View>
 
             </View>

@@ -68,7 +68,7 @@ export default function Buymenu({ navigation, route }) {
 
   const [mapsearch, setmapsearch] = useState('')
   const [mapsearcharray, setmapsearcharray] = useState([])
-  const [loc, setloc] = useState(null)
+  const [loc, setloc] = useState({ lat: 0, lon: 0 })
   const [slider, setslider] = useState(5)
   const [cord, setcord] = useState({ lat: 0, lng: 0 })
   const [flagState, setFlagState] = useState(false)
@@ -76,6 +76,8 @@ export default function Buymenu({ navigation, route }) {
   const [visible, setvisible] = useState(false)
   const [slocation, setslocation] = useState(false)
   const [applylocationS, setapplylocationS] = useState(false)
+  const [applylocationC, setapplylocationC] = useState(false)
+
   const [favour, setfavour] = useState()
 
   const map = useRef(null);
@@ -200,15 +202,7 @@ export default function Buymenu({ navigation, route }) {
     setapplylocationS(false)
   }
 
-  const apply = () => {
-    if (mapsearch != '') {
-      setapplylocationS(true)
-      setslocation(false)
-    }
-    else {
-      alert('Choose location')
-    }
-  }
+
   const reloadF = () => {
     search(false)
   }
@@ -223,6 +217,11 @@ export default function Buymenu({ navigation, route }) {
     if (applylocationS == true) {
       data.currentLat = loc.lat
       data.currentLon = loc.lon
+      data.distance = slider
+    }
+    if (applylocationC) {
+      data.currentLat = cord.lat
+      data.currentLon = cord.lng
       data.distance = slider
     }
     if (city !== 'city') {
@@ -418,6 +417,29 @@ export default function Buymenu({ navigation, route }) {
 
 
   }
+
+  const apply = () => {
+    if (mapsearch != '') {
+      if (loc.lat != 0 && loc.lon != 0) {
+        setapplylocationS(true)
+
+        setslocation(false)
+      }
+      else if (cord.lat != 0 && cord.lng != 0) {
+        setslocation(false)
+        setapplylocationC(true)
+      }
+      else {
+        alert('Cordinate is empty')
+      }
+    }
+
+    else {
+      alert('Choice location')
+    }
+    console.log('bbbbbbb', loc, cord);
+  }
+
   const clearFilter = () => {
     setmake(null)
     setmodel(null)
@@ -647,7 +669,7 @@ export default function Buymenu({ navigation, route }) {
 
               </TouchableOpacity>
 
-              {applylocationS == false ?
+              {applylocationS == false && !applylocationC ?
 
                 <Text style={{ fontSize: totalSize(0.85), marginTop: height(1), alignSelf: 'center', color: '#FF0000' }}>
                   Select City and distance

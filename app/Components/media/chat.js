@@ -328,13 +328,13 @@ export default function Chat({ navigation, route }) {
           }
 
           <View style={{
-            width: width(95), marginVertical: height(1),
+            width: width(85), marginVertical: height(1),
             borderRadius: 5, alignSelf: 'center', flexDirection: 'row',
             justifyContent: 'space-between', alignItems: 'center'
 
           }}>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => alert('this is imag picker')}
             >
 
@@ -343,7 +343,7 @@ export default function Chat({ navigation, route }) {
                 style={{ height: 40, width: 40 }}
               />
 
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <View style={{ backgroundColor: '#d9d9d9', borderRadius: 5 }}>
 

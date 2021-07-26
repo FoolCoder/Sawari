@@ -45,8 +45,7 @@ export default function Sellmenu({ navigation, route }) {
   useEffect(() => {
     try {
       setitem(route.params.data)
-      console.log('rrrrr', item);
-      console.log(';;;;;;;', room);
+
       setfavour(route.params.data.isfavourite)
 
       console.log('rrrrrrrrrrrr', route.params.data)
@@ -64,7 +63,7 @@ export default function Sellmenu({ navigation, route }) {
       const val = JSON.parse(await AsyncStorage.getItem('token'))
 
       setuser(val)
-      console.log('vvvvvvv', user);
+      console.log('user', user);
 
       if (val.id == route.params.data.user._id) {
         setchatDisable(true)
@@ -96,7 +95,7 @@ export default function Sellmenu({ navigation, route }) {
             setloader(false)
           }
 
-          console.log(response)
+          console.log('mmmmmmmm', response)
 
         })
         .catch((e) => {

@@ -58,7 +58,7 @@ export default function Buymenu({ navigation }) {
 
   const [mapsearch, setmapsearch] = useState('')
   const [mapsearcharray, setmapsearcharray] = useState([])
-  const [loc, setloc] = useState(null)
+  const [loc, setloc] = useState({ lat: 0, lon: 0 })
   const [cord, setcord] = useState({ lat: 0, lng: 0 })
 
   const [slider, setslider] = useState(5)
@@ -67,7 +67,7 @@ export default function Buymenu({ navigation }) {
   const [slocation, setslocation] = useState(false)
   const [applylocationS, setapplylocationS] = useState(false)
 
-
+  const [applylocationC, setapplylocationC] = useState(false)
   const map = useRef(null)
 
   const [cars, setcars] = useState([])
@@ -117,9 +117,14 @@ export default function Buymenu({ navigation }) {
     var data = {}
     data.priceCurrency = pricetype
     data.engineType = engineType
-    if (applylocationS == true) {
+    if (applylocationS) {
       data.currentLat = loc.lat
       data.currentLon = loc.lon
+      data.distance = slider
+    }
+    if (applylocationC) {
+      data.currentLat = cord.lat
+      data.currentLon = cord.lng
       data.distance = slider
     }
 
@@ -186,7 +191,7 @@ export default function Buymenu({ navigation }) {
     if (maxengine !== null) {
       data.maxengine = maxengine
     }
-    console.log(data);
+    console.log('dddddddddaaaaatttta', data);
     openD(data)
 
   }
@@ -223,7 +228,6 @@ export default function Buymenu({ navigation }) {
         sort.column = 'millage'
         sort.sort = 'a'
       }
-
       const val = JSON.parse(await AsyncStorage.getItem('token'))
 
       setuser(val)
@@ -238,7 +242,7 @@ export default function Buymenu({ navigation }) {
         body: JSON.stringify({ filter: data, sortBy: sort, user: val.id })
       }).then((response) => response.json())
         .then(async (responseJson) => {
-          console.log(responseJson);
+          console.log('ddddddddd', responseJson);
           if (responseJson.type === 'success') {
             if (responseJson.result) {
               var val = responseJson.result
@@ -309,17 +313,6 @@ export default function Buymenu({ navigation }) {
 
 
 
-  const apply = () => {
-    if (mapsearch != '') {
-
-      setapplylocationS(true)
-      setloc(cord)
-      setslocation(false)
-    }
-    else {
-      alert('Choice location')
-    }
-  }
 
   const clearFilter = () => {
     setmake(null)
@@ -376,7 +369,7 @@ export default function Buymenu({ navigation }) {
       fetch(link + api, requestOptions)
         .then((response) => response.json())
         .then(async (responseJson) => {
-          console.log(responseJson)
+          console.log('eeee', responseJson)
           if (responseJson.type == 'success') {
 
             setcars(data)
@@ -528,14 +521,15 @@ export default function Buymenu({ navigation }) {
 
 
   const _Geocoding = (lat, lon) => {
-    console.log(lat, lon)
+    console.log('llllllllllll', lat, lon)
+
     Geocoder.from(lat, lon)
       .then(json => {
-        console.log('kkkk', json.results[3].formatted_address);
-        var addressComponent = json.results[0].address_components[0];
-        console.log(addressComponent);
         setmapsearch(json.results[0].formatted_address)
-        console.log(mapsearch);
+
+        console.log('kkkk', json.results[0].formatted_address);
+        var addressComponent = json.results[0].address_components[0];
+        console.log('hhhhhhh', addressComponent);
         setcity(json.results[3].formatted_address)
       })
       .catch(error => console.warn(error));
@@ -562,7 +556,6 @@ export default function Buymenu({ navigation }) {
         }, 1500)
 
         setcord({ lat: pos.coords.latitude, lng: pos.coords.longitude })
-
         setaddressLatlon({ lat: pos.coords.latitude, lon: pos.coords.longitude })
         _Geocoding(pos.coords.latitude, pos.coords.longitude)
       }, (err) => {
@@ -633,6 +626,27 @@ export default function Buymenu({ navigation }) {
     setapplylocationS(false)
   }
 
+  const apply = () => {
+    if (mapsearch != '') {
+      if (loc.lat != 0 && loc.lon != 0) {
+        setapplylocationS(true)
+
+        setslocation(false)
+      }
+      else if (cord.lat != 0 && cord.lng != 0) {
+        setslocation(false)
+        setapplylocationC(true)
+      }
+      else {
+        alert('Cordinate is empty')
+      }
+    }
+
+    else {
+      alert('Choice location')
+    }
+    console.log('bbbbbbb', loc, cord);
+  }
   return (
     <Fragment>
       <SafeAreaView
@@ -663,28 +677,29 @@ export default function Buymenu({ navigation }) {
 
               </TouchableOpacity>
 
-              {applylocationS == false ?
+              {
+                !applylocationS && !applylocationC ?
 
-                <Text style={{ fontSize: totalSize(0.85), marginTop: height(1), alignSelf: 'center', color: '#FF0000' }}>
-                  Select City and distance
-                </Text>
-                :
-
-                <View style={{ marginTop: height(0.7), width: width(39), alignSelf: 'flex-end', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
-
-                  <Text style={{ fontSize: totalSize(1.2), width: width(30) }}>
-
-                    {mapsearch}
-
+                  <Text style={{ fontSize: totalSize(0.85), marginTop: height(1), alignSelf: 'center', color: '#FF0000' }}>
+                    Select City and distance
                   </Text>
+                  :
 
-                  <Text style={{ fontSize: totalSize(1.2) }}>
+                  <View style={{ marginTop: height(0.7), width: width(39), alignSelf: 'flex-end', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
 
-                    {slider}mi
+                    <Text style={{ fontSize: totalSize(1.2), width: width(30) }}>
 
-                  </Text>
+                      {mapsearch}
 
-                </View>
+                    </Text>
+
+                    <Text style={{ fontSize: totalSize(1.2) }}>
+
+                      {slider}mi
+
+                    </Text>
+
+                  </View>
 
               }
 
@@ -1449,7 +1464,6 @@ export default function Buymenu({ navigation }) {
               <Header text='location' back={() => maplocationModal()} />
 
               <View style={{ height: height(6), width: width(95), marginTop: height(5), alignSelf: 'center', borderBottomWidth: 0.5, flexDirection: 'row', justifyContent: 'space-between' }}>
-
                 <TextInput
                   placeholder='search by location'
                   value={mapsearch}

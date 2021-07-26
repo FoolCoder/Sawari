@@ -5,13 +5,13 @@ import {
     KeyboardAvoidingView, Alert
 } from 'react-native'
 import Header from '../Components/header/header'
-
+import ImagePicker from 'react-native-image-picker'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { height, width, totalSize } from 'react-native-dimension'
 import pic from '../assets/image-add.png'
 import { link } from './links/links'
 import AsyncStorage from '@react-native-community/async-storage'
-
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
 import { useSelector } from 'react-redux'
 
 var chatLocal = []
@@ -31,6 +31,37 @@ export default function Groupchat({ navigation, route }) {
         })
     }, [])
 
+    const pickimage = () => {
+        const options = {
+            title: 'Sent Picture',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                const source = { uri: response.uri };
+
+                // You can also display the image using data:
+                // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+                // setmassege({
+                //     filePath: response,
+                //     fileData: response.data,
+                //     fileUri: response.uri
+                // });
+            }
+        });
+    }
 
     const sendMessage = () => {
         if (message) {
@@ -42,6 +73,7 @@ export default function Groupchat({ navigation, route }) {
                 message: {
                     author: token.userDetails._id,
                     text: message,
+
                 }
             }
             socket.emit('sendMessage', data)
@@ -178,85 +210,87 @@ export default function Groupchat({ navigation, route }) {
     }
     return (
 
-        <SafeAreaView
-            style={(styles.container)}
-        >
-            <View style={{
-
-                width: width(98),
-                height: height(98),
+        <View style={{
+            flex: 1,
+            width: width(98),
+            height: height(98),
 
 
-                alignSelf: 'center'
-            }}>
-                <Header
-                    text='Global Chat'
-                    back={() => navigation.goBack()}
-                />
-                {
-                    loader ?
-                        <View style={{ flex: 1, justifyContent: 'center' }}>
+            alignSelf: 'center'
+        }}>
 
-                            <Loader
-                                color='#000'
-                            />
-                        </View>
-                        :
-                        <FlatList
-                            style={{
-                                // borderWidth: 1,
-                                // height:  height(80)
-                            }}
-                            inverted
-                            data={massege}
-                            extraData={massege}
-                            renderItem={renderMassege}
-                            keyExtractor={(item, index) => index.toString()}
-                        />}
+            <Header
+                text='Global Chat'
+                back={() => navigation.goBack()}
+            />
 
-                <View style={{
-                    width: width(95), marginVertical: height(1),
-                    borderRadius: 5, alignSelf: 'center', flexDirection: 'row',
-                    justifyContent: 'space-between', alignItems: 'center'
-                }}>
-                    <TouchableOpacity>
-                        <Image style={{
-                            width: 40,
-                            height: 40
-                        }}
-                            source={pic}
+            {
+                loader ?
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+
+                        <Loader
+                            color='#000'
                         />
-                    </TouchableOpacity>
-
-                    <View style={{ backgroundColor: '#d9d9d9', borderRadius: 5, width: width(65) }}>
-
-                        <TextInput
-                            placeholder='Send The message'
-                            multiline
-                            value={message}
-                            onChangeText={(text) => setMessage(text)}
-                            style={{
-                                maxHeight: height(20), width: width(68),
-                                fontSize: totalSize(2.2)
-                            }}
-                        />
-
                     </View>
-                    <TouchableOpacity
-                        onPress={() => {
-                            sendMessage()
-                            setMessage('')
+                    :
+                    <FlatList
+                        style={{
+                            // borderWidth: 1,
+                            // height:  height(80)
                         }}
-                        style={{ borderRadius: 40, backgroundColor: '#ffbb41' }}
-                    >
+                        inverted
+                        data={massege}
+                        extraData={massege}
+                        renderItem={renderMassege}
+                        keyExtractor={(item, index) => index.toString()}
+                    />}
 
-                        <MaterialIcons name='send' size={25} style={{ padding: 12 }} />
+            <View style={{
+                width: width(85), marginVertical: height(1),
+                borderRadius: 5, alignSelf: 'center', flexDirection: 'row',
+                justifyContent: 'space-between', alignItems: 'center'
+            }}>
+                {/* <TouchableOpacity onPress={() => {
+                    pickimage()
+                }}>
+                    <Image style={{
+                        width: 40,
+                        height: 40
+                    }}
+                        source={pic}
+                    />
+                </TouchableOpacity> */}
 
-                    </TouchableOpacity>
+                <View style={{ backgroundColor: '#d9d9d9', borderRadius: 5, width: width(65) }}>
+
+                    <TextInput
+                        placeholder='Send The message'
+                        multiline
+                        value={message}
+                        onChangeText={(text) => setMessage(text)}
+                        style={{
+                            maxHeight: height(20), width: width(68),
+                            fontSize: totalSize(2.2)
+                        }}
+                    />
+
                 </View>
+                <TouchableOpacity
+                    onPress={() => {
+                        sendMessage()
+                        setMessage('')
+                    }}
+                    style={{ borderRadius: 40, backgroundColor: '#ffbb41' }}
+                >
 
+                    <MaterialIcons name='send' size={25} style={{ padding: 12 }} />
+
+                </TouchableOpacity>
             </View>
-        </SafeAreaView>
+
+        </View>
+
+
     )
 }
 const styles = StyleSheet.create({
