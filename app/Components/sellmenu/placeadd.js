@@ -630,36 +630,7 @@ export default function Placeadd({ navigation }) {
 
             <View style={{ width: width(95), alignSelf: 'center' }}>
 
-              <View style={{ height: height(12), alignItems: 'center', flexDirection: 'row' }}>
 
-                <TextInput
-                  onChangeText={(text) => {
-                    if (text.length <= 50) {
-                      settitleLenght(text.length)
-                      settitle(text)
-                    }
-                  }}
-                  value={title}
-                  placeholder='title'
-                  multiline
-                  style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3.5), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
-                />
-
-                {titleLenght < 50 ?
-
-                  <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#000' }}>
-
-                    {titleLenght} / 50
-
-                  </Text>
-                  :
-                  <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#ff6666' }}>
-
-                    {titleLenght} / 50
-
-                  </Text>}
-
-              </View>
 
               <TextInput
                 onChangeText={(text) => setname(text)}
@@ -701,7 +672,36 @@ export default function Placeadd({ navigation }) {
              
               /> */}
 
+              <View style={{ height: height(12), alignItems: 'center', flexDirection: 'row' }}>
 
+                <TextInput
+                  onChangeText={(text) => {
+                    if (text.length <= 50) {
+                      settitleLenght(text.length)
+                      settitle(text)
+                    }
+                  }}
+                  value={title}
+                  placeholder='title'
+                  multiline
+                  style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3.5), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
+                />
+
+                {titleLenght < 50 ?
+
+                  <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#000' }}>
+
+                    {titleLenght} / 50
+
+                  </Text>
+                  :
+                  <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#ff6666' }}>
+
+                    {titleLenght} / 50
+
+                  </Text>}
+
+              </View>
               <TextInput
                 multiline
                 placeholder='description'

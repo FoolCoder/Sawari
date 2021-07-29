@@ -48,6 +48,7 @@ export default function Editprofile({ navigation }) {
         path: 'images',
       },
     };
+    console.log('kkkkkkkkk');
 
     /**
      * The first arg is the options object for customization (it can also be null or omitted for default options),
@@ -102,7 +103,7 @@ export default function Editprofile({ navigation }) {
         .then((response) => response.json())
         .then(async (Data) => {
 
-          console.log(Data)
+          console.log('dddddddddddd', Data)
 
           if (Data.type === 'success') {
             let profile = userProfile

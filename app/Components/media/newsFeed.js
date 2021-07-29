@@ -1,5 +1,8 @@
 import React, { Component, Fragment, useEffect, useRef, useState } from 'react'
-import { View, ImageBackground, Image, Text, TextInput, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView, FlatList, StyleSheet, Modal, Alert, KeyboardAvoidingView } from 'react-native'
+import {
+  View, ImageBackground, Image, Text, TextInput, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView,
+  FlatList, StyleSheet, Modal, Alert, Share
+} from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -29,6 +32,7 @@ import userP from '../../assets/user.png'
 import chat from '../../assets/chatt.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { newsFeedR } from '../Store/action'
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 export default function Newsfeed({ navigation }) {
 
@@ -46,7 +50,7 @@ export default function Newsfeed({ navigation }) {
 
   const [loader, setloader] = useState(true)
   const [Mloader, setMloader] = useState(false)
-
+  const [textflag, settextflag] = useState(false)
   const [commmet1, setcomment1] = useState('')
   const [commmet2, setcomment2] = useState('')
 
@@ -146,75 +150,75 @@ export default function Newsfeed({ navigation }) {
 
   const addPostFeed = async () => {
 
-    if (pics.length > 0 && pics.length < 5) {
+    // if (pics.length > 0 && pics.length < 5) {
 
-      setMloader(true)
+    setMloader(true)
 
-      var data = new FormData()
-      data.append("user", user.id)
-      data.append("text", msg)
-      pics.map(q => {
+    var data = new FormData()
+    data.append("user", user.id)
+    data.append("text", msg)
+    pics.map(q => {
 
-        data.append("images", {
-          name: q.name,
-          type: q.type,
-          uri: q.uri
-        })
-
+      data.append("images", {
+        name: q.name,
+        type: q.type,
+        uri: q.uri
       })
 
-      try {
-        fetch(link + '/post/addPost', {
-          method: 'POST',
-          headers: {
-            Authorization: "Bearer " + user.token,
-            Accept: 'multipart/form-data',
-            'Content-Type': 'multipart/form-data'
-          },
-          body: data
-        })
-          .then((response) => response.json())
-          .then((Data) => {
+    })
 
-            console.log(Data)
+    try {
+      fetch(link + '/post/addPost', {
+        method: 'POST',
+        headers: {
+          Authorization: "Bearer " + user.token,
+          Accept: 'multipart/form-data',
+          'Content-Type': 'multipart/form-data'
+        },
+        body: data
+      })
+        .then((response) => response.json())
+        .then((Data) => {
 
-            if (Data.type === 'success') {
-              setMloader(false)
-              setmsg('')
-              setpics([])
-              Alert.alert(
-                'Post',
-                'Posted Successfully'
-              )
-              dispatch(newsFeedR(!reload))
-            }
+          console.log(Data)
 
-          }).catch((e) => {
-            console.log(e)
+          if (Data.type === 'success') {
             setMloader(false)
-          })
-      }
-      catch (e) {
-        console.log(e)
-        setMloader(false)
-      }
+            setmsg('')
+            setpics([])
+            Alert.alert(
+              'Post',
+              'Posted Successfully'
+            )
+            dispatch(newsFeedR(!reload))
+          }
 
+        }).catch((e) => {
+          console.log(e)
+          setMloader(false)
+        })
     }
-    else {
-      if (pics.length == 0) {
-        Alert.alert(
-          'Post',
-          'Minimum 1 image required to post'
-        )
-      }
-      else {
-        Alert.alert(
-          'Post',
-          'Maximum 4 images allowed'
-        )
-      }
+    catch (e) {
+      console.log(e)
+      setMloader(false)
+    }
 
-    }
+    // }
+    // else {
+    //   if (pics.length == 0) {
+    //     Alert.alert(
+    //       'Post',
+    //       'Minimum 1 image required to post'
+    //     )
+    //   }
+    //   else {
+    //     Alert.alert(
+    //       'Post',
+    //       'Maximum 4 images allowed'
+    //     )
+    //   }
+
+    // }
 
   }
 
@@ -588,7 +592,7 @@ export default function Newsfeed({ navigation }) {
 
           </TouchableOpacity>
 
-          <TouchableOpacity
+          <TouchableOpacity onPress={() => onShare()}
             style={{ height: height(5), width: width(28), borderRadius: 7, borderWidth: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
           >
 
@@ -885,6 +889,44 @@ export default function Newsfeed({ navigation }) {
     )
 
   }
+  const onShare = async () => {
+
+    try {
+
+      const link = await dynamicLinks().buildShortLink({
+        link: 'https://user/123',
+        domainUriPrefix: 'https://sawario.page.link',
+        android: {
+          packageName: 'com.sawario',
+        }
+
+      }, dynamicLinks.ShortLinkType.SHORT);
+
+      console.log('lllllllllllllll', link)
+
+      const result = await Share.share({
+        message:
+          link,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      // Alert.alert(
+      //   'Network',
+      //   'Turn on internet to share app'
+      // )
+      alert(error.message);
+    }
+
+  }
 
   return (
     <Fragment>
@@ -922,9 +964,14 @@ export default function Newsfeed({ navigation }) {
 
                   <TextInput
                     numberOfLines={1}
-                    placeholder='WHATSPPENING'
+                    placeholder='WHATSHPPENING'
                     value={msg}
-                    onChangeText={(text) => setmsg(text)}
+                    onChangeText={(text) => {
+                      setmsg(text)
+                      if (text.length > 0) {
+                        settextflag(true)
+                      }
+                    }}
                     style={{ fontSize: totalSize(2.5), width: width(68), paddingVertical: 0 }}
                   />
 
@@ -950,12 +997,13 @@ export default function Newsfeed({ navigation }) {
                 renderItem={_FlatlistP}
                 showsHorizontalScrollIndicator={false}
               />
-              {pics.length > 0 ?
+              {pics.length > 0 || textflag ?
 
                 <TouchableHighlight
                   underlayColor='#242527'
                   style={{
-                    height: height(5), width: width(40), marginTop: height(1), alignSelf: 'center', backgroundColor: '#fff', borderWidth: 1.5, borderColor: '#fabb47', borderRadius: 10, justifyContent: 'center'
+                    height: height(5), width: width(40), marginTop: height(1), alignSelf: 'center', backgroundColor: '#fff',
+                    borderWidth: 1.5, borderColor: '#fabb47', borderRadius: 10, justifyContent: 'center',
                   }}
                   onPress={() => addPostFeed()}
                 >

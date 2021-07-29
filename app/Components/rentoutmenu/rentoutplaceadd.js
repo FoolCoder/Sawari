@@ -690,6 +690,36 @@ export default function Rplaceadd({ navigation }) {
 
             <View style={{ width: width(95), alignSelf: 'center' }}>
 
+
+
+              <TextInput
+                onChangeText={(text) => setname(text)}
+                value={name}
+                placeholder='Name'
+                style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
+              />
+
+              <TextInput
+                onChangeText={(text) => setphone(text)}
+                value={phone}
+                keyboardType='phone-pad'
+                placeholder='phone'
+                style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
+              />
+
+              <TextInput
+                onChangeText={(text) => setemail(text)}
+                value={email}
+                placeholder='email'
+                style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
+              />
+
+
+
+              {/* <TextInput
+                placeholder='age'
+                style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
+              /> */}
               <View style={{ height: height(12), alignItems: 'center', flexDirection: 'row' }}>
 
                 <TextInput
@@ -730,36 +760,6 @@ export default function Rplaceadd({ navigation }) {
                   </Text>}
 
               </View>
-
-              <TextInput
-                onChangeText={(text) => setname(text)}
-                value={name}
-                placeholder='Name'
-                style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
-              />
-
-              <TextInput
-                onChangeText={(text) => setphone(text)}
-                value={phone}
-                keyboardType='phone-pad'
-                placeholder='phone'
-                style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
-              />
-
-              <TextInput
-                onChangeText={(text) => setemail(text)}
-                value={email}
-                placeholder='email'
-                style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
-              />
-
-
-
-              {/* <TextInput
-                placeholder='age'
-                style={{ paddingVertical: 0, width: width(70), fontSize: totalSize(3), marginTop: height(2), fontFamily: 'BebasNeue-Regular', borderBottomWidth: 1, borderBottomColor: '#a2a2a2' }}
-              /> */}
-
 
               <TextInput
                 multiline
