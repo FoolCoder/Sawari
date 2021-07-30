@@ -39,6 +39,7 @@ export default function Newsfeed({ navigation }) {
   const [user, setuser] = useState()
   const [msg, setmsg] = useState('')
   const [pics, setpics] = useState([])
+  const [video, setvideo] = useState([])
 
   const [newsfeed, setnewsfeed] = useState([])
   const [commentV, setcommentV] = useState(false)
@@ -120,16 +121,29 @@ export default function Newsfeed({ navigation }) {
 
     try {
       const results = await DocumentPicker.pickMultiple({
-        type: [DocumentPicker.types.images],
+        type: [DocumentPicker.types.allFiles],
       });
       results.map(q => {
-        setpics((prev) => {
-          return [
-            ...prev, { uri: q.uri, name: q.name, type: q.type }
-          ]
-        })
+        console.log(q.type);
+        if (q.type == 'image/jpeg') {
+          setpics((prev) => {
+            return [
+              ...prev, { uri: q.uri, name: q.name, type: q.type }
+            ]
+          })
+        }
+        else if (q.type = 'video/mp4') {
+          setvideo((prev) => {
+            return [
+              ...prev, { uri: q.uri, name: q.name, type: q.type }
+            ]
+          })
+        }
+        else {
+          alert('not image')
+        }
       })
-      // console.log(pics);
+      console.log('jjjjjj', results);
 
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -157,6 +171,7 @@ export default function Newsfeed({ navigation }) {
     var data = new FormData()
     data.append("user", user.id)
     data.append("text", msg)
+
     pics.map(q => {
 
       data.append("images", {
@@ -471,7 +486,9 @@ export default function Newsfeed({ navigation }) {
               source={item.user ? { uri: link + '/' + item.user.image } : carpic}
               style={{ height: 50, width: 50, borderRadius: 25, backgroundColor: '#ccc' }}
             />
-
+            {
+              // console.log(pics.length,picV)
+            }
           </TouchableOpacity>
 
           <View style={{ marginLeft: width(3) }}>
@@ -497,7 +514,7 @@ export default function Newsfeed({ navigation }) {
           </Text>
         }
 
-        <View style={{ height: height(30), marginTop: height(1) }}>
+        <View style={{ height: height(30), marginTop: height(1), }}>
 
           <Pages
             indicatorColor='#000'
@@ -526,14 +543,15 @@ export default function Newsfeed({ navigation }) {
               })
 
               :
-              <View
-                style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', justifyContent: 'center', backgroundColor: '#898' }}
-              >
-                <Loader
-                  color='#fff'
-                />
+              null
+              // <View
+              //   style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', justifyContent: 'center', backgroundColor: '#898' }}
+              // >
+              //   <Loader
+              //     color='#fff'
+              //   />
 
-              </View>
+              // </View>
             }
 
           </Pages>
@@ -608,7 +626,7 @@ export default function Newsfeed({ navigation }) {
 
         <View style={{ height: height(2) }} />
 
-      </View>
+      </View >
 
     )
   }
@@ -950,7 +968,7 @@ export default function Newsfeed({ navigation }) {
                 ?
                 { height: height(30), width: '100%', backgroundColor: '#fff' }
                 :
-                { height: height(15), width: '100%', backgroundColor: '#fff' }}
+                { height: textflag ? height(20) : height(15), width: '100%', backgroundColor: '#fff' }}
             >
 
               <View style={{ width: width(90), marginTop: height(4), alignSelf: 'center', flexDirection: 'row', alignItems: 'center' }}>
