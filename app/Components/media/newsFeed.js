@@ -98,7 +98,7 @@ export default function Newsfeed({ navigation }) {
 
           if (responseJson.type === 'success') {
             setnewsfeed(responseJson.result)
-            // console.log(responseJson.result)
+            console.log(responseJson.result)
           }
           setTimeout(() => {
             setloader(false)
@@ -123,6 +123,7 @@ export default function Newsfeed({ navigation }) {
       const results = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.allFiles],
       });
+
       results.map(q => {
         console.log(q.type);
         if (q.type == 'image/jpeg') {
@@ -140,7 +141,7 @@ export default function Newsfeed({ navigation }) {
           })
         }
         else {
-          alert('not image')
+          alert('Please select image or video')
         }
       })
       console.log('jjjjjj', results);
@@ -181,7 +182,15 @@ export default function Newsfeed({ navigation }) {
       })
 
     })
+    video.map(q => {
 
+      data.append("images", {
+        name: q.name,
+        type: q.type,
+        uri: q.uri
+      })
+
+    })
     try {
       fetch(link + '/post/addPost', {
         method: 'POST',
@@ -195,7 +204,7 @@ export default function Newsfeed({ navigation }) {
         .then((response) => response.json())
         .then((Data) => {
 
-          console.log(Data)
+          console.log('assssssssssssssssssss', Data)
 
           if (Data.type === 'success') {
             setMloader(false)
@@ -982,7 +991,7 @@ export default function Newsfeed({ navigation }) {
 
                   <TextInput
                     numberOfLines={1}
-                    placeholder='WHATSHPPENING'
+                    placeholder='Whats Happening'
                     value={msg}
                     onChangeText={(text) => {
                       setmsg(text)
@@ -1015,7 +1024,8 @@ export default function Newsfeed({ navigation }) {
                 renderItem={_FlatlistP}
                 showsHorizontalScrollIndicator={false}
               />
-              {pics.length > 0 || textflag ?
+
+              {pics.length > 0 || textflag || video.length == 1 ?
 
                 <TouchableHighlight
                   underlayColor='#242527'
@@ -1104,7 +1114,7 @@ export default function Newsfeed({ navigation }) {
               <View style={{ height: height(20), width: width(50), backgroundColor: '#fff', borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
                 <Loader color="#000" />
                 <Text style={{ marginTop: height(3), fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#000' }}>
-                  Posting post
+                  Posting
                 </Text>
               </View>
 

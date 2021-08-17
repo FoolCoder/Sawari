@@ -187,6 +187,7 @@ export default function Chat({ navigation, route }) {
 
         var data = {}
         if (route.params.user == false) {
+          console.log('llllllllllllllll');
           data = {
             room:
             {
@@ -203,6 +204,7 @@ export default function Chat({ navigation, route }) {
           }
         }
         else {
+          console.log('kkkkkkkkkkkkkkkkkkkkiiiiiii');
           data = {
             room:
             {
@@ -307,6 +309,33 @@ export default function Chat({ navigation, route }) {
             text={route.params.name}
             back={() => navigation.goBack()}
           />
+          {/* <View style={{
+            position: 'absolute',
+            marginTop: height(10),
+            zIndex: 1,
+            height: height(8), width: width(100),
+            flexDirection: 'row',
+            backgroundColor: '#242527',
+            borderTopWidth: 0.3,
+            borderColor: '#fff',
+            alignItems: 'center'
+
+          }}>
+            <Text
+              style={{
+                fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2',
+                left: 12
+              }}
+            >
+              {chatUser.title}
+            </Text>
+            <Text
+              style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2', left: 22 }}
+            >
+              {chatUser.priceValue} {chatUser.priceCurrency}
+            </Text>
+
+          </View> */}
 
           {load == true ?
 

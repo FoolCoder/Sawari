@@ -1368,7 +1368,7 @@ export default function Rplaceadd({ navigation }) {
                     marginTop: height(3), fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular',
                     color: '#000'
                   }}>
-                    Posting add
+                    Posting ad
                   </Text>
                 </View>
 

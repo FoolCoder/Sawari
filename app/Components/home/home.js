@@ -18,7 +18,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
-import splas from '../../assets/splash.png'
+import splas from '../../assets/splash1.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { socketConnection } from '../Store/actiontype'
 
@@ -263,15 +263,20 @@ export default function Home({ navigation }) {
   const FlatListNotification = ({ item, index }) => (
 
     <TouchableOpacity
-      onPress={() => navigation.navigate('chatStack', {
-        screen: 'chat',
-        params: {
-          data: item,
-          name: item.user.name,
-          room: [item.room],
-          user: true
-        }
-      })}
+      onPress={() =>
+        setnmodel(false),
+        navigation.navigate('chatStack', {
+          screen: 'chat',
+          params: {
+            data: item,
+            name: item.user.name,
+            room: [item.room],
+            user: true
+          },
+
+        })
+
+      }
       style={{ width: width(90), marginVertical: height(1.5), alignSelf: 'center', backgroundColor: '#FFBB4190', borderRadius: 10 }}>
 
       <View style={{ width: width(85), marginVertical: height(1), alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -316,7 +321,7 @@ export default function Home({ navigation }) {
 
         <View style={{ flex: 1 }}>
 
-          <ImageBackground style={{ height: 120, width: 150, alignSelf: 'center', marginTop: height(4) }} source={splas}>
+          <ImageBackground style={{ height: 110, width: 110, alignSelf: 'center', marginTop: height(4) }} source={splas}>
 
           </ImageBackground>
 

@@ -872,9 +872,7 @@ export default function MyProfile({ navigation, route }) {
                 </View>
                 :
                 <View style={{ flex: 1, width: width(96), borderTopWidth: 1.4, borderColor: '#C4C4C4', marginTop: height(3.5) }}>
-                  <Text>
-                    this is false
-                  </Text>
+
                   <FlatList
                     key={'$'}
                     data={notification}

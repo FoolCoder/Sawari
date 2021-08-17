@@ -4,7 +4,7 @@ import { height, width, totalSize } from 'react-native-dimension'
 
 import { link } from '../links/links'
 
-import splas from '../../assets/splash.png'
+import splas from '../../assets/splash1.png'
 import facebook from '../../assets/facebook.png'
 import goole from '../../assets/google.png'
 
@@ -73,7 +73,7 @@ export default function Signup({ navigation }) {
 
         <ScrollView style={{ flex: 1 }}>
 
-          <ImageBackground style={{ height: 170, width: 220, marginTop: height(3), alignSelf: 'center' }} source={splas}>
+          <ImageBackground style={{ height: 140, width: 180, marginTop: height(3), alignSelf: 'center' }} source={splas}>
 
           </ImageBackground>
 

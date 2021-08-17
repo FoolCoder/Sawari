@@ -14,7 +14,7 @@ import { link } from '../links/links'
 
 import Loader from '../loader/loader'
 
-import splas from '../../assets/splash.png'
+import splas from '../../assets/splash1.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { dylinkF } from '../Store/action'
 
@@ -196,7 +196,7 @@ export default function Fhome({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }}>
                 BUY
-            </Text>
+              </Text>
 
             </TouchableHighlight>
 
@@ -208,7 +208,7 @@ export default function Fhome({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }}>
                 SELL
-            </Text>
+              </Text>
 
             </TouchableHighlight>
 
@@ -220,7 +220,7 @@ export default function Fhome({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }}>
                 RENT
-            </Text>
+              </Text>
 
             </TouchableHighlight>
 
@@ -232,7 +232,7 @@ export default function Fhome({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }}>
                 RENT OUT
-            </Text>
+              </Text>
 
             </TouchableHighlight>
 
@@ -244,7 +244,7 @@ export default function Fhome({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular' }}>
                 social media
-            </Text>
+              </Text>
 
             </TouchableHighlight>
 
@@ -256,7 +256,7 @@ export default function Fhome({ navigation }) {
 
               <Text style={{ fontSize: totalSize(4), color: '#FFBB41', fontFamily: 'BebasNeue-Regular' }}>
                 login
-            </Text>
+              </Text>
 
             </TouchableOpacity>
 

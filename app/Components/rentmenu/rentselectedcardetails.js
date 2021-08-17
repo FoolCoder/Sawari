@@ -253,14 +253,14 @@ export default function Rsellmenu({ navigation, route }) {
                           }}
                           imageStyle={{ borderRadius: 10 }}
                         >
-
+                          {/* 
                           <Text style={{ fontSize: totalSize(8), fontFamily: 'BebasNeue-Regular', color: '#60f159' }}>
                             {item.priceCurrency} {item.priceValue} {item.rentType}
                           </Text>
 
                           <Text style={{ fontSize: totalSize(8), fontFamily: 'BebasNeue-Regular', color: '#ec5fef' }}>
                             {item.year}
-                          </Text>
+                          </Text> */}
 
                         </ImageBackground>
 

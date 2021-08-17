@@ -638,7 +638,7 @@ export default function Profile({ navigation }) {
 
                   Reply
 
-               </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -791,7 +791,7 @@ export default function Profile({ navigation }) {
 
                   Reply
 
-               </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -851,7 +851,7 @@ export default function Profile({ navigation }) {
 
                     Reply
 
-               </Text>
+                  </Text>
 
                 </TouchableOpacity>
 
@@ -908,7 +908,7 @@ export default function Profile({ navigation }) {
 
                 <Text style={{ fontSize: totalSize(2), color: '#ffc55d', fontFamily: 'BebasNeue-Regular' }}>
                   edit profile
-                  </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -958,7 +958,7 @@ export default function Profile({ navigation }) {
 
                   <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#fabb47', alignSelf: 'center' }}>
                     Post
-             </Text>
+                  </Text>
 
                 </TouchableHighlight>
 
@@ -1028,8 +1028,8 @@ export default function Profile({ navigation }) {
               <View style={{ height: height(20), width: width(50), backgroundColor: '#fff', borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
                 <Loader color="#000" />
                 <Text style={{ marginTop: height(3), fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#000' }}>
-                  Posting post
-              </Text>
+                  Posting
+                </Text>
               </View>
 
             </View>

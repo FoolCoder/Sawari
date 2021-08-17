@@ -1273,7 +1273,7 @@ export default function Editadd({ navigation, route }) {
                 <View style={{ height: height(20), width: width(50), backgroundColor: '#fff', borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
                   <ActivityIndicator size="large" color="#000" />
                   <Text style={{ marginTop: height(3), fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular', color: '#000' }}>
-                    Posting add
+                    Posting ad
                   </Text>
                 </View>
 
