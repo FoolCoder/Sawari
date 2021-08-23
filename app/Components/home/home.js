@@ -56,7 +56,10 @@ export default function Home({ navigation }) {
   }
 
   useEffect(() => {
-    openNotification()
+    const unsubscribe = navigation.addListener('focus', () => {
+      openNotification()
+    });
+    return unsubscribe
   }, [reload])
 
   useEffect(() => {
@@ -233,7 +236,7 @@ export default function Home({ navigation }) {
       fetch(link + '/notifications/getNotifcationsByUser?userId=' + val.id, requestOptions)
         .then((response) => response.json())
         .then(async (responseJson) => {
-          // console.log(responseJson);
+          console.log('nnnnnnnnnnnnnnnnnnn', responseJson);
           if (responseJson.type === 'success') {
             var val = responseJson.result
             // console.log(val)
@@ -263,18 +266,19 @@ export default function Home({ navigation }) {
   const FlatListNotification = ({ item, index }) => (
 
     <TouchableOpacity
-      onPress={() =>
+      onPress={() => {
         setnmodel(false),
-        navigation.navigate('chatStack', {
-          screen: 'chat',
-          params: {
-            data: item,
-            name: item.user.name,
-            room: [item.room],
-            user: true
-          },
+          navigation.navigate('chatStack', {
+            screen: 'chat',
+            params: {
+              data: item,
+              name: item.user.name,
+              room: [item.room],
+              user: true
+            },
 
-        })
+          })
+      }
 
       }
       style={{ width: width(90), marginVertical: height(1.5), alignSelf: 'center', backgroundColor: '#FFBB4190', borderRadius: 10 }}>
@@ -346,7 +350,9 @@ export default function Home({ navigation }) {
               width: width(25)
             }}>
               <TouchableOpacity
-                onPress={() => setnmodel(true)}
+                onPress={() => setnmodel(true)
+
+                }
               // style={{ borderWidth: 1, borderRadius: 3 }}
               >
 

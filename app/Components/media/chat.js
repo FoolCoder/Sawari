@@ -54,7 +54,7 @@ export default function Chat({ navigation, route }) {
 
       setchatUser(route.params.data)
       c = route.params.data
-
+      console.log('llllllllllll', val);
       setuser(val)
 
       try {
@@ -193,7 +193,7 @@ export default function Chat({ navigation, route }) {
             {
               group: false,
               name: null,
-              users: [user.id, chatUser.users[1]._id]    // Your ID and Other User ID .......... if Group Only Your ID
+              users: [chatUser.users[0]._id, user.id]    // Your ID and Other User ID .......... if Group Only Your ID
             },
             message: {
               author: user.id,
@@ -309,7 +309,7 @@ export default function Chat({ navigation, route }) {
             text={route.params.name}
             back={() => navigation.goBack()}
           />
-          {/* <View style={{
+          <View style={{
             position: 'absolute',
             marginTop: height(10),
             zIndex: 1,
@@ -335,7 +335,7 @@ export default function Chat({ navigation, route }) {
               {chatUser.priceValue} {chatUser.priceCurrency}
             </Text>
 
-          </View> */}
+          </View>
 
           {load == true ?
 
@@ -348,6 +348,9 @@ export default function Chat({ navigation, route }) {
 
             :
             <FlatList
+              style={{
+                marginTop: height(6)
+              }}
               data={chat}
               inverted
               keyExtractor={(item, index) => { return index.toString() }}

@@ -40,9 +40,9 @@ export default function Rsellmenu({ navigation, route }) {
     try {
 
       setitem(route.params.data)
-      console.log('iiiiii', item);
+
       setfavour(route.params.data.isfavourite)
-      console.log(route.params.data)
+      console.log('iiiiiiiiiiiiuuuuuuuu', route.params.data)
 
       open()
 
@@ -184,6 +184,7 @@ export default function Rsellmenu({ navigation, route }) {
   }
 
   const onShare = async () => {
+    console.log('iiiiiittttem', item);
     try {
       const link = await dynamicLinks().buildShortLink({
         link: 'https://RSCDDY/' + item._id,

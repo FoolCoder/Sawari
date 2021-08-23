@@ -19,7 +19,7 @@ import DocumentPicker from 'react-native-document-picker';
 
 import Header from '../header/header'
 import Loader from '../loader/loader';
-
+import Video from 'react-native-video'
 import { link } from '../links/links'
 
 import Cload from '../../assets/Cload.gif'
@@ -39,7 +39,7 @@ export default function Newsfeed({ navigation }) {
   const [user, setuser] = useState()
   const [msg, setmsg] = useState('')
   const [pics, setpics] = useState([])
-  const [video, setvideo] = useState([])
+  const [videos, setvideos] = useState([])
 
   const [newsfeed, setnewsfeed] = useState([])
   const [commentV, setcommentV] = useState(false)
@@ -57,6 +57,8 @@ export default function Newsfeed({ navigation }) {
 
   const [pic, setpic] = useState('')
   const [picV, setpicV] = useState(false)
+  const [video, setvideo] = useState('')
+  const [videoV, setvideoV] = useState(false)
   const [flagState, setFlagState] = useState(false);
   const [postObject, setpostObject] = useState({})
 
@@ -80,7 +82,7 @@ export default function Newsfeed({ navigation }) {
   }
 
   const getNewsFeed = async (item) => {
-
+    console.log(2222222222222222222222);
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + item.token);
 
@@ -98,7 +100,7 @@ export default function Newsfeed({ navigation }) {
 
           if (responseJson.type === 'success') {
             setnewsfeed(responseJson.result)
-            console.log(responseJson.result)
+            console.log('kkkkkkkkkkkk', responseJson.result)
           }
           setTimeout(() => {
             setloader(false)
@@ -126,19 +128,25 @@ export default function Newsfeed({ navigation }) {
 
       results.map(q => {
         console.log(q.type);
-        if (q.type == 'image/jpeg') {
+        if (q.type == 'image/jpeg' || q.type == 'image/jpg' || q.type == 'image/png' || q.type == 'image/webp') {
           setpics((prev) => {
             return [
               ...prev, { uri: q.uri, name: q.name, type: q.type }
             ]
           })
         }
-        else if (q.type = 'video/mp4') {
-          setvideo((prev) => {
-            return [
-              ...prev, { uri: q.uri, name: q.name, type: q.type }
-            ]
-          })
+        else if (q.type === 'video/mp4' || q.type === 'video/mov' || q.type === 'video/avi' || q.type === 'video/mkv') {
+          if (q.size <= 5242880) {
+            setvideos((prev) => {
+              return [
+                ...prev, { uri: q.uri, name: q.name, type: q.type }
+              ]
+            })
+
+          }
+          else {
+            alert('video file size out of limit')
+          }
         }
         else {
           alert('Please select image or video')
@@ -162,6 +170,12 @@ export default function Newsfeed({ navigation }) {
     })
     setpics(pic)
   }
+  const removevideo = (item) => {
+    let video = videos.filter((e) => {
+      return e != item
+    })
+    setvideos(video)
+  }
 
   const addPostFeed = async () => {
 
@@ -182,7 +196,7 @@ export default function Newsfeed({ navigation }) {
       })
 
     })
-    video.map(q => {
+    videos.map(q => {
 
       data.append("images", {
         name: q.name,
@@ -210,6 +224,7 @@ export default function Newsfeed({ navigation }) {
             setMloader(false)
             setmsg('')
             setpics([])
+            setvideos([])
             Alert.alert(
               'Post',
               'Posted Successfully'
@@ -464,7 +479,37 @@ export default function Newsfeed({ navigation }) {
       </View>
     )
   }
+  const _FlatlistV = ({ item }) => {
+    return (
+      <View style={{ margin: width(1), height: 60 }}>
+        <View style={{ height: 60, width: 90 }}>
 
+          {/* <Image
+            style={{ height: 50, width: 80, marginTop: 5, borderWidth: 1, borderColor: '#000', backgroundColor: '#bbb', borderRadius: 5 }}
+            source={{ uri: item.uri }} /> */}
+          <Video source={{ uri: item.uri }}   // Can be a URL or a local file.
+            autoPlay={false}
+            shouldPlay={false}
+            controls={false}
+
+            // onBuffer={this.onBuffer}                
+            // onError={this.videoError}              
+            style={{ height: 50, width: 80, marginTop: 5, borderWidth: 1, borderColor: '#000', backgroundColor: '#bbb', borderRadius: 5 }} />
+
+          <TouchableOpacity
+            onPress={() => removevideo(item)}
+            style={{ height: 20, width: 20, alignSelf: 'flex-end', justifyContent: 'center', alignItems: 'center', position: 'absolute', zIndex: 1, backgroundColor: '#aaa', borderRadius: 10 }}
+          >
+            <Text style={{ fontSize: totalSize(1.5), fontWeight: 'bold', color: '#fff' }}>
+              X
+            </Text>
+
+          </TouchableOpacity>
+
+        </View>
+      </View>
+    )
+  }
   const _Flatlist = ({ item, index }) => {
     return (
 
@@ -532,22 +577,46 @@ export default function Newsfeed({ navigation }) {
             {item.media.length > 0 ?
 
               item.media.map((e) => {
+
                 return (
+                  <View>
+                    {e.type === 'image' ?
+                      <TouchableOpacity
+                        onPress={() => {
+                          setpic(e.name)
+                          setpicV(true)
+                        }}
+                      >
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      setpic(e.name)
-                      setpicV(true)
-                    }}
-                  >
+                        <Image
+                          source={{ uri: link + '/' + e.name }}
+                          style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', backgroundColor: '#898' }}
+                        />
 
-                    <Image
-                      source={{ uri: link + '/' + e.name }}
-                      style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', backgroundColor: '#898' }}
-                    />
 
-                  </TouchableOpacity>
+                      </TouchableOpacity>
+                      :
+                      <TouchableOpacity
+                        onPress={() => {
+                          setvideo(e.name)
+                          setvideoV(true)
+                        }}
+                      >
 
+
+                        <Video
+                          source={{ uri: link + '/' + e.name }}
+                          autoPlay={true}
+                          shouldPlay={true}
+
+                          // controls={e.type == 'video' ? true : false}
+                          style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', backgroundColor: '#898' }}
+                        />
+                      </TouchableOpacity>
+
+                    }
+
+                  </View>
                 )
               })
 
@@ -973,9 +1042,9 @@ export default function Newsfeed({ navigation }) {
           <ScrollView style={{ flex: 1 }}>
 
             <View style={
-              pics.length > 0
+              pics.length > 0 || videos.length > 0
                 ?
-                { height: height(30), width: '100%', backgroundColor: '#fff' }
+                { height: height(38), width: '100%', backgroundColor: '#fff' }
                 :
                 { height: textflag ? height(20) : height(15), width: '100%', backgroundColor: '#fff' }}
             >
@@ -1017,15 +1086,24 @@ export default function Newsfeed({ navigation }) {
 
               </View>
 
+
               <FlatList
-                style={{ marginTop: height(2), flexGrow: 0 }}
+                style={{ marginTop: height(1), flexGrow: 0 }}
                 data={pics}
                 horizontal={true}
                 renderItem={_FlatlistP}
                 showsHorizontalScrollIndicator={false}
+                ListFooterComponent={() => <View style={{ width: '95%', borderWidth: 0.3 }} />}
+              />
+              <FlatList
+                style={{ flexGrow: 0 }}
+                data={videos}
+                horizontal={true}
+                renderItem={_FlatlistV}
+                showsHorizontalScrollIndicator={false}
               />
 
-              {pics.length > 0 || textflag || video.length == 1 ?
+              {pics.length > 0 || textflag || videos.length > 0 ?
 
                 <TouchableHighlight
                   underlayColor='#242527'
@@ -1136,13 +1214,49 @@ export default function Newsfeed({ navigation }) {
                 <ImageBackground
                   source={{ uri: link + '/' + pic }}
                   style={{ height: height(50), width: '100%' }}
-                  imageStyle={{ resizeMode: 'contain' }}
+                  imageStyle={{ resizeMode: 'cover' }}
                 />
 
               </View>
 
               <TouchableOpacity
                 onPress={() => setpicV(false)}
+                style={{ marginTop: height(2), position: 'absolute', alignSelf: 'flex-end' }}
+              >
+
+                <MaterialIcons name='close' size={35} color='#fff' />
+
+              </TouchableOpacity>
+
+
+
+            </View>
+
+          </Modal>
+          <Modal
+            animationType={'fade'}
+            transparent={true}
+            visible={videoV}
+            onRequestClose={() => setvideoV(false)}
+          >
+
+            <View style={{ flex: 1, backgroundColor: '#000' }}>
+
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+
+                <Video
+                  source={{ uri: link + '/' + video }}
+                  style={{ height: height(50), width: '100%' }}
+                  autoPlay={true}
+                  // shouldPlay={true}
+                  controls={true}
+                // resizeMode={'cover'}
+                />
+
+              </View>
+
+              <TouchableOpacity
+                onPress={() => setvideoV(false)}
                 style={{ marginTop: height(2), position: 'absolute', alignSelf: 'flex-end' }}
               >
 

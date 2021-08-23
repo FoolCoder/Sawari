@@ -233,17 +233,37 @@ export default function Groupchat({ navigation, route }) {
                         />
                     </View>
                     :
-                    <FlatList
-                        style={{
-                            // borderWidth: 1,
-                            // height:  height(80)
-                        }}
-                        inverted
-                        data={massege}
-                        extraData={massege}
-                        renderItem={renderMassege}
-                        keyExtractor={(item, index) => index.toString()}
-                    />}
+
+
+                    massege.length === 0 ?
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Text style={{
+                                fontSize: totalSize(3),
+
+                                fontFamily: 'BebasNeue-Regular'
+                            }}>
+                                Nothing to show Here
+                            </Text>
+                        </View>
+                        :
+
+
+                        <FlatList
+                            style={{
+                                // borderWidth: 1,
+                                // height:  height(80)
+                            }}
+                            inverted
+                            data={massege}
+                            extraData={massege}
+                            renderItem={renderMassege}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+            }
 
             <View style={{
                 width: width(85), marginVertical: height(1),
