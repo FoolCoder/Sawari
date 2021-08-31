@@ -1,7 +1,7 @@
 import React, { Component, Fragment, useEffect, useRef, useState } from 'react'
 import {
   View, ImageBackground, Image, Text, TextInput, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView,
-  FlatList, StyleSheet, Modal, Alert, Share
+  FlatList, StyleSheet, Modal, Alert, Share, Dimensions,
 } from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
 
@@ -16,14 +16,14 @@ import millify from 'millify'
 import AsyncStorage from '@react-native-community/async-storage'
 
 import DocumentPicker from 'react-native-document-picker';
-
+import FastImage from 'react-native-fast-image'
 import Header from '../header/header'
 import Loader from '../loader/loader';
 import Video from 'react-native-video'
 import { link } from '../links/links'
 
 import Cload from '../../assets/Cload.gif'
-
+import VideoPlayer from 'react-native-video-player'
 import addimage from '../../assets/image-add.png'
 import commentp from '../../assets/comment.png'
 import carpic from '../../assets/carpic.png'
@@ -34,10 +34,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { newsFeedR } from '../Store/action'
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 
+const threshold = 100
 export default function Newsfeed({ navigation }) {
 
   const [user, setuser] = useState()
-  const [msg, setmsg] = useState('')
+  const [msg, setmsg] = useState([])
   const [pics, setpics] = useState([])
   const [videos, setvideos] = useState([])
 
@@ -54,6 +55,7 @@ export default function Newsfeed({ navigation }) {
   const [textflag, settextflag] = useState(false)
   const [commmet1, setcomment1] = useState('')
   const [commmet2, setcomment2] = useState('')
+  const [paused, setpaused] = useState(true);
 
   const [pic, setpic] = useState('')
   const [picV, setpicV] = useState(false)
@@ -61,18 +63,30 @@ export default function Newsfeed({ navigation }) {
   const [videoV, setvideoV] = useState(false)
   const [flagState, setFlagState] = useState(false);
   const [postObject, setpostObject] = useState({})
-
+  const [start, setstart] = useState(null)
+  const [end, setend] = useState(null)
   const reload = useSelector((state) => state.reload)
   const dispatch = useDispatch()
   const userProfile = useSelector((state) => state.user)
-
   useEffect(() => {
 
     open()
-
+    // onPlayPausePress()
     // console.log('123')
 
-  }, [reload])
+
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      onPlayPausePress()
+    });
+    return unsubscribe
+  }, [reload, navigation])
+  const onPlayPausePress = () => {
+    setpaused(!paused)
+
+  }
+
 
   const open = async () => {
 
@@ -145,7 +159,7 @@ export default function Newsfeed({ navigation }) {
 
           }
           else {
-            alert('video file size out of limit')
+            alert('video file size out of limit, Max Size limit %mb')
           }
         }
         else {
@@ -178,86 +192,121 @@ export default function Newsfeed({ navigation }) {
   }
 
   const addPostFeed = async () => {
+    if ((pics.length > 0 && pics.length <= 4) ||
+      (videos.length > 0 && videos.length <= 1) ||
+      msg.length > 0) {
+      if (pics.length > 4) {
+        return Alert.alert(
+          'Pic Alert',
+          'Pic should be less than equal to 4'
+        )
+      }
+      if (videos.length > 1) {
+        return Alert.alert(
+          'Video',
+          'Video should be one'
+        )
+      }
+      // if ((pics.length <= 4 && videos.length <= 1)) {
+      setMloader(true)
 
-    // if (pics.length > 0 && pics.length < 5) {
 
-    setMloader(true)
 
-    var data = new FormData()
-    data.append("user", user.id)
-    data.append("text", msg)
+      var data = new FormData()
+      data.append("user", user.id)
+      data.append("text", msg)
 
-    pics.map(q => {
+      pics.map(q => {
 
-      data.append("images", {
-        name: q.name,
-        type: q.type,
-        uri: q.uri
-      })
 
-    })
-    videos.map(q => {
 
-      data.append("images", {
-        name: q.name,
-        type: q.type,
-        uri: q.uri
-      })
-
-    })
-    try {
-      fetch(link + '/post/addPost', {
-        method: 'POST',
-        headers: {
-          Authorization: "Bearer " + user.token,
-          Accept: 'multipart/form-data',
-          'Content-Type': 'multipart/form-data'
-        },
-        body: data
-      })
-        .then((response) => response.json())
-        .then((Data) => {
-
-          console.log('assssssssssssssssssss', Data)
-
-          if (Data.type === 'success') {
-            setMloader(false)
-            setmsg('')
-            setpics([])
-            setvideos([])
-            Alert.alert(
-              'Post',
-              'Posted Successfully'
-            )
-            dispatch(newsFeedR(!reload))
-          }
-
-        }).catch((e) => {
-          console.log(e)
-          setMloader(false)
+        data.append("images", {
+          name: q.name,
+          type: q.type,
+          uri: q.uri
         })
-    }
-    catch (e) {
-      console.log(e)
-      setMloader(false)
+
+
+
+      })
+
+
+
+      videos.map(q => {
+
+
+        data.append("images", {
+          name: q.name,
+          type: q.type,
+          uri: q.uri
+        })
+
+
+      })
+
+      try {
+        fetch(link + '/post/addPost', {
+          method: 'POST',
+          body: data,
+          headers: {
+            Authorization: "Bearer " + user.token,
+            'Accept': "application/json",
+            'Content-Type': 'multipart/form-data'
+          },
+        })
+          // fetch(link + '/post/addPost', {
+          //   method: 'POST',
+          //   headers: new Header({
+          //     Authorization: "Bearer " + user.token,
+          //     Accept: 'multipart/form-data',
+          //     'Content-Type': 'multipart/form-data'
+          //   }),
+          //   body: data
+          // })
+          .then((response) => response.json())
+          .then((Data) => {
+
+            console.log('assssssssssssssssssss', Data)
+
+            if (Data.type === 'success') {
+              setMloader(false)
+              setmsg('')
+              setpics([])
+              setvideos([])
+              Alert.alert(
+                'Post',
+                'Posted Successfully'
+              )
+              dispatch(newsFeedR(!reload))
+            }
+
+          }).catch((e) => {
+            console.log(e)
+            setMloader(false)
+          })
+      }
+      catch (e) {
+        console.log(e)
+        setMloader(false)
+      }
+      //   }
+      //   else {
+      //     alert('out of limit')
+      //   }
     }
 
-    // }
-    // else {
-    //   if (pics.length == 0) {
-    //     Alert.alert(
-    //       'Post',
-    //       'Minimum 1 image required to post'
-    //     )
-    //   }
-    //   else {
-    //     Alert.alert(
-    //       'Post',
-    //       'Maximum 4 images allowed'
-    //     )
-    //   }
 
-    // }
+
+
+
+    else {
+      Alert.alert(
+        'Out of Limit',
+        'Images should be less than 5 and Video should be 1',
+        ''
+      )
+    }
+
 
   }
 
@@ -489,6 +538,8 @@ export default function Newsfeed({ navigation }) {
             source={{ uri: item.uri }} /> */}
           <Video source={{ uri: item.uri }}   // Can be a URL or a local file.
             autoPlay={false}
+            // paused={true}
+            muted
             shouldPlay={false}
             controls={false}
 
@@ -511,6 +562,8 @@ export default function Newsfeed({ navigation }) {
     )
   }
   const _Flatlist = ({ item, index }) => {
+    const { Width } = Dimensions.get("window")
+
     return (
 
       <View style={
@@ -526,9 +579,12 @@ export default function Newsfeed({ navigation }) {
           <TouchableOpacity
             onPress={() => {
               if (item.user._id == user.id) {
+                onPlayPausePress()
                 navigation.navigate('profile')
               }
+
               else {
+                onPlayPausePress()
                 navigation.navigate('uProfile', {
                   data: item
                 })
@@ -568,7 +624,7 @@ export default function Newsfeed({ navigation }) {
           </Text>
         }
 
-        <View style={{ height: height(30), marginTop: height(1), }}>
+        <View style={{ height: height(30), marginTop: height(1) }}>
 
           <Pages
             indicatorColor='#000'
@@ -588,31 +644,43 @@ export default function Newsfeed({ navigation }) {
                         }}
                       >
 
-                        <Image
-                          source={{ uri: link + '/' + e.name }}
+                        <FastImage
+                          source={{
+                            uri: link + '/' + e.name,
+                            priority: FastImage.priority.high
+                          }}
                           style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', backgroundColor: '#898' }}
                         />
 
 
                       </TouchableOpacity>
                       :
-                      <TouchableOpacity
-                        onPress={() => {
-                          setvideo(e.name)
-                          setvideoV(true)
-                        }}
-                      >
+                      <View>
+                        <TouchableOpacity
+                          onPress={() => {
+                            setvideo(e.name)
+                            setvideoV(true)
+                            setpaused(!paused)
+                          }}
+                          style={{
+                            alignItems: 'flex-end', marginRight: 15, right: 0,
+                            position: 'absolute', zIndex: 1
+                          }}
+                        >
+                          <MaterialIcons name='fullscreen' size={30} />
+                        </TouchableOpacity>
+                        <VideoPlayer
+                          video={{ uri: link + '/' + e.name }}
+                          // autoPlay={true}
+                          resizeMode={'cover'}
+                          fullScreenOnLongPress={true}
+                          paused={paused}
 
 
-                        <Video
-                          source={{ uri: link + '/' + e.name }}
-                          autoPlay={true}
-                          shouldPlay={true}
-
-                          // controls={e.type == 'video' ? true : false}
+                          //   // controls={e.type == 'video' ? true : false}
                           style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', backgroundColor: '#898' }}
                         />
-                      </TouchableOpacity>
+                      </View>
 
                     }
 
@@ -1036,17 +1104,23 @@ export default function Newsfeed({ navigation }) {
           <Header text='NEWS FEED'
             back={() => navigation.goBack()}
             image={link + '/' + userProfile.userDetails.image}
-            profile={() => navigation.navigate('profile')}
+            profile={() => {
+              onPlayPausePress()
+              navigation.navigate('profile')
+            }}
           />
 
-          <ScrollView style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }}
+          // scrollEventThrottle={16}
+
+          >
 
             <View style={
               pics.length > 0 || videos.length > 0
                 ?
                 { height: height(38), width: '100%', backgroundColor: '#fff' }
                 :
-                { height: textflag ? height(20) : height(15), width: '100%', backgroundColor: '#fff' }}
+                { height: msg.length > 0 ? height(20) : height(15), width: '100%', backgroundColor: '#fff' }}
             >
 
               <View style={{ width: width(90), marginTop: height(4), alignSelf: 'center', flexDirection: 'row', alignItems: 'center' }}>
@@ -1064,9 +1138,9 @@ export default function Newsfeed({ navigation }) {
                     value={msg}
                     onChangeText={(text) => {
                       setmsg(text)
-                      if (text.length > 0) {
-                        settextflag(true)
-                      }
+
+
+
                     }}
                     style={{ fontSize: totalSize(2.5), width: width(68), paddingVertical: 0 }}
                   />
@@ -1103,7 +1177,7 @@ export default function Newsfeed({ navigation }) {
                 showsHorizontalScrollIndicator={false}
               />
 
-              {pics.length > 0 || textflag || videos.length > 0 ?
+              {pics.length > 0 || msg.length > 0 || videos.length > 0 ?
 
                 <TouchableHighlight
                   underlayColor='#242527'
@@ -1120,7 +1194,8 @@ export default function Newsfeed({ navigation }) {
 
                 </TouchableHighlight>
 
-                : null}
+                : null
+              }
 
             </View>
 
@@ -1161,6 +1236,7 @@ export default function Newsfeed({ navigation }) {
 
             <TouchableOpacity
               onPress={() => {
+                setpaused(true)
                 // alert('ddddddd')
                 navigation.navigate('chatStack', {
                   screen: 'listchat'
@@ -1211,9 +1287,12 @@ export default function Newsfeed({ navigation }) {
 
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 
-                <ImageBackground
-                  source={{ uri: link + '/' + pic }}
-                  style={{ height: height(50), width: '100%' }}
+                <FastImage
+                  source={{
+                    uri: link + '/' + pic,
+                    priority: FastImage.priority.high
+                  }}
+                  style={{ width: '100%' }}
                   imageStyle={{ resizeMode: 'cover' }}
                 />
 
@@ -1233,6 +1312,7 @@ export default function Newsfeed({ navigation }) {
             </View>
 
           </Modal>
+
           <Modal
             animationType={'fade'}
             transparent={true}
@@ -1243,20 +1323,24 @@ export default function Newsfeed({ navigation }) {
             <View style={{ flex: 1, backgroundColor: '#000' }}>
 
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-
-                <Video
-                  source={{ uri: link + '/' + video }}
-                  style={{ height: height(50), width: '100%' }}
+                {/* {console.log('kkkkkkkkkkk', video)} */}
+                <VideoPlayer
+                  video={{ uri: link + '/' + video }}
+                  style={{ height: height(100), width: width(100) }}
                   autoPlay={true}
-                  // shouldPlay={true}
-                  controls={true}
-                // resizeMode={'cover'}
+                  shouldPlay={true}
+                // controls={true}
+                // resizeMode={'contain'}
                 />
 
               </View>
 
               <TouchableOpacity
-                onPress={() => setvideoV(false)}
+                onPress={() => {
+
+                  setpaused(false)
+                  setvideoV(false)
+                }}
                 style={{ marginTop: height(2), position: 'absolute', alignSelf: 'flex-end' }}
               >
 

@@ -73,6 +73,7 @@ export default function Chat({ navigation }) {
   }
 
   const _Flatlist = ({ item }) => {
+    { console.log('lklklklklklklkl', item) }
     return (
 
       <TouchableOpacity
@@ -80,7 +81,8 @@ export default function Chat({ navigation }) {
           data: item,
           name: getOtherUserObject(item.users).name,
           room: true,
-          user: false
+          user: false,
+          profileflag: true
         })}
         style={{ height: height(12), width: '100%', borderBottomWidth: 1, justifyContent: 'center' }}>
 

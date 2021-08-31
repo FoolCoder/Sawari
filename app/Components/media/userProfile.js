@@ -7,6 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 import { Pages } from 'react-native-pages'
+import VideoPlayer from 'react-native-video-player'
 
 import moment from 'moment-timezone';
 import millify from 'millify'
@@ -18,6 +19,7 @@ import DocumentPicker from 'react-native-document-picker';
 
 import { link } from '../links/links'
 import Loader from '../loader/loader'
+import FastImage from 'react-native-fast-image'
 
 import addimage from '../../assets/image-add.png'
 import commentp from '../../assets/comment.png'
@@ -32,6 +34,9 @@ export default function UserProfile({ navigation, route }) {
 
   const [room, setroom] = useState('')
   const [user, setuser] = useState()
+  const [videoV, setvideoV] = useState(false)
+  const [video, setvideo] = useState('')
+  const [paused, setpaused] = useState(true);
 
   const [newsfeed, setnewsfeed] = useState([])
   const [commentV, setcommentV] = useState(false)
@@ -58,9 +63,17 @@ export default function UserProfile({ navigation, route }) {
   useEffect(() => {
 
     open()
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      onPlayPausePress()
+    });
+    return unsubscribe
+  }, [reload, navigation])
+  const onPlayPausePress = () => {
+    setpaused(!paused)
 
-  }, [reload])
-
+  }
   const open = async () => {
 
     const val = JSON.parse(await AsyncStorage.getItem('token'))
@@ -90,7 +103,7 @@ export default function UserProfile({ navigation, route }) {
           if (responseJson.type === 'success') {
             setnewsfeed(responseJson.result)
             setroom(responseJson.room)
-            console.log(responseJson)
+            console.log('ppppppppppppppp', responseJson)
           }
           setTimeout(() => {
             setloader(false)
@@ -362,19 +375,58 @@ export default function UserProfile({ navigation, route }) {
               item.media.map((e) => {
                 return (
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      setpic(e.name)
-                      setpicV(true)
-                    }}
-                  >
+                  <View>
+                    {e.type === 'image' ?
+                      <TouchableOpacity
+                        onPress={() => {
+                          setpic(e.name)
+                          setpicV(true)
+                        }}
+                      >
 
-                    <Image
-                      source={{ uri: link + '/' + e.name }}
-                      style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', backgroundColor: '#898' }}
-                    />
+                        <FastImage
+                          source={{
+                            uri: link + '/' + e.name,
+                            priority: FastImage.priority.high
+                          }}
+                          style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', backgroundColor: '#898' }}
+                        />
 
-                  </TouchableOpacity>
+
+                      </TouchableOpacity>
+                      :
+                      <View>
+
+                        <TouchableOpacity
+                          style={{
+                            alignItems: 'flex-end', marginRight: 10, right: 0,
+                            position: 'absolute', zIndex: 1
+
+                          }}
+                          onPress={() => {
+                            setvideo(e.name)
+                            setvideoV(true)
+                            setpaused(!paused)
+                          }}
+                        >
+                          <MaterialIcons name='fullscreen' size={30} />
+                        </TouchableOpacity>
+
+                        <VideoPlayer
+                          video={{ uri: link + '/' + e.name }}
+                          resizeMode={'cover'}
+                          paused={paused}
+                          style={{
+                            height: height(25), width: width(92), borderRadius: 7,
+                            alignSelf: 'center', backgroundColor: '#898'
+                          }}
+                        />
+                      </View>
+
+                    }
+
+                  </View>
+
 
 
 
@@ -382,14 +434,7 @@ export default function UserProfile({ navigation, route }) {
               })
 
               :
-              <View
-                style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', justifyContent: 'center', backgroundColor: '#898' }}
-              >
-                <Loader
-                  color='#fff'
-                />
-
-              </View>
+              null
             }
 
           </Pages>
@@ -514,7 +559,7 @@ export default function UserProfile({ navigation, route }) {
 
                   Reply
 
-               </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -667,7 +712,7 @@ export default function UserProfile({ navigation, route }) {
 
                   Reply
 
-               </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -727,7 +772,7 @@ export default function UserProfile({ navigation, route }) {
 
                     Reply
 
-               </Text>
+                  </Text>
 
                 </TouchableOpacity>
 
@@ -787,16 +832,21 @@ export default function UserProfile({ navigation, route }) {
                 :
 
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('chatStack', {
-                    screen: 'chat',
-                    params: {
-                      data: route.params.data,
-                      name: route.params.data.user.name,
-                      room: room,
-                      user: true,
-                      roomF: roomFunc
-                    }
-                  })}
+                  onPress={() => {
+                    onPlayPausePress()
+                    navigation.navigate('chatStack', {
+                      screen: 'chat',
+                      params: {
+                        data: route.params.data,
+                        name: route.params.data.user.name,
+                        room: room,
+                        user: false,
+
+                        roomF: roomFunc
+                      }
+                    })
+                  }
+                  }
                   style={{ height: height(6), width: width(40), marginTop: height(1), alignSelf: 'center', justifyContent: 'center', alignItems: 'center', borderRadius: 10, backgroundColor: '#242527', borderColor: '#ffc55d', borderWidth: 1 }}
                 >
 
@@ -845,7 +895,10 @@ export default function UserProfile({ navigation, route }) {
           <View style={{ marginTop: height(80), marginLeft: width(79.5), position: 'absolute', zIndex: 1 }}>
 
             <TouchableOpacity
-              onPress={() => navigation.navigate('chatStack')}
+              onPress={() => {
+                setpaused(true)
+                navigation.navigate('chatStack')
+              }}
               style={{ height: 70, width: 70, borderRadius: 50, marginTop: height(0.5), borderWidth: 1, borderColor: '#ffc55d', backgroundColor: '#00000090' }}
             >
 
@@ -896,6 +949,49 @@ export default function UserProfile({ navigation, route }) {
 
           </Modal>
 
+          <Modal
+            animationType={'fade'}
+            transparent={true}
+            visible={videoV}
+            onRequestClose={() => setvideoV(false)}
+          >
+
+            <View style={{ flex: 1, backgroundColor: '#000' }}>
+
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: width(100) }}>
+
+                <VideoPlayer
+                  video={{ uri: link + '/' + video }}
+                  autoplay={false}
+                  // videoWidth={1600}
+                  // videoHeight={900}
+                  paused={paused}
+                  style={{ height: height(100), width: width(100) }}
+                // controls={true}
+                // resizeMode={'contain'}
+                // autoPlay={true}
+                // // shouldPlay={true}
+                />
+
+              </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setpaused(false)
+                  setvideoV(false)
+                }}
+                style={{ marginTop: height(2), position: 'absolute', alignSelf: 'flex-end' }}
+              >
+
+                <MaterialIcons name='close' size={35} color='#fff' />
+
+              </TouchableOpacity>
+
+
+
+            </View>
+
+          </Modal>
           <Modal
             visible={commentV}
             animationType='slide'

@@ -212,7 +212,7 @@ export default function Groupchat({ navigation, route }) {
 
         <View style={{
             flex: 1,
-            width: width(98),
+            width: width(100),
             height: height(98),
 
 

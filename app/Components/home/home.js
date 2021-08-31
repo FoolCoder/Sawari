@@ -1,5 +1,9 @@
 import React, { Component, Fragment, useContext, useState, useEffect } from 'react'
-import { View, ImageBackground, AppState, Text, Image, TouchableHighlight, TouchableOpacity, SafeAreaView, StyleSheet, Alert, Share, Modal, FlatList } from 'react-native'
+import {
+  View, ImageBackground, AppState, Text, Image, TouchableHighlight,
+  TouchableOpacity, SafeAreaView, StyleSheet, Alert, Share, Modal, FlatList,
+  ActivityIndicator
+} from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
 
 import AsyncStorage from '@react-native-community/async-storage'
@@ -8,7 +12,6 @@ import { Authcontext } from '../context/context'
 
 import { socket } from '../socket/socket'
 import { socketF, userP } from '../Store/action'
-
 import { link } from '../links/links'
 import Loader from '../loader/loader'
 
@@ -274,7 +277,8 @@ export default function Home({ navigation }) {
               data: item,
               name: item.user.name,
               room: [item.room],
-              user: true
+              user: false,
+              reciver: item.reciever._id
             },
 
           })
@@ -284,7 +288,7 @@ export default function Home({ navigation }) {
       style={{ width: width(90), marginVertical: height(1.5), alignSelf: 'center', backgroundColor: '#FFBB4190', borderRadius: 10 }}>
 
       <View style={{ width: width(85), marginVertical: height(1), alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-
+        {console.log('itttttttttttttt', item)}
         <Image
           source={{ uri: link + '/' + item.user.image }}
           style={{ height: totalSize(6), width: totalSize(6), borderRadius: totalSize(3), marginTop: height(0.5) }}
@@ -350,7 +354,10 @@ export default function Home({ navigation }) {
               width: width(25)
             }}>
               <TouchableOpacity
-                onPress={() => setnmodel(true)
+                onPress={() => {
+                  setnmodel(true)
+                  openNotification()
+                }
 
                 }
               // style={{ borderWidth: 1, borderRadius: 3 }}
@@ -509,8 +516,11 @@ export default function Home({ navigation }) {
                 {
                   NLoader === true ?
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                      <Loader
+
+                      <ActivityIndicator
+                        size='large'
                         color='#000'
+
                       />
 
                     </View>
@@ -525,6 +535,7 @@ export default function Home({ navigation }) {
                         data={notification}
                         keyExtractor={(item, index) => { return '$' + index.toString() }}
                         renderItem={FlatListNotification}
+                        ListFooterComponent={() => <View style={{ height: height(12) }} />}
                       />
 
                     </View>

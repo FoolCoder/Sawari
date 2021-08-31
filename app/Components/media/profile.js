@@ -13,9 +13,11 @@ import millify from 'millify'
 import Header from '../header/header'
 
 import AsyncStorage from '@react-native-community/async-storage'
+import FastImage from 'react-native-fast-image'
 
 import DocumentPicker from 'react-native-document-picker';
-
+import Video from 'react-native-video'
+import VideoPlayer from 'react-native-video-player'
 import { link } from '../links/links'
 import Loader from '../loader/loader'
 
@@ -34,6 +36,7 @@ export default function Profile({ navigation }) {
   const [user, setuser] = useState()
   const [msg, setmsg] = useState('')
   const [pics, setpics] = useState([])
+  const [videos, setvideos] = useState([])
 
   const [newsfeed, setnewsfeed] = useState([])
   const [commentV, setcommentV] = useState(false)
@@ -42,14 +45,19 @@ export default function Profile({ navigation }) {
   const [replyV, setreplyV] = useState(false)
   const [replysC, setreplysC] = useState([])
   const textin = useRef(null)
+  const [paused, setpaused] = useState(true);
 
   const [loader, setloader] = useState(true)
   const [Mloader, setMloader] = useState(false)
+  const [textflag, settextflag] = useState(false)
 
   const [commmet1, setcomment1] = useState('')
   const [commmet2, setcomment2] = useState('')
 
   const [pic, setpic] = useState('')
+  const [video, setvideo] = useState('')
+  const [videoV, setvideoV] = useState(false)
+
   const [picV, setpicV] = useState(false)
   const [flagState, setFlagState] = useState(false);
   const [postObject, setpostObject] = useState({})
@@ -61,9 +69,17 @@ export default function Profile({ navigation }) {
   useEffect(() => {
 
     open()
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      onPlayPausePress()
+    });
+    return unsubscribe
+  }, [reload, navigation])
+  const onPlayPausePress = () => {
+    setpaused(!paused)
 
-  }, [reload])
-
+  }
   const open = async () => {
 
     const val = JSON.parse(await AsyncStorage.getItem('token'))
@@ -113,16 +129,36 @@ export default function Profile({ navigation }) {
 
     try {
       const results = await DocumentPicker.pickMultiple({
-        type: [DocumentPicker.types.images],
+        type: [DocumentPicker.types.allFiles],
       });
+
       results.map(q => {
-        setpics((prev) => {
-          return [
-            ...prev, { uri: q.uri, name: q.name, type: q.type }
-          ]
-        })
+        console.log(q.type);
+        if (q.type == 'image/jpeg' || q.type == 'image/jpg' || q.type == 'image/png' || q.type == 'image/webp') {
+          setpics((prev) => {
+            return [
+              ...prev, { uri: q.uri, name: q.name, type: q.type }
+            ]
+          })
+        }
+        else if (q.type === 'video/mp4' || q.type === 'video/mov' || q.type === 'video/avi' || q.type === 'video/mkv') {
+          if (q.size <= 5242880) {
+            setvideos((prev) => {
+              return [
+                ...prev, { uri: q.uri, name: q.name, type: q.type }
+              ]
+            })
+
+          }
+          else {
+            alert('video file size out of limit,Max Size limit 5mb')
+          }
+        }
+        else {
+          alert('Please select image or video')
+        }
       })
-      // console.log(pics);
+      console.log('jjjjjj', results);
 
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -140,17 +176,82 @@ export default function Profile({ navigation }) {
     })
     setpics(pic)
   }
-
+  const removevideo = (item) => {
+    let video = videos.filter((e) => {
+      return e != item
+    })
+    setvideos(video)
+  }
   const addPostFeed = async () => {
 
-    if (pics.length > 0 && pics.length < 5) {
+    if (pics.length > 0 && pics.length <= 4 && videos.length <= 1) {
 
       setMloader(true)
 
       var data = new FormData()
       data.append("user", user.id)
       data.append("text", msg)
+
       pics.map(q => {
+
+        data.append("images", {
+          name: q.name,
+          type: q.type,
+          uri: q.uri
+        })
+
+      })
+
+
+
+      try {
+        fetch(link + '/post/addPost', {
+          method: 'POST',
+          headers: {
+            Authorization: "Bearer " + user.token,
+            Accept: 'multipart/form-data',
+            'Content-Type': 'multipart/form-data'
+          },
+          body: data
+        })
+          .then((response) => response.json())
+          .then((Data) => {
+
+            console.log('assssssssssssssssssss', Data)
+
+            if (Data.type === 'success') {
+              setMloader(false)
+              setmsg('')
+              setpics([])
+              setvideos([])
+              Alert.alert(
+                'Post',
+                'Posted Successfully'
+              )
+              dispatch(newsFeedR(!reload))
+            }
+
+          }).catch((e) => {
+            console.log(e)
+            setMloader(false)
+          })
+      }
+      catch (e) {
+        console.log(e)
+        setMloader(false)
+      }
+
+    }
+    else if (videos.length > 0 && videos.length <= 1 && pics.length <= 4) {
+
+      setMloader(true)
+
+      var data = new FormData()
+      data.append("user", user.id)
+      data.append("text", msg)
+
+
+      videos.map(q => {
 
         data.append("images", {
           name: q.name,
@@ -173,12 +274,13 @@ export default function Profile({ navigation }) {
           .then((response) => response.json())
           .then((Data) => {
 
-            console.log(Data)
+            console.log('assssssssssssssssssss', Data)
 
             if (Data.type === 'success') {
               setMloader(false)
               setmsg('')
               setpics([])
+              setvideos([])
               Alert.alert(
                 'Post',
                 'Posted Successfully'
@@ -198,20 +300,32 @@ export default function Profile({ navigation }) {
 
     }
     else {
-      if (pics.length == 0) {
+      console.log(pics.length);
+      console.log(videos.length);
+
+      if (pics.length >= 5) {
+
         Alert.alert(
           'Post',
-          'Minimum 1 image required to post'
+          'Maximum 4 images allowed',
+
         )
       }
-      else {
+      else if (videos.length >= 2) {
         Alert.alert(
           'Post',
-          'Maximum 4 images allowed'
+          'Maximum 1 video allowed to post'
         )
       }
 
+      else {
+        Alert.alert(
+          'Post',
+          'write something'
+        )
+      }
     }
+
 
   }
 
@@ -433,7 +547,39 @@ export default function Profile({ navigation }) {
       </View>
     )
   }
+  const _FlatlistV = ({ item }) => {
+    return (
+      <View style={{
+        margin: width(1), height: 60,
+      }}>
+        <View style={{ height: 60, width: 90, alignSelf: 'flex-start', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
 
+          {/* <Image
+            style={{ height: 50, width: 80, marginTop: 5, borderWidth: 1, borderColor: '#000', backgroundColor: '#bbb', borderRadius: 5 }}
+            source={{ uri: item.uri }} /> */}
+          <Video source={{ uri: item.uri }}   // Can be a URL or a local file.
+            autoPlay={false}
+            shouldPlay={false}
+            controls={false}
+
+            // onBuffer={this.onBuffer}                
+            // onError={this.videoError}              
+            style={{ height: 50, width: 80, marginTop: 5, borderWidth: 1, borderColor: '#000', backgroundColor: '#bbb', borderRadius: 5 }} />
+
+          <TouchableOpacity
+            onPress={() => removevideo(item)}
+            style={{ height: 20, width: 20, alignSelf: 'flex-end', justifyContent: 'center', alignItems: 'center', position: 'absolute', zIndex: 1, backgroundColor: '#aaa', borderRadius: 10 }}
+          >
+            <Text style={{ fontSize: totalSize(1.5), fontWeight: 'bold', color: '#fff' }}>
+              X
+            </Text>
+
+          </TouchableOpacity>
+
+        </View>
+      </View>
+    )
+  }
   const _Flatlist = ({ item, index }) => {
     return (
 
@@ -475,7 +621,10 @@ export default function Profile({ navigation }) {
           </Text>
         }
 
-        <View style={{ height: height(30), marginTop: height(1) }}>
+        <View style={{
+          height: height(30), marginTop: height(1), width: width(90), alignSelf: 'center',
+          borderRadius: 7
+        }}>
 
           <Pages
             indicatorColor='#000'
@@ -486,34 +635,63 @@ export default function Profile({ navigation }) {
               item.media.map((e) => {
                 return (
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      setpic(e.name)
-                      setpicV(true)
-                    }}
-                  >
+                  <View>
+                    {e.type === 'image' ?
+                      <TouchableOpacity
+                        onPress={() => {
+                          setpic(e.name)
+                          setpicV(true)
+                        }}
+                      >
 
-                    <Image
-                      source={{ uri: link + '/' + e.name }}
-                      style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', backgroundColor: '#898' }}
-                    />
+                        <FastImage
+                          source={{
+                            uri: link + '/' + e.name,
+                            priority: FastImage.priority.high
+                          }}
+                          style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', backgroundColor: '#898' }}
+                        />
 
-                  </TouchableOpacity>
 
+                      </TouchableOpacity>
+                      :
+                      <View>
 
+                        <TouchableOpacity
+                          style={{
+                            alignItems: 'flex-end', marginRight: 10, right: 0,
+                            position: 'absolute', zIndex: 1
+
+                          }}
+                          onPress={() => {
+                            setvideo(e.name)
+                            setvideoV(true)
+                            setpaused(!paused)
+                          }}
+                        >
+                          <MaterialIcons name='fullscreen' size={30} />
+                        </TouchableOpacity>
+
+                        <VideoPlayer
+                          video={{ uri: link + '/' + e.name }}
+                          resizeMode={'cover'}
+                          paused={paused}
+                          style={{
+                            height: height(25), width: width(92), borderRadius: 7,
+                            alignSelf: 'center', backgroundColor: '#898'
+                          }}
+                        />
+                      </View>
+
+                    }
+
+                  </View>
 
                 )
               })
 
               :
-              <View
-                style={{ height: height(25), width: width(92), borderRadius: 7, alignSelf: 'center', justifyContent: 'center', backgroundColor: '#898' }}
-              >
-                <Loader
-                  color='#fff'
-                />
-
-              </View>
+              null
             }
 
           </Pages>
@@ -884,10 +1062,10 @@ export default function Profile({ navigation }) {
           <ScrollView style={{ flex: 1 }}>
 
             <View style={
-              pics.length > 0 ?
-                { height: height(54), width: '100%', backgroundColor: '#fff', alignItems: 'center' }
+              pics.length > 0 || videos.length > 0 ?
+                { height: height(64), width: '100%', backgroundColor: '#fff', alignItems: 'center' }
                 :
-                { height: height(37), width: '100%', backgroundColor: '#fff', alignItems: 'center' }
+                { height: textflag ? height(47) : height(37), width: '100%', backgroundColor: '#fff', alignItems: 'center' }
             }>
 
               <Image
@@ -902,7 +1080,10 @@ export default function Profile({ navigation }) {
               </Text>
 
               <TouchableOpacity
-                onPress={() => navigation.navigate('editprofile')}
+                onPress={() => {
+                  onPlayPausePress()
+                  navigation.navigate('editprofile')
+                }}
                 style={{ height: height(3.2), width: width(25), marginTop: height(1), alignSelf: 'center', justifyContent: 'center', alignItems: 'center', borderRadius: 5, backgroundColor: '#242527', borderColor: '#ffc55d', borderWidth: 1 }}
               >
 
@@ -920,7 +1101,12 @@ export default function Profile({ navigation }) {
                     numberOfLines={1}
                     placeholder='WHATS HAPPENING'
                     value={msg}
-                    onChangeText={(text) => setmsg(text)}
+                    onChangeText={(text) => {
+                      setmsg(text)
+                      if (text.length > 0) {
+                        settextflag(true)
+                      }
+                    }}
                     style={{ fontSize: totalSize(2.5), width: width(80), paddingVertical: 0 }}
                   />
 
@@ -940,13 +1126,21 @@ export default function Profile({ navigation }) {
               </View>
 
               <FlatList
-                style={{ marginTop: height(2), flexGrow: 0, alignSelf: 'flex-start' }}
+                style={{ marginTop: height(0.5), flexGrow: 0, alignSelf: 'flex-start' }}
                 data={pics}
                 horizontal={true}
                 renderItem={_FlatlistP}
                 showsHorizontalScrollIndicator={false}
               />
-              {pics.length > 0 ?
+              <FlatList
+                style={{ marginTop: height(0.5), flexGrow: 0, alignSelf: 'flex-start' }}
+                style={{ flexGrow: 0 }}
+                data={videos}
+                horizontal={true}
+                renderItem={_FlatlistV}
+                showsHorizontalScrollIndicator={false}
+              />
+              {pics.length > 0 || textflag || videos.length > 0 ?
 
                 <TouchableHighlight
                   underlayColor='#242527'
@@ -1002,7 +1196,11 @@ export default function Profile({ navigation }) {
           <View style={{ marginTop: height(80), marginLeft: width(79.5), position: 'absolute', zIndex: 1 }}>
 
             <TouchableOpacity
-              onPress={() => navigation.navigate('chatStack')}
+              onPress={() => {
+                onPlayPausePress()
+                navigation.navigate('chatStack')
+              }
+              }
               style={{ height: 70, width: 70, borderRadius: 50, marginTop: height(0.5), borderWidth: 1, borderColor: '#ffc55d', backgroundColor: '#00000090' }}
             >
 
@@ -1049,7 +1247,7 @@ export default function Profile({ navigation }) {
 
                 <ImageBackground
                   source={{ uri: link + '/' + pic }}
-                  style={{ height: height(50), width: '100%' }}
+                  style={{ width: '100%' }}
                   imageStyle={{ resizeMode: 'contain' }}
                 />
 
@@ -1069,6 +1267,51 @@ export default function Profile({ navigation }) {
             </View>
 
           </Modal>
+
+          <Modal
+            animationType={'fade'}
+            transparent={true}
+            visible={videoV}
+            onRequestClose={() => setvideoV(false)}
+          >
+
+            <View style={{ flex: 1, backgroundColor: '#000' }}>
+
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: width(100) }}>
+
+                <VideoPlayer
+                  video={{ uri: link + '/' + video }}
+                  autoplay={false}
+                  // videoWidth={1600}
+                  // videoHeight={900}
+                  paused={paused}
+                  style={{ height: height(100), width: width(100) }}
+                // controls={true}
+                // resizeMode={'contain'}
+                // autoPlay={true}
+                // // shouldPlay={true}
+                />
+
+              </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setpaused(false)
+                  setvideoV(false)
+                }}
+                style={{ marginTop: height(2), position: 'absolute', alignSelf: 'flex-end' }}
+              >
+
+                <MaterialIcons name='close' size={35} color='#fff' />
+
+              </TouchableOpacity>
+
+
+
+            </View>
+
+          </Modal>
+
 
           <Modal
             visible={commentV}

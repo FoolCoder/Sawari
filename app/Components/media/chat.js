@@ -56,15 +56,31 @@ export default function Chat({ navigation, route }) {
       c = route.params.data
       console.log('llllllllllll', val);
       setuser(val)
-
+      console.log('rrrrrrroooom');
       try {
         if (route.params.room == null) {
           setroom(route.params.room)
           r = route.params.room
+          console.log('rooom', r);
         }
+
+
         else {
-          setroom(route.params.room[0]._id)
-          r = route.params.room[0]._id
+
+          if (route.params.user == false) {
+            if (route.params.profileflag === true) {
+              console.log(45555555555555555);
+              setroom(route.params.data._id)
+              api = route.params.data._id
+
+
+            }
+            else {
+              setroom(route.params.room[0]._id)
+              r = route.params.room[0]._id
+            }
+          }
+
         }
       }
       catch (e) {
@@ -76,7 +92,7 @@ export default function Chat({ navigation, route }) {
       apiCall(val)
 
       socket.on('messageRecieved', (data) => {
-
+        console.log('receiecd', data);
         if (r == data.message.room || c._id == data.message.room) {
 
           if (data.received == true) {
@@ -91,7 +107,7 @@ export default function Chat({ navigation, route }) {
       })
 
       socket.on('messageSentAck', (data) => {
-        console.log(data)
+        console.log('l;;;;;', data)
 
         if (data.sent == true) {
           try {
@@ -104,7 +120,7 @@ export default function Chat({ navigation, route }) {
           }
 
           setroom(data.message.room)
-
+          console.log(']]]]', data.message.room)
           chatLocal = [data.message, ...chatLocal]
 
           setchat(chatLocal)
@@ -125,18 +141,28 @@ export default function Chat({ navigation, route }) {
   }
 
   const apiCall = (val) => {
-
     if (route.params.room != null) {
 
-      console.log(route.params.room)
+      console.log('fffffffffffffffffffffffffffff', route.params.room)
 
       let api = ''
 
       if (route.params.user == false) {
-        api = route.params.data._id
+        if (route.params.profileflag === true) {
+          console.log(45555555555555555);
+          setroom(route.params.data._id)
+          api = route.params.data._id
+
+
+        }
+        else {
+          api = route.params.room[0]._id
+          console.log('ifffffff', api);
+        }
       }
       else {
         api = route.params.room[0]._id
+        console.log('aaaaaaaaaaaa', api);
       }
 
       var myHeaders = new Headers();
@@ -186,25 +212,62 @@ export default function Chat({ navigation, route }) {
       try {
 
         var data = {}
-        if (route.params.user == false) {
-          console.log('llllllllllllllll');
-          data = {
-            room:
-            {
-              group: false,
-              name: null,
-              users: [chatUser.users[0]._id, user.id]    // Your ID and Other User ID .......... if Group Only Your ID
-            },
-            message: {
-              author: user.id,
-              room: chatUser._id,
-              text: message,
-              attachments: null
+        if (route.params.user === false) {
+          console.log('yyyyyyyyyyyyy');
+
+          if (route.params.profileflag) {
+            data = {
+              room:
+              {
+                group: false,
+                name: null,
+                users: [user.id, route.params.data.users[0]._id]    // Your ID and Other User ID .......... if Group Only Your ID
+              },
+              message: {
+                author: user.id,
+                room: route.params.data._id,
+                text: message,
+                attachments: null
+              }
+            }
+
+          }
+          else {
+            console.log(9);
+            data = {
+              room:
+              {
+                group: false,
+                name: null,
+                users: [user.id, route.params.reciver]    // Your ID and Other User ID .......... if Group Only Your ID
+              },
+              message: {
+                author: user.id,
+                room: room === null ? route.params.room : route.params.room[0]._id,
+                text: message,
+                attachments: null
+              }
             }
           }
         }
         else {
-          console.log('kkkkkkkkkkkkkkkkkkkkiiiiiii');
+          id = ''
+          console.log('kkkkkkkkkkrkkkkkkkkkkiiiiiii', room);
+          if (room === null) {
+            id = route.params.room
+          }
+          else {
+            if (route.params.room) {
+
+              id = route.params.room[0]._id
+            }
+            else {
+              id = room
+            }
+
+          }
+
+
           data = {
             room:
             {
@@ -214,7 +277,7 @@ export default function Chat({ navigation, route }) {
             },
             message: {
               author: user.id,
-              room: room,
+              room: id,
               text: message,
               attachments: null
             }
@@ -309,34 +372,39 @@ export default function Chat({ navigation, route }) {
             text={route.params.name}
             back={() => navigation.goBack()}
           />
-          <View style={{
-            position: 'absolute',
-            marginTop: height(10),
-            zIndex: 1,
-            height: height(8), width: width(100),
-            flexDirection: 'row',
-            backgroundColor: '#242527',
-            borderTopWidth: 0.3,
-            borderColor: '#fff',
-            alignItems: 'center'
+          {
+            chatUser.title == null && chatUser.priceValue == '' && chatUser.priceCurrency == '' ?
+              null
+              :
 
-          }}>
-            <Text
-              style={{
-                fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2',
-                left: 12
-              }}
-            >
-              {chatUser.title}
-            </Text>
-            <Text
-              style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2', left: 22 }}
-            >
-              {chatUser.priceValue} {chatUser.priceCurrency}
-            </Text>
+              <View style={{
+                position: 'absolute',
+                marginTop: height(10),
+                zIndex: 1,
+                height: height(8), width: width(100),
+                flexDirection: 'row',
+                backgroundColor: '#242527',
+                borderTopWidth: 0.3,
+                borderColor: '#fff',
+                alignItems: 'center'
 
-          </View>
+              }}>
+                <Text
+                  style={{
+                    fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2',
+                    left: 12
+                  }}
+                >
+                  {chatUser.title}
+                </Text>
+                <Text
+                  style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2', left: 22 }}
+                >
+                  {chatUser.priceValue} {chatUser.priceCurrency}
+                </Text>
 
+              </View>
+          }
           {load == true ?
 
             <View style={{ flex: 1, justifyContent: 'center' }}>

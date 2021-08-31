@@ -32,10 +32,10 @@ export default function Sellmenu({ navigation, route }) {
   const [visible, setvisible] = useState(false)
   const [pic, setpic] = useState('')
   const [ownerD, setownerD] = useState(false)
-  const [room, setroom] = useState('')
+
   const [chatDisable, setchatDisable] = useState(false)
   const [chatBColor, setchatBColor] = useState('#000')
-
+  const [room, setroom] = useState('')
   const [favour, setfavour] = useState()
   const [flagState, setFlagState] = useState(false)
 
@@ -48,7 +48,7 @@ export default function Sellmenu({ navigation, route }) {
 
       setfavour(route.params.data.isfavourite)
 
-      console.log('rrrrrrrrrrrr', route.params.data)
+      console.log('rrrrrrrrrrrr', room)
 
       open()
 
@@ -58,14 +58,15 @@ export default function Sellmenu({ navigation, route }) {
   }, [])
 
   const open = async () => {
+    console.log('uiiiiiiui', item);
     try {
 
       const val = JSON.parse(await AsyncStorage.getItem('token'))
 
       setuser(val)
-      console.log('user', user);
+      console.log('uuusssssser', val);
 
-      if (val.id == route.params.data.user._id) {
+      if (val.id == route.params.data.user[0]._id) {
         setchatDisable(true)
         setchatBColor('#ccc')
       }
@@ -95,7 +96,7 @@ export default function Sellmenu({ navigation, route }) {
             setloader(false)
           }
 
-          console.log('mmmmmmmm', response)
+          console.log('mmmmmmmm', room)
 
         })
         .catch((e) => {
@@ -658,7 +659,9 @@ export default function Sellmenu({ navigation, route }) {
 
               :
               <View style={{ width: '100%', borderTopWidth: 1, flexDirection: 'row', alignSelf: 'center', alignItems: 'center' }}>
-
+                {
+                  console.log('rrrrrrrrrrrtrtrt', room)
+                }
                 <TouchableOpacity
                   disabled={chatDisable}
                   onPress={() => navigation.navigate('chatStack', {
@@ -671,6 +674,7 @@ export default function Sellmenu({ navigation, route }) {
                       roomF: roomFunc
                     }
                   })}
+
                   style={{ height: height(7), width: width(25), borderRightWidth: 1, borderColor: '#aaa', justifyContent: 'center', alignItems: 'center' }}>
                   <Image
                     style={{

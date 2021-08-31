@@ -42,7 +42,8 @@ export default function Rsellmenu({ navigation, route }) {
       setitem(route.params.data)
 
       setfavour(route.params.data.isfavourite)
-      console.log('iiiiiiiiiiiiuuuuuuuu', route.params.data)
+      console.log('iiiiiiiiiiiiuuuuuuuu', route.params.data.user[0]._id)
+
 
       open()
 
@@ -58,7 +59,7 @@ export default function Rsellmenu({ navigation, route }) {
       setuser(val)
       // const val = JSON.parse(await AsyncStorage.getItem('token'))
 
-      if (val.id == route.params.data.user._id) {
+      if (val.id == route.params.data.user[0]._id) {
         setchatDisable(true)
         setchatBColor('#ccc')
       }
@@ -709,89 +710,93 @@ export default function Rsellmenu({ navigation, route }) {
           width: width(94),
           alignSelf: 'center'
         }}>
-          {loader == true ?
-
-            <View style={{ flex: 1, justifyContent: 'center', backgroundColor: '#fff' }}>
+          {
 
 
-              <Loader
-                color='#000'
-              />
+            loader == true ?
 
-            </View>
+              <View style={{ flex: 1, justifyContent: 'center', backgroundColor: '#fff' }}>
 
-            :
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
-              <TouchableOpacity
-                disabled={chatDisable}
-                onPress={() => navigation.navigate('chatStack', {
-                  screen: 'chat',
-                  params: {
-                    data: route.params.data,
-                    name: route.params.data.user.name,
-                    room: room,
-                    user: true,
-                    roomF: roomFunc
-                  }
-                })}
-                style={{ borderRadius: 3, borderColor: chatBColor }}>
-
-                <Image source={chat}
-                  style={{
-                    paddingVertical: 5, paddingHorizontal: 10,
-                    height: 40, width: 50
-                  }}
+                <Loader
+                  color='#000'
                 />
-                {/* <MaterialCommunityIcons name='message-text-outline' size={40} color={chatBColor}
+
+              </View>
+
+              :
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+
+                <TouchableOpacity
+                  disabled={chatDisable}
+                  onPress={() => navigation.navigate('chatStack', {
+                    screen: 'chat',
+                    params: {
+                      data: route.params.data,
+                      name: route.params.data.user[0].name,
+                      room: room,
+                      user: true,
+                      rentflag: true,
+                      roomF: roomFunc
+                    }
+                  })}
+                  style={{ borderRadius: 3, borderColor: chatBColor }}>
+
+                  <Image source={chat}
+                    style={{
+                      paddingVertical: 5, paddingHorizontal: 10,
+                      height: 40, width: 50
+                    }}
+                  />
+                  {/* <MaterialCommunityIcons name='message-text-outline' size={40} color={chatBColor}
       style={{ paddingVertical: 5, paddingHorizontal: 10 }} /> */}
 
-              </TouchableOpacity>
-              <View
-                style={{
-                  width: 0.5,
-                  height: height(7),
-                  backgroundColor: '#000'
-                }}
-              />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    width: 0.5,
+                    height: height(7),
+                    backgroundColor: '#000'
+                  }}
+                />
 
-              <TouchableOpacity
-                onPress={() => dialCall()}
-                style={{}}>
+                <TouchableOpacity
+                  onPress={() => dialCall()}
+                  style={{}}>
 
-                <MaterialIcons name='call' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
+                  <MaterialIcons name='call' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
 
-              </TouchableOpacity>
-              <View
-                style={{
-                  width: 0.5,
-                  height: height(7),
-                  backgroundColor: '#000'
-                }}
-              />
-              <TouchableOpacity
-                onPress={() => sms()}
-                style={{}}>
+                </TouchableOpacity>
+                <View
+                  style={{
+                    width: 0.5,
+                    height: height(7),
+                    backgroundColor: '#000'
+                  }}
+                />
+                <TouchableOpacity
+                  onPress={() => sms()}
+                  style={{}}>
 
-                <FontAwesome5 name='sms' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
+                  <FontAwesome5 name='sms' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
 
-              </TouchableOpacity>
-              <View
-                style={{
-                  width: 0.5,
-                  height: height(7),
-                  backgroundColor: '#000'
-                }}
-              />
-              <TouchableOpacity
-                onPress={() => email()}
-                style={{}}>
+                </TouchableOpacity>
+                <View
+                  style={{
+                    width: 0.5,
+                    height: height(7),
+                    backgroundColor: '#000'
+                  }}
+                />
+                <TouchableOpacity
+                  onPress={() => email()}
+                  style={{}}>
 
-                <MaterialCommunityIcons name='email' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
+                  <MaterialCommunityIcons name='email' size={40} style={{ paddingVertical: 5, paddingHorizontal: 10 }} />
 
-              </TouchableOpacity>
+                </TouchableOpacity>
 
-            </View>
+              </View>
           }
 
         </View>

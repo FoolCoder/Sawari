@@ -673,8 +673,9 @@ export default function MyProfile({ navigation, route }) {
           data: item,
           name: item.user.name,
           room: [item.room],
-          user: true
-        }
+          user: false,
+          reciver: item.reciever._id
+        },
       })}
       style={{ width: width(90), marginVertical: height(1.5), alignSelf: 'center', backgroundColor: '#FFBB4190', borderRadius: 10 }}>
 
