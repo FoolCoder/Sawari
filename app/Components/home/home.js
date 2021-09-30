@@ -19,14 +19,15 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-
+import { Badge } from 'react-native-elements'
 
 import splas from '../../assets/splash1.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { socketConnection } from '../Store/actiontype'
 
-import { dylinkF } from '../Store/action'
+import { dylinkF , AddNotification, SetNotification} from '../Store/action'
 import { useSafeArea } from 'react-native-safe-area-context'
+import { assertAnyTypeAnnotation } from '@babel/types'
 
 export default function Home({ navigation }) {
   const { logout } = useContext(Authcontext)
@@ -41,8 +42,12 @@ export default function Home({ navigation }) {
   const dylink = useSelector((state) => state.dyL)
   const userProfile = useSelector((state) => state.user)
   const reload = useSelector((state) => state.reload)
-
-
+  const [badge, setbadge]=useState(false)
+  const addn= useSelector((state)=> state.Add)
+  const setn = useSelector((state)=> state.Set)
+  const [Ncount, setncount] = useState(0)
+const [lastindex, setlastindex]=useState(null)
+const [nextindex, setnextindex]=useState(null)
   const authlogout = async () => {
     await AsyncStorage.removeItem('token')
     await AsyncStorage.setItem('IsSignedIn', 'false').then(() => {
@@ -61,8 +66,12 @@ export default function Home({ navigation }) {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       openNotification()
+      CountNotification()
+      // getcount()
+
     });
     return unsubscribe
+    
   }, [reload])
 
   useEffect(() => {
@@ -79,9 +88,11 @@ export default function Home({ navigation }) {
   }, [])
 
   const handle = (e) => {
+    console.log('eeeeeeeeeeeeeeeeeee',e);
     if (e === 'active') {
-      console.log(dylink)
+      console.log('dddylink',dylink)
     }
+    
   }
 
   const open = async () => {
@@ -221,8 +232,72 @@ export default function Home({ navigation }) {
     }
 
   }
-  const openNotification = async () => {
+  const CountNotification=async()=>{
+    console.log('rrrrrrrrrrruuuu');
+    const val = JSON.parse(await AsyncStorage.getItem('token'))
 
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + val.token);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+    try {
+      fetch(link + '/notifications/getNotifcationscountByUser?userId=' + val.id, requestOptions)
+        .then((response) => response.json())
+        .then(async (responseJson) => {
+          console.log('nnnbbbbbbbbbyyyyyyyyyybbnnnn', responseJson);
+          if (responseJson.type === 'success') {
+            var val = responseJson.result
+            console.log('vccccccccccccccccccc',val)
+            const count= JSON.parse(await AsyncStorage.getItem('count'))
+          
+            console.log("sadasdasdadadsada",count);
+            if(count){
+              if (val>count){
+                console.log('vvvvvvaaaaaaaaaalllll');
+                await AsyncStorage.setItem('count', JSON.stringify(val))
+                setlastindex(val-count)
+                setbadge(true)
+              }
+              else{
+                console.log('eeeelllllllllssssssseeeyttt');
+                await AsyncStorage.setItem('count', JSON.stringify(val))
+                setbadge(false)
+
+              }
+            }
+            else{
+              console.log("asdasdasdadasdadsadsadsadasdsad wow");
+              await AsyncStorage.setItem('count', JSON.stringify(val))
+
+            }
+
+          
+
+          }
+          else {
+            alert('Check your Internet Connection')
+            setNLoader(false)
+            // setload(false)
+            // setmodalloader(false)
+          }
+        }).catch(e => {
+          console.log(e);
+          alert('Check your Internet Connection')
+          setNLoader(false)
+          // setmodalloader(false)
+        })
+    } catch (e) {
+      alert('Check your Internet Connection')
+    }
+  }
+ 
+  const openNotification = async () => {
+console.log('nnnnnnnnnnnnnnnnaaaaaa', addn, setn);
     const val = JSON.parse(await AsyncStorage.getItem('token'))
 
     var myHeaders = new Headers();
@@ -248,6 +323,7 @@ export default function Home({ navigation }) {
             setNLoader(false)
             // setload(false)
             // setmodalloader(false)
+
           }
           else {
             alert('Check your Internet Connection')
@@ -263,11 +339,12 @@ export default function Home({ navigation }) {
     } catch (e) {
       alert('Check your Internet Connection')
     }
+    setncount(0)
 
   }
 
   const FlatListNotification = ({ item, index }) => (
-
+    
     <TouchableOpacity
       onPress={() => {
         setnmodel(false),
@@ -278,7 +355,8 @@ export default function Home({ navigation }) {
               name: item.user.name,
               room: [item.room],
               user: false,
-              reciver: item.reciever._id
+              reciver: item.reciever._id,
+              adname:item.room.titleAd
             },
 
           })
@@ -286,16 +364,25 @@ export default function Home({ navigation }) {
 
       }
       style={{ width: width(90), marginVertical: height(1.5), alignSelf: 'center', backgroundColor: '#FFBB4190', borderRadius: 10 }}>
+        
+  
 
       <View style={{ width: width(85), marginVertical: height(1), alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-        {console.log('itttttttttttttt', item)}
+        {/* {console.log('itttttttttttttt', item, index)} */}
+      
+        
         <Image
           source={{ uri: link + '/' + item.user.image }}
           style={{ height: totalSize(6), width: totalSize(6), borderRadius: totalSize(3), marginTop: height(0.5) }}
         />
         {console.log(item.user.image)}
         <View style={{ width: width(68) }}>
-
+<View style={{
+  flexDirection:'row',
+  alignItems:'center',
+  justifyContent:'space-between',
+  width:width(28)
+}}>
           <Text
             numberOfLines={1}
             style={{ fontSize: totalSize(3) }}>
@@ -303,6 +390,10 @@ export default function Home({ navigation }) {
             {item.user.name}
 
           </Text>
+          <Text style={{
+            fontSize:totalSize(2.2)
+          }}>{item.room.titleAd}</Text>
+          </View>
 
           <Text
             numberOfLines={3}
@@ -357,14 +448,35 @@ export default function Home({ navigation }) {
                 onPress={() => {
                   setnmodel(true)
                   openNotification()
+                
+                  setbadge(false)
+                  
                 }
 
                 }
               // style={{ borderWidth: 1, borderRadius: 3 }}
               >
 
-                <MaterialIcons name='notifications-none' size={30} style={{ paddingHorizontal: 7 }} />
+                <View style={{
+                  flexDirection: 'row',
+                  // borderWidth: 1,
+                  width: 45
+                }}>
+                  <MaterialIcons name='notifications-none' size={30} style={{ paddingHorizontal: 7 }}
+                    style={{
+                      right: 5
+                    }} />
+{
+  badge==false ?
+  null 
+  :
 
+                  <Badge status="error" value={lastindex}
+                    containerStyle={{ position: 'absolute', zIndex: 1, left: 12,top:2}}
+
+                  />
+}
+                </View>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => onShare()}
@@ -499,7 +611,9 @@ export default function Home({ navigation }) {
                   }}>
                     Notifications
                   </Text>
-                  <TouchableOpacity onPress={() => setnmodel(false)}
+                  <TouchableOpacity onPress={() => {
+                    setbadge(false)
+                    setnmodel(false)}}
                     style={{
                       alignItems: 'flex-end'
                     }}

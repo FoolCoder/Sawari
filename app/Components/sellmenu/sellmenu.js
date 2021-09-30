@@ -1,5 +1,5 @@
-import React, { Component, Fragment, useEffect, useState } from 'react'
-import { View, ImageBackground, Image, Modal, Text, TouchableHighlight, TouchableOpacity, ActivityIndicator, SafeAreaView, FlatList, StyleSheet, Alert, Share } from 'react-native'
+import React, { Component, Fragment, useEffect, useState, useCallback } from 'react'
+import { View, ImageBackground, Image, Modal, ScrollView, Text, TouchableHighlight, RefreshControl, TouchableOpacity, ActivityIndicator, SafeAreaView, FlatList, StyleSheet, Alert, Share } from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
 import { useFocusEffect } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
@@ -13,7 +13,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links'
 import Header from '../header/header'
 
 import { link } from '../links/links'
-
+import FastImage from 'react-native-fast-image'
 import car from '../../assets/car.png'
 import ads from '../../assets/ADS.png'
 
@@ -22,6 +22,8 @@ export default function Sellmenu({ navigation }) {
   const [city, setcity] = useState()
   const [load, setload] = useState(true)
   const [modalloader, setmodalloader] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+
   const select = useSelector((state) => state.cardetails)
 
   useFocusEffect(
@@ -30,6 +32,15 @@ export default function Sellmenu({ navigation }) {
       return () => true;
     }, [])
   );
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      open()
+      setRefreshing(false)
+    }, 3000);
+  }, []);
+
 
   const open = async () => {
     const val = JSON.parse(await AsyncStorage.getItem('token'))
@@ -134,8 +145,11 @@ export default function Sellmenu({ navigation }) {
     return (
       <View style={{ height: height(15), width: width(95), marginTop: height(3), alignSelf: 'center', borderWidth: 2, borderRadius: 10, flexDirection: 'row', alignItems: 'center' }}>
 
-        <Image
-          source={{ uri: link + '/' + item.images[0] }}
+        <FastImage
+          source={{
+            uri: link + '/' + item.images[0],
+            priority: FastImage.priority.high
+          }}
           style={{ height: '100%', width: width(45), backgroundColor: 'gray', borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }} />
 
         <View style={{ marginLeft: width(2) }}>
@@ -174,7 +188,7 @@ export default function Sellmenu({ navigation }) {
 
               <Text style={{ fontSize: totalSize(2), fontFamily: 'BebasNeue-Regular' }}>
                 edit
-            </Text>
+              </Text>
 
             </TouchableOpacity>
 
@@ -186,7 +200,7 @@ export default function Sellmenu({ navigation }) {
 
                 <Text style={{ fontSize: totalSize(2), color: '#fff', fontFamily: 'BebasNeue-Regular' }}>
                   available
-                   </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -198,7 +212,7 @@ export default function Sellmenu({ navigation }) {
 
                 <Text style={{ fontSize: totalSize(2), color: '#fff', fontFamily: 'BebasNeue-Regular' }}>
                   sold
-                  </Text>
+                </Text>
 
               </TouchableOpacity>
 
@@ -237,7 +251,7 @@ export default function Sellmenu({ navigation }) {
 
               <Text style={{ fontSize: totalSize(3), fontFamily: 'BebasNeue-Regular' }}>
                 place an ad
-            </Text>
+              </Text>
 
               <View style={{ width: width(10) }} />
 
@@ -263,11 +277,20 @@ export default function Sellmenu({ navigation }) {
               </View>
 
               :
-              <FlatList
-                data={adds}
-                renderItem={_Flatlist}
-              />
-
+              <ScrollView
+                // contentContainerStyle={styles.scrollView}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+              >
+                <FlatList
+                  data={adds}
+                  renderItem={_Flatlist}
+                />
+              </ScrollView>
           }
 
           <Modal

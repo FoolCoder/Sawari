@@ -1,11 +1,16 @@
-import { cardetail, socketConnection, newsFeed, user, dylink } from './actiontype';
+import { cardetail, socketConnection, newsFeed, user, dylink, addnotification, setnotification } from './actiontype';
 
 const initialState = {
   cardetails: [],
   socket: undefined,
   reload: false,
   user: { userDetails: { image: '' } },
-  dyL: null
+  dyL: null, 
+ addnotification:0,
+ setnotification:0
+ 
+
+  
 }
 
 export const reducer = (state = initialState, action) => {
@@ -35,6 +40,20 @@ export const reducer = (state = initialState, action) => {
         ...state,
         dyL: action.dylink
       }
+      case addnotification:
+        return{
+          ...state,
+        Add:action.addnotification
+          
+        }
+        case setnotification:
+          return{
+            ...state,
+Set:action.setnotification    
+// set:5
+}
+  
+
     default:
       return state
   }

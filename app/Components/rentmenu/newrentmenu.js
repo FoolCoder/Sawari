@@ -1,5 +1,6 @@
 import React, { Component, Fragment, useEffect, useState, useRef } from 'react'
-import { View, ImageBackground, Image, Text, PermissionsAndroid, TextInput, TouchableOpacity, TouchableHighlight, SafeAreaView, FlatList, StyleSheet, Modal, ScrollView, ActivityIndicator, Alert, Share } from 'react-native'
+import { View, ImageBackground, Image, Text, PermissionsAndroid, TextInput, TouchableOpacity, TouchableHighlight,
+   SafeAreaView, FlatList, StyleSheet, Modal, ScrollView, ActivityIndicator, Alert, Share } from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
 
 import Slider from '@react-native-community/slider';

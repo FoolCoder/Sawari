@@ -1,5 +1,6 @@
 import React, { Component, Fragment, useEffect, useState } from 'react'
-import { View, ImageBackground, Image, Text, TouchableHighlight, TouchableOpacity, ActivityIndicator, SafeAreaView, FlatList, StyleSheet } from 'react-native'
+import { View, ImageBackground, Image, Text, TouchableHighlight, TouchableOpacity, ActivityIndicator, SafeAreaView, 
+  FlatList, StyleSheet } from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
 import { useSelector } from 'react-redux'
 

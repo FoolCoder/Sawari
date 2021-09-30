@@ -1,4 +1,4 @@
-import { cardetail, socketConnection, newsFeed, user, dylink } from './actiontype';
+import { cardetail, socketConnection, newsFeed, user, dylink, addnotification, setnotification } from './actiontype';
 
 const carD = (car) => ({
   type: cardetail,
@@ -24,5 +24,14 @@ const dylinkF = (l) => ({
   type: dylink,
   dylink: l
 })
+const AddNotification=(add)=>({
+  type:addnotification,
+  addnotification:add
 
-export { carD, socketF, newsFeedR, userP, dylinkF }
+})
+const SetNotification=(set)=>({
+  type:setnotification,
+  setnotification:set
+})
+
+export { carD, socketF, newsFeedR, userP, dylinkF, AddNotification, SetNotification }

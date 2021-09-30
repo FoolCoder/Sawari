@@ -27,14 +27,18 @@ export default function Chat({ navigation, route }) {
   const [message, setmessage] = useState('')
   const [room, setroom] = useState('')
   const [user, setuser] = useState('')
-  const [chatUser, setchatUser] = useState('')
-
+  const [chatUser, setchatUser] = useState(null)
+  const [Adtitle, setAdtitle]=useState(null)
+  const [Ad, setAd]=useState(null)
+const [ntitle, setntitle]=useState(null)
   const socket = useSelector((state) => state.socket)
-
+  
 
   useEffect(() => {
-
-    open()
+console.log(route.params.title);
+open()
+chechAdtitle()
+    console.log('addddddddddddddddd',Adtitle);
 
     return (() => {
       socket.removeAllListeners()
@@ -54,6 +58,7 @@ export default function Chat({ navigation, route }) {
 
       setchatUser(route.params.data)
       c = route.params.data
+      console.log('cccccccccccccckjhgc'+ JSON.stringify(c));
       console.log('llllllllllll', val);
       setuser(val)
       console.log('rrrrrrroooom');
@@ -71,7 +76,7 @@ export default function Chat({ navigation, route }) {
             if (route.params.profileflag === true) {
               console.log(45555555555555555);
               setroom(route.params.data._id)
-              api = route.params.data._id
+              api = route.params.data._id 
 
 
             }
@@ -227,25 +232,27 @@ export default function Chat({ navigation, route }) {
                 author: user.id,
                 room: route.params.data._id,
                 text: message,
-                attachments: null
+                attachments: null,
+                // titleAd:chatUser.title
               }
             }
 
           }
           else {
-            console.log(9);
+            console.log(900);
             data = {
               room:
               {
                 group: false,
                 name: null,
-                users: [user.id, route.params.reciver]    // Your ID and Other User ID .......... if Group Only Your ID
+                users: [user.id, route.params.data.user._id]    // Your ID and Other User ID .......... if Group Only Your ID
               },
               message: {
                 author: user.id,
                 room: room === null ? route.params.room : route.params.room[0]._id,
                 text: message,
-                attachments: null
+                attachments: null,
+                titleAd:null
               }
             }
           }
@@ -279,7 +286,8 @@ export default function Chat({ navigation, route }) {
               author: user.id,
               room: id,
               text: message,
-              attachments: null
+              attachments: null,
+              titleAd:chatUser.title
             }
           }
         }
@@ -358,7 +366,27 @@ export default function Chat({ navigation, route }) {
         </View>
     )
   }
+const chechAdtitle=()=>{
+ console.log('tttttuppppe', typeof(chatUser));
+  if(route.params.data){
+    if(route.params.adname){
+      console.log('kkkkkkkkkkk', route.params.adname);
+        return  setntitle(route.params.adname)
+      }
+      if(route.params.title){
+        return setAdtitle(route.params.title)
+      }
+    return   setAd({title:route.params.data.title, price:route.params.data.priceValue, priceC: route.params.data.priceCurrency})
+  
+  }
+  
+ else{
+   return null
+ }
 
+   
+   
+}
   return (
     <Fragment>
       <SafeAreaView
@@ -372,8 +400,9 @@ export default function Chat({ navigation, route }) {
             text={route.params.name}
             back={() => navigation.goBack()}
           />
-          {
-            chatUser.title == null && chatUser.priceValue == '' && chatUser.priceCurrency == '' ?
+         
+         {
+           Ad===null   ?
               null
               :
 
@@ -395,12 +424,73 @@ export default function Chat({ navigation, route }) {
                     left: 12
                   }}
                 >
-                  {chatUser.title}
+                { Ad.title}
                 </Text>
                 <Text
                   style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2', left: 22 }}
                 >
-                  {chatUser.priceValue} {chatUser.priceCurrency}
+                  {Ad.price} {Ad.priceC}
+                </Text>
+
+              </View>
+          }
+              {
+           ntitle===null  ?
+null              :
+<View style={{
+  position: 'absolute',
+  marginTop: height(10),
+  zIndex: 1,
+  height: height(8), width: width(100),
+  flexDirection: 'row',
+  backgroundColor: '#242527',
+  borderTopWidth: 0.3,
+  borderColor: '#fff',
+  alignItems: 'center'
+
+}}>
+             
+                <Text
+                  style={{
+                    fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2',
+                    left: 12
+                  }}
+                >
+                { ntitle}
+                </Text>
+                </View>
+
+              
+          }
+          {
+           Adtitle===null  ?
+              null
+              :
+
+              <View style={{
+                position: 'absolute',
+                marginTop: height(10),
+                zIndex: 1,
+                height: height(8), width: width(100),
+                flexDirection: 'row',
+                backgroundColor: '#242527',
+                borderTopWidth: 0.3,
+                borderColor: '#fff',
+                alignItems: 'center'
+
+              }}>
+                <Text
+                  style={{
+                    fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2',
+                    left: 12
+                  }}
+                >
+                  {Adtitle}
+                </Text>
+                <Text
+                  style={{ fontSize: totalSize(4), fontFamily: 'BebasNeue-Regular', color: '#a2a2a2', left: 22 }}
+                >
+                  {Adtitle.priceValue} {Adtitle.priceCurrency}
                 </Text>
 
               </View>

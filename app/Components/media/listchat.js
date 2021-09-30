@@ -80,6 +80,7 @@ export default function Chat({ navigation }) {
         onPress={() => navigation.navigate('chat', {
           data: item,
           name: getOtherUserObject(item.users).name,
+          title:item.titleAd,
           room: true,
           user: false,
           profileflag: true
@@ -94,13 +95,30 @@ export default function Chat({ navigation }) {
           />
 
           <View style={{ width: '60%', marginLeft: width(2) }}>
+<View style={{
+  flexDirection:'row',
+  // justifyContent:'space-around',
+  alignItems:'center',
+  // justifyContent:'center'
+}}>
+            <Text style={{ fontSize: totalSize(3.5), fontFamily: 'BebasNeue-Regular', }}>
 
-            <Text style={{ fontSize: totalSize(3.5), fontFamily: 'BebasNeue-Regular' }}>
-
-              {item.users ? getOtherUserObject(item.users).name : item.name}
-
+              {item.users ? getOtherUserObject(item.users).name : item.name} 
             </Text>
-
+            {
+              item.titleAd ?
+            
+            <Text style={{
+              left:10
+            }}>---</Text>
+            :
+            null
+            }
+            <Text style={{
+                fontSize:totalSize(2.5), fontFamily: 'BebasNeue-Regular' ,left:width(5),
+              }}>{item.titleAd} </Text>
+           
+</View>
             <Text
               numberOfLines={1}
               style={{ fontSize: totalSize(2) }}>

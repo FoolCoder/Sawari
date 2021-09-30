@@ -1,8 +1,8 @@
-import React, { Component, Fragment, useEffect, useState, useRef } from 'react'
+import React, { Component, Fragment, useEffect, useState, useRef, useCallback } from 'react'
 import {
   View, ImageBackground, Text, TextInput, TouchableOpacity, Image,
   TouchableHighlight, SafeAreaView, StyleSheet, Modal, ScrollView,
-  PermissionsAndroid, FlatList
+  PermissionsAndroid, FlatList, RefreshControl
 } from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -18,7 +18,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { link, apikey } from '../links/links'
 
 import MapView, { PROVIDER_GOOGLE, Marker, Circle } from 'react-native-maps'
-
+import FastImage from 'react-native-fast-image'
 import ModalDropdown from 'react-native-modal-dropdown';
 import ActivityIndicator from '../loader/loader'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
@@ -77,6 +77,7 @@ export default function Buymenu({ navigation, route }) {
   const [slocation, setslocation] = useState(false)
   const [applylocationS, setapplylocationS] = useState(false)
   const [applylocationC, setapplylocationC] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
 
   const [favour, setfavour] = useState()
 
@@ -102,6 +103,14 @@ export default function Buymenu({ navigation, route }) {
     makearrayF()
 
   }, [])
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      openD()
+      setRefreshing(false)
+    }, 3000);
+  }, []);
 
   const makearrayF = async () => {
     const val = JSON.parse(await AsyncStorage.getItem('token'))
@@ -584,13 +593,19 @@ export default function Buymenu({ navigation, route }) {
 
         </View>
 
-        <ImageBackground
-          source={{ uri: link + '/' + item.images[0] }}
+        <FastImage
+          source={{
+            uri: link + '/' + item.images[0],
+            priority: FastImage.priority.high
+          }}
           style={{ height: '100%', width: width(45) }}
-          imageStyle={{ borderTopRightRadius: 8, borderBottomRightRadius: 8, backgroundColor: 'gray' }}
+          Style={{
+            borderTopRightRadius: 8, borderBottomRightRadius: 8,
+            backgroundColor: 'gray'
+          }}
         >
 
-        </ImageBackground>
+        </FastImage>
 
       </TouchableOpacity>
     )
@@ -650,8 +665,16 @@ export default function Buymenu({ navigation, route }) {
       <SafeAreaView style={styles.container}>
         <View style={{ flex: 1 }}>
           <Header text='Rent Menu' back={() => navigation.goBack()} />
-          <View style={{ width: width(95), marginTop: height(2), alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-
+          <View style={{ width: width(95), marginTop: height(2), alignSelf: 'center', }}>
+          <ScrollView
+                  contentContainerStyle={{flexDirection:'row', justifyContent: 'space-between'}}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
+                >
             <View style={{ width: width(40) }}>
 
               <TouchableOpacity
@@ -736,7 +759,7 @@ export default function Buymenu({ navigation, route }) {
               </Text>
 
             </TouchableHighlight>
-
+</ScrollView>
           </View>
           <View style={{ marginTop: height(1), borderWidth: 0.5, borderColor: '#aaa' }} />
 
@@ -769,12 +792,12 @@ export default function Buymenu({ navigation, route }) {
 
                 </View>
 
-                <FlatList
-                  data={cars}
-                  keyExtractor={(item, index) => { return index.toString() }}
-                  renderItem={_Flatlist}
-                />
 
+                  <FlatList
+                    data={cars}
+                    keyExtractor={(item, index) => { return index.toString() }}
+                    renderItem={_Flatlist}
+                  />
               </View>
           }
           {/* <TouchableOpacity

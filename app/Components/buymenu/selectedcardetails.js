@@ -48,7 +48,7 @@ export default function Sellmenu({ navigation, route }) {
 
       setfavour(route.params.data.isfavourite)
 
-      console.log('rrrrrrrrrrrr', room)
+      console.log('rrrrrrrrrrrr', room, route.params.data)
 
       open()
 
@@ -84,8 +84,8 @@ export default function Sellmenu({ navigation, route }) {
         headers: myHeaders,
         redirect: 'follow'
       };
-
-      fetch(link + '/room/checkRoom?userId=' + val.id + '&otherUserId=' + route.params.data.user[0]._id, requestOptions)
+console.log('ttttttttttttttttttt',route.params.data);
+      fetch(link + '/room/checkRoom?userId=' + val.id + '&otherUserId=' + route.params.data.user[0]._id + '&titleAd='+ route.params.data.title, requestOptions)
         .then(response => response.json())
         .then(response => {
 
@@ -203,6 +203,7 @@ export default function Sellmenu({ navigation, route }) {
   }
 
   const onShare = async () => {
+    console.log('iiitem', item);
     try {
       const link = await dynamicLinks().buildShortLink({
         link: 'https://SCDDY/' + item._id,

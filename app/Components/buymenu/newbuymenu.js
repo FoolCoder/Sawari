@@ -1,5 +1,8 @@
-import React, { Component, Fragment, useEffect, useState, useRef } from 'react'
-import { View, ImageBackground, Image, Text, PermissionsAndroid, TextInput, TouchableOpacity, TouchableHighlight, SafeAreaView, FlatList, StyleSheet, Modal, ScrollView, ActivityIndicator, Alert, Share } from 'react-native'
+import React, { Component, Fragment, useEffect, useState, useRef, useCallback } from 'react'
+import {
+  View, ImageBackground, Image, Text, PermissionsAndroid, TextInput, RefreshControl,
+  TouchableOpacity, TouchableHighlight, SafeAreaView, FlatList, StyleSheet, Modal, ScrollView, ActivityIndicator, Alert, Share
+} from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
 
 import Slider from '@react-native-community/slider';
@@ -8,7 +11,7 @@ import Geocoder from 'react-native-geocoding';
 import Geolocation from 'react-native-geolocation-service'
 import AsyncStorage from '@react-native-community/async-storage'
 import dynamicLinks from '@react-native-firebase/dynamic-links'
-
+import FastImage from 'react-native-fast-image'
 import { link, apikey } from '../links/links'
 
 import MapView, { PROVIDER_GOOGLE, Marker, Circle } from 'react-native-maps'
@@ -18,6 +21,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import cl from '../../assets/cl.png'
 import ads from '../../assets/ADS.png'
+
+
+
+
 
 export default function Buymenu({ navigation }) {
 
@@ -77,7 +84,7 @@ export default function Buymenu({ navigation }) {
     lat: 0,
     lon: 0
   })
-
+  const [refreshing, setRefreshing] = useState(false)
   // const reload = useSelector((state) => state.reload)
 
   useEffect(() => {
@@ -309,9 +316,14 @@ export default function Buymenu({ navigation }) {
       )
   }
 
-
-
-
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      openD()
+      clearFilter()
+      setRefreshing(false)
+    }, 3000);
+  }, []);
 
 
   const clearFilter = () => {
@@ -507,13 +519,20 @@ export default function Buymenu({ navigation }) {
 
         </View>
 
-        <ImageBackground
-          source={{ uri: link + '/' + item.images[0] }}
+        <FastImage
+          source={{
+            uri: link + '/' + item.images[0],
+            priority: FastImage.priority.high
+          }}
           style={{ height: '100%', width: width(45) }}
-          imageStyle={{ borderTopRightRadius: 8, borderBottomRightRadius: 8, backgroundColor: 'gray' }}
+          Style={{
+            borderTopRightRadius: 8, borderBottomRightRadius: 8,
+            backgroundColor: 'gray'
+          }}
+
         >
 
-        </ImageBackground>
+        </FastImage>
 
       </TouchableOpacity>
     )
@@ -654,101 +673,115 @@ export default function Buymenu({ navigation }) {
       />
       <SafeAreaView style={styles.container}>
 
-        <View style={{ flex: 1 }}>
 
-          <Header text='BUY MENU' back={() => navigation.goBack()} />
+        <Header text='BUY MENU' back={() => navigation.goBack()} />
+        
 
-          <View style={{ width: width(95), marginTop: height(2), alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ width: width(95), marginTop: height(2), alignSelf: 'center', }}>
+        <ScrollView
+                  contentContainerStyle={{
+                    flexDirection: 'row', justifyContent: 'space-between' 
+                  }}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
+                >
 
-            <View style={{ width: width(40) }}>
+          <View style={{ width: width(40) }}>
 
-              <TouchableOpacity
-                onPress={() => setslocation(true)}
-                style={{ height: height(5), borderWidth: 1, borderRadius: 5, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-              >
-
-                <MaterialIcons name='location-on' size={15} />
-
-                <Text style={{ fontSize: totalSize(1.7), marginLeft: width(3), fontFamily: 'BebasNeue-Regular' }}>
-                  Search Location
-                </Text>
-
-                <View style={{ width: width(5) }} />
-
-              </TouchableOpacity>
-
-              {
-                !applylocationS && !applylocationC ?
-
-                  <Text style={{ fontSize: totalSize(0.85), marginTop: height(1), alignSelf: 'center', color: '#FF0000' }}>
-                    Select City and distance
-                  </Text>
-                  :
-
-                  <View style={{ marginTop: height(0.7), width: width(39), alignSelf: 'flex-end', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
-
-                    <Text style={{ fontSize: totalSize(1.2), width: width(30) }}>
-
-                      {mapsearch}
-
-                    </Text>
-
-                    <Text style={{ fontSize: totalSize(1.2) }}>
-
-                      {slider}mi
-
-                    </Text>
-
-                  </View>
-
-              }
-
-            </View>
-
-            <View style={{ width: width(30) }}>
-
-              <TouchableOpacity
-                onPress={() => setvisible(true)}
-                style={{ height: height(5), borderWidth: 1, borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}
-              >
-
-                <Text style={{ fontSize: totalSize(1.7), fontFamily: 'BebasNeue-Regular' }}>
-                  More Filter
-                </Text>
-
-              </TouchableOpacity>
-
-              <Text style={{ marginTop: height(1), alignSelf: 'center', fontSize: totalSize(0.8) }}>
-
-                Tap{' '}
-
-                <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
-
-                  SEARCH
-
-                </Text>
-
-                {' '}Button to apply filters
-
-              </Text>
-
-            </View>
-
-            <TouchableHighlight
-              onPress={() => search(true)}
-              underlayColor='#242527'
-              style={{ height: height(5), width: width(20), borderWidth: 1, borderRadius: 5, backgroundColor: '#FFBB41', justifyContent: 'center', alignItems: 'center' }}
+            <TouchableOpacity
+              onPress={() => setslocation(true)}
+              style={{ height: height(5), borderWidth: 1, borderRadius: 5, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
             >
 
-              <Text style={{ fontSize: totalSize(1.7), fontFamily: 'BebasNeue-Regular' }}>
-                Search
+              <MaterialIcons name='location-on' size={15} />
+
+              <Text style={{ fontSize: totalSize(1.7), marginLeft: width(3), fontFamily: 'BebasNeue-Regular' }}>
+                Search Location
               </Text>
 
-            </TouchableHighlight>
+              <View style={{ width: width(5) }} />
+
+            </TouchableOpacity>
+
+            {
+              !applylocationS && !applylocationC ?
+
+                <Text style={{ fontSize: totalSize(0.85), marginTop: height(1), alignSelf: 'center', color: '#FF0000' }}>
+                  Select City and distance
+                </Text>
+                :
+
+                <View style={{ marginTop: height(0.7), width: width(39), alignSelf: 'flex-end', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
+
+                  <Text style={{ fontSize: totalSize(1.2), width: width(30) }}>
+
+                    {mapsearch}
+
+                  </Text>
+
+                  <Text style={{ fontSize: totalSize(1.2) }}>
+
+                    {slider}mi
+
+                  </Text>
+
+                </View>
+
+            }
 
           </View>
 
-          <View style={{ marginTop: height(1), borderWidth: 0.5, borderColor: '#aaa' }} />
+          <View style={{ width: width(30) }}>
+
+            <TouchableOpacity
+              onPress={() => setvisible(true)}
+              style={{ height: height(5), borderWidth: 1, borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}
+            >
+
+              <Text style={{ fontSize: totalSize(1.7), fontFamily: 'BebasNeue-Regular' }}>
+                More Filter
+              </Text>
+
+            </TouchableOpacity>
+
+            <Text style={{ marginTop: height(1), alignSelf: 'center', fontSize: totalSize(0.8) }}>
+
+              Tap{' '}
+
+              <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
+
+                SEARCH
+
+              </Text>
+
+              {' '}Button to apply filters
+
+            </Text>
+
+          </View>
+
+          <TouchableHighlight
+            onPress={() => search(true)}
+            underlayColor='#242527'
+            style={{ height: height(5), width: width(20), borderWidth: 1, borderRadius: 5, backgroundColor: '#FFBB41', justifyContent: 'center', alignItems: 'center' }}
+          >
+
+            <Text style={{ fontSize: totalSize(1.7), fontFamily: 'BebasNeue-Regular' }}>
+              Search
+            </Text>
+
+          </TouchableHighlight>
+          </ScrollView>
+
+        </View>
+       
+
+        <View style={{ marginTop: height(1), borderWidth: 0.5, borderColor: '#aaa' }} />
+        <View style={{ flex: 1 }}>
 
           {load == true
             ?
@@ -778,16 +811,25 @@ export default function Buymenu({ navigation }) {
                   </Text>
 
                 </View>
+                {/* <ScrollView
+                  // contentContainerStyle={styles.scrollView}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
+                > */}
+                  {/* <Text>Pull down to see RefreshControl indicator</Text> */}
 
-                <FlatList
-                  data={cars}
-                  keyExtractor={(item, index) => { return index.toString() }}
-                  renderItem={_Flatlist}
-                />
 
+                  <FlatList
+                    data={cars}
+                    keyExtractor={(item, index) => { return index.toString() }}
+                    renderItem={_Flatlist}
+                  />
               </View>
           }
-
           <Modal
             animationType={'slide'}
             transparent={true}
@@ -1654,5 +1696,11 @@ const styles = StyleSheet.create({
     height: height(35),
     width: width(100),
     marginTop: height(1)
-  }
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: 'pink',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })

@@ -1,5 +1,6 @@
 import React, { Component, Fragment, useEffect, useRef, useState } from 'react'
-import { View, ImageBackground, LayoutAnimation, UIManager, PermissionsAndroid, Image, ActivityIndicator, Alert, Modal, FlatList, TextInput, Text, TouchableOpacity, TouchableHighlight, SafeAreaView, StyleSheet, ScrollView } from 'react-native'
+import { View, ImageBackground, LayoutAnimation, UIManager, PermissionsAndroid, Image, ActivityIndicator, Alert, Modal, FlatList, 
+  TextInput, Text, TouchableOpacity, TouchableHighlight, SafeAreaView, StyleSheet, ScrollView } from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -744,7 +745,7 @@ export default function Editadd({ navigation, route }) {
               <Text style={{
                 fontFamily: 'BebasNeue-Regular', fontSize: totalSize(3)
               }}>
-                {mapsearch}
+                {city}
               </Text>
 
             </View>

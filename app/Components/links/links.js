@@ -1,5 +1,5 @@
-export const link = 'http://3.95.158.224:9999'
-// export const link = 'http://192.168.0.115:9999'
+// export const link = 'http://3.95.158.224:9999'
+export const link = 'http://0902-101-50-108-76.ngrok.io'
 
 export const filterdadds = '/ad/getFilteredAds'
 export const useradds = '/ad/getAdsByUser?userId='

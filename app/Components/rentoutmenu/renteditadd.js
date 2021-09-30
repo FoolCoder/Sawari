@@ -145,7 +145,7 @@ export default function Reditadd({ navigation, route }) {
       setemail(data.email)
       setaddress(data.address)
       setaddressLatlon({ lat: data.latitude, lon: data.longitude, city: data.city })
-      // setdiscription(data.description)
+      setdiscription(data.description)
       setsellertype(data.sellerType)
       setmake(data.make)
       setmodel(data.model)
@@ -163,6 +163,7 @@ export default function Reditadd({ navigation, route }) {
       setgear(data.gear)
       setenginType(data.engineType)
       setengine(data.engineValue)
+      setmapsearch(data.city)
 
 
     } catch (e) {
@@ -373,7 +374,7 @@ export default function Reditadd({ navigation, route }) {
       data.append("bodyType", bodytype)
       data.append("fuel", fuel)
       data.append("gear", gear)
-      data.append("city", city)
+      data.append("city", mapsearch)
       data.append("latitude", addressLatlon.lat)
       data.append("longitude", addressLatlon.lon)
       data.append("make", make)
@@ -592,6 +593,7 @@ export default function Reditadd({ navigation, route }) {
     if (mapsearch != '') {
       setapplylocationS(true)
       setslocation(false)
+      setmapsearch(mapsearch)
     }
     else {
       alert('Choose location')
