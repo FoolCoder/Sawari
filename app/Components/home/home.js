@@ -5,6 +5,7 @@ import {
   ActivityIndicator
 } from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
+import { Badge } from 'react-native-elements'
 
 import AsyncStorage from '@react-native-community/async-storage'
 
@@ -19,15 +20,14 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { Badge } from 'react-native-elements'
+
 
 import splas from '../../assets/splash1.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { socketConnection } from '../Store/actiontype'
 
-import { dylinkF , AddNotification, SetNotification} from '../Store/action'
+import { dylinkF } from '../Store/action'
 import { useSafeArea } from 'react-native-safe-area-context'
-import { assertAnyTypeAnnotation } from '@babel/types'
 
 export default function Home({ navigation }) {
   const { logout } = useContext(Authcontext)
@@ -37,17 +37,15 @@ export default function Home({ navigation }) {
   const [loader, setloader] = useState(false)
   const [NLoader, setNLoader] = useState(true)
   const [notification, setnotification] = useState([])
+  const [lastindex, setlastindex]=useState(null)
+  const [badge, setbadge]=useState(false)
 
   const [Nmodal, setnmodel] = useState(false)
   const dylink = useSelector((state) => state.dyL)
   const userProfile = useSelector((state) => state.user)
   const reload = useSelector((state) => state.reload)
-  const [badge, setbadge]=useState(false)
-  const addn= useSelector((state)=> state.Add)
-  const setn = useSelector((state)=> state.Set)
-  const [Ncount, setncount] = useState(0)
-const [lastindex, setlastindex]=useState(null)
-const [nextindex, setnextindex]=useState(null)
+
+
   const authlogout = async () => {
     await AsyncStorage.removeItem('token')
     await AsyncStorage.setItem('IsSignedIn', 'false').then(() => {
@@ -67,11 +65,9 @@ const [nextindex, setnextindex]=useState(null)
     const unsubscribe = navigation.addListener('focus', () => {
       openNotification()
       CountNotification()
-      // getcount()
 
     });
     return unsubscribe
-    
   }, [reload])
 
   useEffect(() => {
@@ -88,11 +84,9 @@ const [nextindex, setnextindex]=useState(null)
   }, [])
 
   const handle = (e) => {
-    console.log('eeeeeeeeeeeeeeeeeee',e);
     if (e === 'active') {
-      console.log('dddylink',dylink)
+      console.log(dylink)
     }
-    
   }
 
   const open = async () => {
@@ -295,9 +289,8 @@ const [nextindex, setnextindex]=useState(null)
       alert('Check your Internet Connection')
     }
   }
- 
   const openNotification = async () => {
-console.log('nnnnnnnnnnnnnnnnaaaaaa', addn, setn);
+
     const val = JSON.parse(await AsyncStorage.getItem('token'))
 
     var myHeaders = new Headers();
@@ -323,7 +316,6 @@ console.log('nnnnnnnnnnnnnnnnaaaaaa', addn, setn);
             setNLoader(false)
             // setload(false)
             // setmodalloader(false)
-
           }
           else {
             alert('Check your Internet Connection')
@@ -339,12 +331,11 @@ console.log('nnnnnnnnnnnnnnnnaaaaaa', addn, setn);
     } catch (e) {
       alert('Check your Internet Connection')
     }
-    setncount(0)
 
   }
 
   const FlatListNotification = ({ item, index }) => (
-    
+
     <TouchableOpacity
       onPress={() => {
         setnmodel(false),
@@ -364,24 +355,22 @@ console.log('nnnnnnnnnnnnnnnnaaaaaa', addn, setn);
 
       }
       style={{ width: width(90), marginVertical: height(1.5), alignSelf: 'center', backgroundColor: '#FFBB4190', borderRadius: 10 }}>
-        
-  
 
       <View style={{ width: width(85), marginVertical: height(1), alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-        {/* {console.log('itttttttttttttt', item, index)} */}
-      
-        
+        {console.log('itttttttttttttt', item)}
         <Image
           source={{ uri: link + '/' + item.user.image }}
           style={{ height: totalSize(6), width: totalSize(6), borderRadius: totalSize(3), marginTop: height(0.5) }}
         />
         {console.log(item.user.image)}
         <View style={{ width: width(68) }}>
-<View style={{
+
+        <View style={{
   flexDirection:'row',
   alignItems:'center',
   justifyContent:'space-between',
-  width:width(28)
+  width:width(35),
+  //  borderWidth:1
 }}>
           <Text
             numberOfLines={1}
@@ -448,16 +437,13 @@ console.log('nnnnnnnnnnnnnnnnaaaaaa', addn, setn);
                 onPress={() => {
                   setnmodel(true)
                   openNotification()
-                
-                  setbadge(false)
-                  
                 }
 
                 }
               // style={{ borderWidth: 1, borderRadius: 3 }}
               >
 
-                <View style={{
+<View style={{
                   flexDirection: 'row',
                   // borderWidth: 1,
                   width: 45
@@ -483,7 +469,7 @@ console.log('nnnnnnnnnnnnnnnnaaaaaa', addn, setn);
               // style={{ borderWidth: 1, borderRadius: 3 }}
               >
 
-                <MaterialCommunityIcons name='share' size={35} style={{ paddingHorizontal: 7 }} />
+<MaterialCommunityIcons name='share' size={35} style={{ paddingHorizontal: 7 }} />
 
               </TouchableOpacity>
             </View>
@@ -611,9 +597,7 @@ console.log('nnnnnnnnnnnnnnnnaaaaaa', addn, setn);
                   }}>
                     Notifications
                   </Text>
-                  <TouchableOpacity onPress={() => {
-                    setbadge(false)
-                    setnmodel(false)}}
+                  <TouchableOpacity onPress={() => setnmodel(false)}
                     style={{
                       alignItems: 'flex-end'
                     }}

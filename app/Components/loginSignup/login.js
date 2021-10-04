@@ -1,11 +1,10 @@
 import React, { Component, Fragment, useContext, useEffect, useState } from 'react'
-import { View, ImageBackground, Image, Text, TouchableOpacity, TouchableHighlight,
-   TextInput, SafeAreaView, StyleSheet, Modal } from 'react-native'
+import { View, ImageBackground, Image, Text, TouchableOpacity, TouchableHighlight, TextInput, SafeAreaView, StyleSheet, Modal } from 'react-native'
 import { height, width, totalSize } from 'react-native-dimension'
 
 import AsyncStorage from '@react-native-community/async-storage'
 import message from '@react-native-firebase/messaging'
-
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { link } from '../links/links'
 import { Authcontext } from '../context/context'
 import Loader from '../loader/loader'

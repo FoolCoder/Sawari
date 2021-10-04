@@ -159,7 +159,7 @@ export default function Newsfeed({ navigation }) {
 
           }
           else {
-            alert('video file size out of limit, Max Size limit %mb')
+            alert('video file size out of limit, Max Size limit 5mb')
           }
         }
         else {

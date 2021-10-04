@@ -1,33 +1,70 @@
 {
   "project_info": {
-    "project_number": "1018845079644",
-    "project_id": "sawario",
-    "storage_bucket": "sawario.appspot.com"
+    "project_number": "965114676886",
+    "project_id": "innua-311508",
+    "storage_bucket": "innua-311508.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1018845079644:android:eee03746158da0bccd9e99",
+        "mobilesdk_app_id": "1:965114676886:android:25c2310568884d7f29a4b7",
         "android_client_info": {
-          "package_name": "com.sawario"
+          "package_name": "com.innua"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1018845079644-j7bqnp09fi3kbhpbnnrtic6pm7id61q9.apps.googleusercontent.com",
+          "client_id": "965114676886-6mvvlrc98g8fsfvcvmb1hbv3u429nqnl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.innua",
+            "certificate_hash": "0177dc273eb9dc47f4538bc68178760547ddae18"
+          }
+        },
+        {
+          "client_id": "965114676886-8cvivljlnlslsibhuoj1cdp5u4s9ttfh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBIIAIRMP2HaMrMWIkVdSRLys5W9gb3APw"
+          "current_key": "AIzaSyBsGb9mKWD-hCXhf5uLKtiyP8A_lz0Eau8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1018845079644-j7bqnp09fi3kbhpbnnrtic6pm7id61q9.apps.googleusercontent.com",
+              "client_id": "965114676886-8cvivljlnlslsibhuoj1cdp5u4s9ttfh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965114676886:android:4e8dff21cdeb458029a4b7",
+        "android_client_info": {
+          "package_name": "com.innuaavendor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965114676886-8cvivljlnlslsibhuoj1cdp5u4s9ttfh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsGb9mKWD-hCXhf5uLKtiyP8A_lz0Eau8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "965114676886-8cvivljlnlslsibhuoj1cdp5u4s9ttfh.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
